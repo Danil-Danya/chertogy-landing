@@ -1,0 +1,130 @@
+.types {
+    padding-bottom: 60px; 
+
+    &__container {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 30px;
+    }
+
+    &__slider {
+        margin-top: 30px;
+
+        &-buttons {
+            display: flex;
+            gap: 10px;
+        }
+    }
+
+    &__title {
+        @include media ($sm) {
+            text-align: left;
+        }
+    }
+
+    &__button {
+        border-radius: 10px;
+        background: var(--03-dark-2, #18171E);
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 0;
+    }
+
+    &__content {
+        @include media ($sm) {
+            display: flex;
+            gap: 20px;
+        }
+    }
+
+    &__item {
+        max-width: 580px;
+        width: 100%;
+        border-radius: 15px;
+        border: 1px solid var(--based-stroke, #18171E);
+        background: var(--plate-02, linear-gradient(109deg, rgba(0, 0, 0, 0.30) -1.6%, rgba(22, 19, 23, 0.30) 48.61%, rgba(0, 0, 0, 0.30) 98.83%));
+
+        /* ACTIVE GLOW */
+        box-shadow: 0 0 22px 0 rgba(129, 86, 146, 0.15);
+        padding: 40px 30px;
+
+        @include media ($lg) {
+            max-width: 100%;
+        }
+
+        &-title {
+            color: var(--01-primary-color-MAIN, #86489C);
+            font-variant-numeric: lining-nums proportional-nums;
+
+            /* PC/H3 */
+            font-family: "Alegreya SC";
+            font-size: 32px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 115%; /* 36.8px */
+
+            // @include media ($sm) {
+
+            // }
+        }
+
+        &-mark {
+            display: block;
+            padding: 8px 16px;border-radius: 40px;
+            border: 1px solid rgba(129, 86, 146, 0.13);
+            background: var(--02-Accent-dark, #742628);
+            color: var(--01-primary-color-5, #D5B0E4);
+            font-family: Alegreya;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 120%; /* 19.2px */
+            text-align: center;
+        }
+
+        &-top {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        &-center {
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+            margin: 30px 0;
+        }
+
+        &-link {
+            display: block !important;
+            display: flex !important;
+            align-items: center;
+            color: var(--02-Accent-main, #D23C48);
+            font-variant-numeric: lining-nums proportional-nums;
+
+            /* PC/Button 2 */
+            font-family: "Alegreya SC";
+            font-size: 32px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 120%; /* 38.4px */
+            gap: 20px;
+        }
+
+        &-icon {     
+            display: block;
+            display: flex;
+            align-items: center;
+            height: 100%;
+
+            svg {
+                width: 32px;
+                height: 32px;
+            }
+        }
+    }
+}

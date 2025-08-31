@@ -1,0 +1,139 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    //border: 1px solid red;
+}
+
+::selection {
+    background: #6e328484;
+    color: #fff; 
+}
+
+::-webkit-scrollbar {
+  width: 8px; 
+  height: 8px; 
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6E3284;
+}
+
+
+body {
+    background: #1D1D1D;
+    position: relative;
+
+    &::after {
+        content: '';
+        display: block;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: -1;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.626) 91.26%, #000 100%), linear-gradient(180deg, #070407 0%, rgba(33, 26, 37, 0.00) 88.08%), linear-gradient(90deg, rgba(0, 0, 0, 0.90) 0%, rgba(5, 16, 15, 0.95) 50%, rgba(0, 0, 0, 0.90) 100%), lightgray 50% / cover no-repeat;
+    }
+}
+
+a {
+    text-decoration: none;
+}
+
+ul, li {
+    list-style: none;
+}
+
+img {
+    object-fit: cover;
+}
+
+section {
+    overflow: hidden;
+}
+
+.red {
+    color: var(--02-Accent-1, #E44653) !important;
+}
+
+.title {
+    text-align: center;
+    font-variant-numeric: lining-nums proportional-nums;
+
+    /* PC/H2 */
+    font-family: "Alegreya SC";
+    font-size: 46px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100%; /* 46px */
+    background: var(--04-text-h1-style, linear-gradient(90deg, #CBBECD 0%, #FFF 46.5%, #CBBECD 100%));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    &-sticked {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        
+        &::after {
+            content: '';
+            width: 182px;
+            height: 6px;
+            background: url('/images/sticked/bg-right.png');
+
+            @include media ($md) {
+                display: none;
+            }
+        }
+
+         &::before {
+            content: '';
+            width: 182px;
+            height: 8px;
+            background: url('/images/sticked/bg-left.png');
+
+            @include media ($md) {
+                display: none;
+            }
+        }
+    }
+
+    @include media ($sm) {
+        font-size: 26px;
+    }
+}
+
+.text {
+    color: var(--04-text-main, #EEE0F1);
+    font-variant-numeric: lining-nums proportional-nums;
+
+    /* PC/p3 */
+    font-family: Alegreya;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%; /* 24px */
+}
+
+.bg-about {
+    background: url('/images/about/bg.png') no-repeat center /cover;
+}
+
+.bg-slogan {
+    background: url('/images/slogan/bg.png') no-repeat center /cover;
+}
+
+.bg-faq {
+    background: url('/images/faq/bg.png') no-repeat center /cover;
+}
+
+.bg-general  {
+    background: url('/images/general/bg.png') no-repeat center /cover;
+}

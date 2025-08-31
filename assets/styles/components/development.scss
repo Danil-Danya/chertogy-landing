@@ -1,0 +1,115 @@
+.development {
+    //padding: 60px 0;
+    height: 100vh;
+    
+    @include media ($md) {
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-bottom: 100px;
+    }
+
+    &__head {
+        margin-top: 200px;
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        align-items: center;
+        background: var(--02-Accent-main, #D23C48);
+        padding: 15px;
+        color: var(--04-text-main, #EEE0F1);
+        text-align: center;
+        font-variant-numeric: lining-nums proportional-nums;
+
+        @include media ($md) {
+            margin-top: 100px;
+            flex-wrap: wrap;
+            font-size: 16px;
+            gap: 10px;
+        }
+
+        /* PC/H3 */
+        font-family: "Alegreya SC";
+        font-size: 32px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 115%; /* 36.8px */
+    }
+
+    &__content {
+        margin-top: 100px;
+        text-align: center;
+
+        @include media ($md) {
+            margin-top: 50px;
+        }
+    }
+
+    &__text {
+        margin-top: 60px;
+        margin-bottom: 20px;
+
+        @include media ($md) {
+            margin-top: 40px;
+        }
+    }
+
+    &__title {
+        margin-bottom: 40px;
+    }
+
+    &__button {
+        display: block;
+        width: 300px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #FFF;
+        text-align: center;
+        font-variant-numeric: lining-nums proportional-nums;
+
+        /* PC/Button 1 */
+        font-family: "Alegreya SC";
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 120%; /* 24px */
+        gap: 10px;
+        transition: all 300ms;
+
+        @include media ($md) {
+            width: 100%;
+        }
+
+        &-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+
+            @include media ($md) {
+                flex-wrap: wrap;
+            }
+        }
+
+        &.vk {
+            border-radius: 5px;
+            background: var(--01-primary-color-MAIN, #86489C);
+            
+            &:hover {
+                background: #9462a7;
+            }
+        }
+        &.tg {
+            border-radius: 5px;
+            box-shadow: 0 4px 19px 0 rgba(178, 90, 212, 0.12);
+            background: #308FE9;
+    
+            &:hover {
+                background: #5da9ef;
+            }
+
+        }
+    }
+}

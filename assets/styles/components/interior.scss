@@ -1,0 +1,155 @@
+.interior {
+    padding: 90px 0;
+
+    &__title {
+        margin-bottom: 40px;
+    }
+
+    &__content {
+        &-slider {
+            display: flex;
+            //align-items: center;
+            gap: 20px;
+
+            @include media ($lg) {
+                flex-direction: column;
+            }
+        }
+    }
+
+    &__slide {
+        &-img {
+            width: 100%;
+            height: 465px;
+            border-radius: 15px;
+
+            @include media ($sm) {
+                height: 265px;
+            }
+        }
+    }
+
+    &__swiper {
+        width: 100%;
+        position: relative;
+
+        &-paginate {
+            @include media ($lg) {
+                //width: 150%;
+                display: flex;
+            }
+        }
+    }
+
+    &__paginate {
+        @include media ($lg) {
+            width: 100%;
+            display: flex;
+            overflow-x: scroll;
+            gap: 10px;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+
+        &-button {
+            display: block;
+            width: 320px;
+            height: 75px;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            color: var(--01-primary-color-6, #EEE0F1);
+            font-variant-numeric: lining-nums proportional-nums;
+
+            /* PC/H3 */
+            font-family: "Alegreya SC";
+            font-size: 32px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 115%; /* 36.8px */
+            border-radius: 10px;
+            border: 1px solid var(--based-stroke, #18171E);
+            background: var(--plate-01, linear-gradient(257deg, rgba(90, 51, 98, 0.20) -4.79%, rgba(31, 24, 33, 0.20) 86.4%));
+            backdrop-filter: blur(10px);
+            margin-bottom: 22px;
+            cursor: pointer;
+            transition: all 300ms;
+
+            @include media ($lg) {
+                width: 280px;
+
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+            }
+
+            @include media ($sm) {
+                font-size: 22px;
+                justify-content: center;
+                width: 220px;
+                height: auto;
+            }
+
+            &:hover {
+                color: #815692;
+            }
+
+            &-active {
+                border-radius: 10px;
+                background: 
+                linear-gradient(109deg, rgba(31, 24, 33, 0.60) -1.6%, rgba(22, 19, 23, 0.60) 48.61%, rgba(0, 0, 0, 0.60) 98.83%),
+                linear-gradient(83deg, #211820 3.04%, rgba(37, 3, 51, 0.00) 170.14%),
+                url('/images/interior/bg.jpg') center/cover no-repeat;
+
+                box-shadow: 0 0 12.6px -8px rgba(20, 20, 30, 0.54);
+                color: #815692;
+            }
+        }
+    }
+
+    &__button {
+        border: 0;
+        background: #000000a7;
+        cursor: pointer;
+        border-radius: 10px;
+        padding: 10px;
+        height: 75px;
+
+        & > span {
+            & > svg {
+                width: 28px;
+                height: 28px;
+
+            }
+        }
+        @include media ($sm) {
+            padding: 5px;
+        }
+
+        &-next {
+            position: absolute;
+            right: 25px;
+            top: calc(50% - 38px);
+            z-index: 999;
+
+            @include media ($sm) {
+                right: 15px;
+                top: calc(50% - 28px);
+            }
+        }
+
+        &-prev {
+            position: absolute;
+            left: 25px;
+            top: calc(50% - 38px);
+            z-index: 999;
+
+            @include media ($sm) {
+                left: 15px;
+                top: calc(50% - 28px);
+            }
+        }
+    }
+}

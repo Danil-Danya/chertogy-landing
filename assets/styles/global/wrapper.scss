@@ -1,0 +1,33 @@
+$xl: 1220px;
+$lg: 992px;
+$md: 768px;
+$sm: 576px;
+
+@mixin media($size) {
+    @media (max-width: $size) {
+        @content;
+    }
+}
+
+.container {
+    max-width: $xl;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 15px;
+
+    @include media($lg) {
+        max-width: $md;
+    }
+
+    @include media($md) {
+        max-width: $sm;
+    }
+
+    @include media($sm) {
+        max-width: $sm;
+    }
+
+    @include media($sm) {
+        max-width: 100%;
+    }
+}

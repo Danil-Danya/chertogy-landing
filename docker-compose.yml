@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  nuxt-app:
+    build: .
+    ports:
+      - "7000:7000"
+    environment:
+      NITRO_PORT: 7000
+      NITRO_HOST: 0.0.0.0
+    volumes:
+      - .:/app
+      - /app/node_modules
+    restart: unless-stopped

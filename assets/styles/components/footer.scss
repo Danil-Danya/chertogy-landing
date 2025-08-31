@@ -1,0 +1,156 @@
+.footer {
+    padding: 30px 0; 
+    &__content {
+        display: flex;
+        justify-content: space-between;
+
+        @include media ($lg) {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            // align-items: center;
+            flex-direction: column;
+        }
+    }
+
+    &__logo {
+        width: 216px;
+        height: 222px;
+        flex-shrink: 0;
+
+        @include media ($sm) {
+            width: 100%;
+            height: 115px;
+            display: flex;
+            justify-content: center;
+        }
+
+        &-img {
+            @include media ($sm) {
+                width: 70%;
+                height: auto;
+                object-fit: contain;
+            }
+        }
+    }
+
+    &__title {
+        color: var(--01-primary-color-4, #AA70BF);
+        font-variant-numeric: lining-nums proportional-nums;
+
+        /* PC/Button 1 */
+        font-family: "Alegreya SC";
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 120%; /* 24px */
+        margin-bottom: 10px;
+    }
+
+    &__item {
+        max-width: 405px;
+        width: 100%;
+
+        @include media ($sm) {
+            margin-top: 24px;
+        }
+
+        &-title {
+            color: var(--01-primary-color-5, #D5B0E4);
+            font-variant-numeric: lining-nums proportional-nums;
+
+            /* PC/P1 */
+            font-family: Alegreya;
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
+        }
+
+        &-block {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    }
+
+    &__text {
+        font-size: 22px;
+    }
+
+    &__link {
+        display: block;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--01-primary-color-5, #D5B0E4);
+        font-variant-numeric: lining-nums proportional-nums;
+
+        /* PC/P1 */
+        font-family: Alegreya;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin-top: 38px;
+        transition: all 300ms;
+
+        &:hover {
+            color: #FFFFFF;
+        }
+    }
+
+    &__right {
+        display: flex;
+        align-items: center;
+        gap: 90px;
+    }
+
+    &__container {
+        margin-top: 38px;
+    }
+
+    &__socials {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+
+        &-link {
+            display: block;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        &-text {
+            color: var(--01-primary-color-5, #D5B0E4);
+            /* mob p2 */
+            font-family: Alegreya;
+            font-size: 16px !important;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 110%; 
+        }
+    }
+
+    &__bottom {
+        @include media ($sm) {
+            margin-top: 20px;
+        }
+        
+        &-text {
+            color: var(--08-unavailable-main, #38393F);
+            text-align: center;
+
+            /* PC/Helper text */
+            font-family: "Alegreya SC";
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 120%; /* 16.8px */
+            @include media ($sm) {
+                margin-top: 10px;
+            }
+        }
+    }
+}

@@ -1,0 +1,70 @@
+.mission {
+    padding-bottom: 30px;
+    
+    &__content {
+        width: 100%;
+        margin-top: 60px;
+    }
+
+    &__container {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 30px;
+        margin-top: 40px;
+    }
+
+    &__block {
+        max-width: 560px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &-text {
+            color: var(--04-text-main, #EEE0F1);
+            text-align: center;
+
+            /* PC/P2 */
+            font-family: Alegreya;
+            font-size: 22px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 125%; /* 27.5px */
+            max-width: 500px;
+        }
+    }
+
+    &__item {
+        max-width: 560px;
+        width: 100%;
+        position: relative;
+        padding: 40px 28px;
+        border-radius: 10px;
+        border: 1px solid var(--Hover-stroke, #1F1821);
+        background: var(--plate-01, linear-gradient(257deg, rgba(90, 51, 98, 0.20) -4.79%, rgba(31, 24, 33, 0.20) 86.4%));
+
+        &-title {
+            color: var(--01-primary-color-5, #D5B0E4);
+            font-variant-numeric: lining-nums proportional-nums;
+
+            /* PC/H3 */
+            -webkit-text-stroke-width: 1px;
+            -webkit-text-stroke-color: var(--Hover-stroke, #1F1821);
+            font-family: "Alegreya SC";
+            font-size: 32px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 115%; /* 36.8px */
+            margin-bottom: 20px;
+        }
+    }
+
+
+    &__img {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+}
