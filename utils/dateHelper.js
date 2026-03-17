@@ -27,4 +27,26 @@ const translateDateISOToWords = (isoString, useGenitive = true) => {
     return useGenitive ? `${day} ${month} ${year} г.` : `${day} ${month} ${year}`;
 };
 
-export default translateDateISOToWords;
+const translateDateISOToWordsNoYear = (isoString, useGenitive = true) => {
+    const date = new Date(isoString);
+
+    if (isNaN(date)) {
+        return 'Некорректная дата';
+    }
+
+    const day = date.getDate();
+    const month = months[date.getMonth()][useGenitive ? 'gen' : 'nom'];
+
+    if (useGenitive) {
+        return `${day} ${month}`;
+    }
+    else {
+        return `${day} ${month}`;
+    }
+};
+
+
+export {
+    translateDateISOToWords,
+    translateDateISOToWordsNoYear
+};

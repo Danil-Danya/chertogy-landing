@@ -1,0 +1,96 @@
+.calendar {
+    margin: 60px 0;
+
+    &__button {
+        &-container {
+            display: flex;
+            gap: 10px;
+        }
+    }
+
+    &__content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 30px;
+        border-radius: 15px;
+        border: 1px solid var(--based-stroke, #18171E);
+        background: var(--plate-01, linear-gradient(257deg, rgba(90, 51, 98, 0.20) -4.79%, rgba(31, 24, 33, 0.20) 86.4%));
+
+        @include media ($sm) {
+            padding: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+    }
+    
+    &__split {
+        text-align: left !important;
+
+        @include media ($sm) {
+            font-size: 18px;
+        }
+    }
+
+    &__info {
+        display: flex;
+        gap: 10px;
+    }
+    
+    &__left {
+        max-width: 750px;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        display: flex;
+        gap: 30px;
+    }
+
+    &__type {
+        color: #FFFFFF;
+        font-size: 20px;
+        display: flex;
+        gap: 10px;
+        cursor: pointer;
+        transition: 300ms;
+
+        &:hover {
+            color: #86489C !important;
+        }
+    }
+
+    &__button {
+        background: #1F1821;
+        border: 0;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 300ms;
+
+        @include media ($sm) {
+            width: 30px;
+            height: 30px;
+        }
+
+        &:hover {
+            background: #413245;
+        }
+    }
+
+    &__count {
+        color: var(--01-primary-color-MAIN, #86489C) !important;
+        text-align: center;
+        /* PC/H4 */
+        font-family: "Alegreya SC";
+        font-size: 26px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 115%; /* 29.9px */
+    }
+}

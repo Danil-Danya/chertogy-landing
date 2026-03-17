@@ -5,13 +5,13 @@
                 <h2 class="title slogan__title">Следуйте этим советам и все получится!</h2>
                 <div class="slogan__container">
                     <div class="slogan__divider">
-                        <NuxtImg loading="lazy" class="slogan__divider-img" src="/images/slogan/divider.png" alt="Делитель" format="webp" v-if="!isMobile" />
+                        <img loading="lazy" class="slogan__divider-img" src="/images/slogan/divider.png" alt="Делитель" format="webp" v-if="!isMobile" />
                     </div>
                     <div class="slogan__item" v-for="item in sloganList" :key="item">
-                        <NuxtImg loading="lazy" class="slogan__item-number" :src="item.number" alt="Нумерация" format="webp" />
+                        <img loading="lazy" class="slogan__item-number" :src="item.number" alt="Нумерация" format="webp" />
                         <div class="slogan__item-top">
                             <h3 class="slogan__item-title">{{ item.title }}</h3>
-                            <NuxtImg loading="lazy" class="slogan__item-icon" :src="item.icon" alt="Иконка" format="webp" />
+                            <img loading="lazy" class="slogan__item-icon" :src="item.icon" alt="Иконка" format="webp" />
                         </div>
                         <div class="slogan__item-bottom">
                             <p class="text slogan__item-text" v-html="item.text" />
@@ -21,7 +21,7 @@
                 <div class="slogan__block">
                     <div class="slogan__block-item">
                         <p class="slogan__block-text">Наш клуб всегда рад новичкам и готов помочь вам сделать первые шаги в удивительный мир настольных ролевых игр!</p>
-                        <NuxtImg loading="lazy" class="slogan__block-img" src="/images/logos/logo-slogan.png" alt="Лого" format="webp"/>
+                        <img loading="lazy" class="slogan__block-img" src="/images/logos/logo-slogan.png" alt="Лого" format="webp"/>
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
             icon: '/images/slogan/PencilSimpleLine.png',
             number: '/images/slogan/1.png',
             title: 'Запишитесь на игру',
-            text: 'Выберите игру в расписании или обратитесь к <span>Смотрителю</span> — мы подберем для Вас наиболее подходящую игру.'
+            text: 'Выберите игру в расписании или обратитесь к <a href="https://t.me/ChertogiGeroev" target="_blank" rel="noopener noreferrer" class="red">Смотрителю</a> — мы подберем для Вас наиболее подходящую игру.'
         },
         {
             icon: '/images/slogan/Users.png',

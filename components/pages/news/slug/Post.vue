@@ -9,7 +9,7 @@
             </div>
             <div class="post__container">
                 <div class="post__container-left">
-                    <NuxtImg 
+                    <img v-if="image"
                         class="post__container-img" 
                         :src="image" alt="Картинка" 
                         @click="toggleIsZoomed"  
@@ -21,7 +21,7 @@
                         <p class="post__container-date">{{ formattedDate }}</p>
                     </div>
                     <div class="post__block">
-                        <p class="post__container-text text" v-for="item in text" :key="item">{{ item }}</p>
+                        <p class="post__container-text text" v-for="item in text" :key="item" v-html="item" />
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@
 
     import ZoomImage from '@/components/shared/instruments/ZoomImage.vue';
 
-    import translateDateISOToWords from '@/utils/dateHelper.js';
+    import { translateDateISOToWords } from '@/utils/dateHelper.js';
 
     import { useRouter } from 'vue-router';
     import { useIsMobile } from '@/composables/useIsMobile.js';

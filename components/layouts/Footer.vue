@@ -3,7 +3,7 @@
         <div class="container">
             <div class="footer__content">
                 <div class="footer__left">
-                    <NuxtImg loading="lazy" class="footer__logo" src="/images/logos/logo-footer.png" alt="Лого футер" format="webp" />
+                    <img loading="lazy" class="footer__logo" src="/images/logos/logo-footer.png" alt="Лого футер" format="webp" />
                 </div>
                 <div class="footer__right">
                     <div class="footer__item" v-for="item in footerContent" :key="item">
@@ -11,11 +11,13 @@
                             <h3 class="footer__title">{{ item.title }}</h3>
                             <div class="footer__item-block" v-for="block in item.content" :key="block">
                                 <h4 class="footer__item-title" v-if="block.title">{{ block.title }}</h4>
-                                <p class="text footer__text">{{ block.text }}</p>
+                                <a target="_blank" rel="noopener noreferrer" :href="block.link" class="text footer__text">
+                                    <p class="text footer__text">{{ block.text }}</p>
+                                </a>
                             </div>
                         </div>
                         <div class="footer__social">
-                            <a :href="item.link" class="footer__link">
+                            <a target="_blank" rel="noopener noreferrer" :href="item.link" class="footer__link">
                                 <span class="footer__icon">
                                     <Component :is="item.icon" />
                                 </span>
@@ -27,7 +29,9 @@
             </div>
             <div class="footer__container">
                 <p class="footer__bottom-text">ИП АЛЕКСАНДРОВ НИКОЛАЙ АЛЕКСАНДРОВИЧ ОГРНИП 324774600682026</p>
-                <p class="footer__bottom-text">Политика обработки персональных данных и конфиденциальности</p>
+                <p class="footer__bottom-text">
+                    <a class="footer__bottom-text" target="_blank" rel="noopener noreferrer" href="https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/panel/privacy-policy">Политика обработки персональных данных и конфиденциальности</a>
+                </p>
             </div>
         </div>
     </section>
@@ -42,7 +46,10 @@
         {
             title: 'Мы находимся',
             content: [
-                { text: 'г. Москва, м. Арбатская Малый Николопесковский переулок, 6' }
+                { 
+                    text: 'г. Москва, м. Арбатская Малый Николопесковский переулок, 6',
+                    link: 'https://yandex.uz/maps/org/halls_of_heroes/133180006455/?ll=37.593210%2C55.750829&utm_source=share&z=17'
+                }
             ],
             icon: TGIcon,
             text: 'Телеграм канал',

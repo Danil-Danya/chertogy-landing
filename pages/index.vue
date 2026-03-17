@@ -14,6 +14,7 @@
 </template>
 
 <script setup>
+    
     import FAQ from '@/components/pages/index/FAQ.vue'
     import Head from "@/components/pages/index/Head.vue";
     import About from "@/components/pages/index/About.vue";
@@ -24,12 +25,11 @@
     definePageMeta({ layout: 'site-layout' });
 
     useHead({
-    title: 'Чертоги Героев — клуб настольных ролевых игр в Москве',
+        title: 'Чертоги Героев — клуб настольных ролевых игр в Москве',
         meta: [
-            { name: 'description', content: 'Чертоги Героев — аутентичный клуб настольных ролевых игр (D&D, Pathfinder и другие) в центре Москвы. Уютная атмосфера, опытные мастера и незабываемые приключения.' },
+            { name: 'description', content: 'Самый аутентичный клуб настольных ролевых игр в центре Москвы (Арбат). Погрузитесь в захватывающие миры вместе с лучшими Мастерам! Приходите сами, зовите друзей или заводите новых у нас! Вы можете поиграть D&D (ДнД), Vampire: The Masquerade, Fate, Daggerheart, Call of Cthulhu, Клинки во Тьме, Delta Green, 10 свечей, Warhammer и другие системы.' },
             { name: 'keywords', content: 'Чертоги Героев, клуб D&D Москва, настольные ролевые игры, Dungeons and Dragons, Pathfinder, клуб настолок' },
-            { property: 'og:title', content: 'Чертоги Героев — клуб настольных ролевых игр в Москве' },
-            { property: 'og:description', content: 'Аутентичный клуб настольных ролевых игр в центре Москвы.' }
         ]
     });
+
 </script>

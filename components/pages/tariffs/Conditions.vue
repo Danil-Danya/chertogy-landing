@@ -7,12 +7,12 @@
             <div class="conditions__container">
                 <div class="conditions__item" v-for="item in conditionsList" :key="item">
                     <p class="conditions__text text">{{ item.text }}</p>
-                    <NuxtImg loading="lazy" :src="item.image" alt="Декорация" class="conditions__img" format="webp" />
+                    <img loading="lazy" :src="item.image" alt="Декорация" class="conditions__img" format="webp" />
                 </div>
             </div>
             <div class="conditions__banner">
                 <div class="conditions__banner-block">
-                    <h3 class="conditions__banner-slogan">Хотите посетить клуб на особых условиях? Обращайтесь к <a href="https://t.me/ChertogiGeroev" class="red">Смотрителю</a></h3>
+                    <h3 class="conditions__banner-slogan">Хотите посетить клуб на особых условиях? Обращайтесь к <a href="https://t.me/ChertogiGeroev" target="_blank" rel="noopener noreferrer" class="red">Смотрителю</a></h3>
                 </div>
             </div>
         </div>

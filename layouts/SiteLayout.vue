@@ -1,6 +1,6 @@
 <template>
     <header class="header">
-        <Navbar  v-if="!isMobile"/>
+        <Navbar v-if="!isMobile"/>
         <MobileNavbar v-else/>
     </header>
     <main class="main">
@@ -34,4 +34,5 @@
     onBeforeUnmount(() => {
         window.removeEventListener('resize', () => checkIsMobile());
     })
+    
 </script>

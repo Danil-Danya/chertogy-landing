@@ -93,6 +93,22 @@
             }
         }
 
+        &-test {
+            margin-top: 60px;
+            display: flex;
+            justify-content: center;
+        }
+
+        &.test {
+            background: #38393F;
+            border-radius: 10px;
+
+            &:hover {
+                background: #53545a;
+            }
+            //width: 100%;
+        }
+
         &.vk {
             border-radius: 5px;
             background: var(--01-primary-color-MAIN, #86489C);

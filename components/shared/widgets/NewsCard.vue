@@ -2,7 +2,16 @@
     <div class="news__card">
         <div class="news__card-top">
             <NuxtLink :to="`/news/${slug}`">
-                <NuxtImg loading="lazy" class="news__card-img" :src="image" :alt="`Картинка новости ${title}`" format="webp" />
+                <img loading="lazy" 
+                    class="news__card-img" 
+                    ref="clientImage"
+                    :src="image" 
+                    :alt="`Картинка новости ${title}`" 
+                    format="webp" 
+                    :class="{
+                        'news__card-img-slider': isSlider
+                    }" 
+                />
             </NuxtLink>
         </div>
         <div class="news__card-center">
@@ -22,7 +31,9 @@
 
 <script setup>
 
-    import translateDateISOToWords from '@/utils/dateHelper.js';
+    import { translateDateISOToWords } from '@/utils/dateHelper.js';
+
+    const clientImage = ref(null);
 
     const props = defineProps({
         image: {
@@ -63,5 +74,16 @@
     });
 
     const formattedDate = computed(() => translateDateISOToWords(props.date));
+
+    const fixImageSize = () => {
+        setTimeout(() => {
+            const imageWidth = clientImage.value.clientWidth;
+            clientImage.value.style.height = `${imageWidth}px`;
+        }, 300);
+    }
+
+    onMounted(() => {
+        fixImageSize();
+    })
 
 </script>

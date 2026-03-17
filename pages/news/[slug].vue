@@ -4,54 +4,76 @@
             :title="newsStore.oneNews.title"
             :date="newsStore.oneNews.createdAt"
             :text="description"
-            :image="`https://api.чертоги-героев.рф/images/${newsStore.oneNews.previewPath}`"
+            :image="previewImage"
         />
         <NewsSlider />
     </div>
 </template>
 
 <script setup>
-    
+
+    import { computed, watchEffect, onMounted } from 'vue';
+    import { useRoute } from 'vue-router';
+    import { useNewsStore } from '@/store/useNews.js';
+
     import Post from "@/components/pages/news/slug/Post.vue";
     import NewsSlider from "@/components/pages/news/slug/NewsSlider.vue";
 
-    import { useNewsStore } from '@/store/useNews.js';
-    import { storeToRefs } from 'pinia';
-    import { useRoute } from 'vue-router';
+    definePageMeta({ layout: 'site-layout' });
 
     const route = useRoute();
     const newsStore = useNewsStore();
-    const { oneNews } = storeToRefs(newsStore);
-
-    definePageMeta({ layout: 'site-layout' });
 
     const slug = computed(() => route.params.slug);
-    await newsStore.fetchOneNews(slug);
+
+    await newsStore.fetchOneNews(slug.value);
+
+    const previewImage = computed(() => {
+        const path = newsStore.oneNews?.previewPath;
+        return path ? `https://api.чертоги-героев.рф/images/${path}` : null;
+    });
+
 
     const description = computed(() => {
-        if (!newsStore.oneNews?.description) {
+        const text = newsStore.oneNews?.description;
+
+        if (!text) {
             return [];
         }
 
-        return newsStore.oneNews.description
-            .replace(/\\n/g, '\n') 
+        return text
+            .replace(/\r\n/g, '\n')
+            .replace(/\r/g, '\n')
             .split('\n')
-            .filter(line => line.trim() !== '');
+            .map(line => line.trim())
+            .filter(Boolean);
     });
 
-    watchEffect(async () => {
-        if (slug.value) {
-            await newsStore.fetchOneNews(slug.value);
+
+    watchEffect(() => {
+        if (newsStore.oneNews) {
+            useHead({
+                title: newsStore.oneNews.title || 'Чертоги Героев',
+                meta: [
+                    { name: 'description', content: newsStore.oneNews.shortDescription || 'Чертоги Героев — аутентичный клуб настольных ролевых игр.' },
+                    { name: 'keywords', content: 'Чертоги Героев, клуб D&D Москва, настольные ролевые игры, Dungeons and Dragons, клуб настолок' },
+                    { property: 'og:title', content: newsStore.oneNews.title || 'Чертоги Героев — клуб настольных ролевых игр в Москве' },
+                    { property: 'og:description', content: newsStore.oneNews.shortDescription || 'Аутентичный клуб настольных ролевых игр в центре Москвы.' }
+                ]
+            });
         }
     });
 
-    useHead({
-        title: newsStore.oneNews.title,
-        meta: [
-            { name: 'description', content: 'Чертоги Героев — аутентичный клуб настольных ролевых игр (D&D, Pathfinder и другие) в центре Москвы. Уютная атмосфера, опытные мастера и незабываемые приключения.' },
-            { name: 'keywords', content: 'Чертоги Героев, клуб D&D Москва, настольные ролевые игры, Dungeons and Dragons, Pathfinder, клуб настолок' },
-            { property: 'og:title', content: 'Чертоги Героев — клуб настольных ролевых игр в Москве' },
-            { property: 'og:description', content: 'Аутентичный клуб настольных ролевых игр в центре Москвы.' }
-        ]
-    });
+    watch(slug, async (newSlug) => {
+        if (newSlug) {
+            if (process.client) {
+                await newsStore.fetchOneNews(newSlug);
+            }
+        }
+    }, { immediate: true });
+
+    onMounted(async () => {
+        await newsStore.fetchOneNews(slug.value);
+    })
+
 </script>

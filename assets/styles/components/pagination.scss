@@ -21,6 +21,15 @@
         align-items: center;
         transition: all 300ms;
 
+        &-arrow {
+            @include media ($sm) {
+                width: auto;
+                height: auto;
+                padding: 0;
+                background: none;
+            }
+        }
+
         &-icon {
             display: block;
             display: flex;
@@ -43,6 +52,10 @@
         display: flex;
         gap: 10px;
         margin: 0 30px;
+
+        @include media ($sm) {
+            margin: 0 10px;
+        }
     }
 
     &__container {

@@ -10,7 +10,7 @@
                     <div class="mission__item" v-for="item in missionList" :key="item">
                         <h3 class="mission__item-title">{{ item.title }}</h3>
                         <p class="text mission__item-text">{{ item.text }}</p>
-                        <NuxtImg loading="lazy" class="mission__img" :src="item.image" alt="Задний фон" format="webp" />
+                        <img loading="lazy" class="mission__img" :src="item.image" alt="Задний фон" format="webp" />
                     </div>
                 </div>
             </div>

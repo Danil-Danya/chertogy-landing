@@ -4,7 +4,7 @@
             <div class="footer__content">
                 <div class="footer__top">
                     <div class="footer__logo">
-                        <NuxtImg loading="lazy" class="footer__logo-img" src="/images/logos/logo-footer-mobile.png" alt="Лого" format="webp" />
+                        <img loading="lazy" class="footer__logo-img" src="/images/logos/logo-footer-mobile.png" alt="Лого" format="webp" />
                     </div>
                 </div>
                 <div class="footer__center">
@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <div class="footer__socials">
-                        <a :href="item.link" class="footer__socials-link" v-for="item in footerSocials" :key="item">
+                        <a target="_blank" rel="noopener noreferrer" :href="item.link" class="footer__socials-link" v-for="item in footerSocials" :key="item">
                             <span class="footer__socials-icon">
                                 <Component :is="item.icon" />
                             </span>

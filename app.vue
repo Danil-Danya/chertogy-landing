@@ -2,7 +2,7 @@
     <div>
         <PageLoader />;
         <Preloader v-show="loading" />;
-        <NuxtLayout v-show="!loading">
+        <NuxtLayout>
             <NuxtPage />;
         </NuxtLayout>;
     </div>;

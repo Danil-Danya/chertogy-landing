@@ -1,0 +1,176 @@
+.date {
+    margin-bottom: 50px;
+
+    &__container {
+        border-radius: 10px;
+        // border: 1px solid var(--based-stroke, #18171E);
+        background: var(--plate-main, radial-gradient(103.75% 60.01% at 51.36% 54.36%, rgba(44, 38, 47, 0.30) 0%, rgba(21, 21, 22, 0.30) 100%));
+    
+        /* BG BLUR */
+        backdrop-filter: blur(10px);
+        // padding: 30px;
+
+        @include media($md) {
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding: 0;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+
+    &__head {
+        &-list {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            border: 1px solid #222231;
+            border-radius: 15px;
+            background: var(--plate-03, linear-gradient(114deg, rgba(54, 38, 38, 0.30) -3.5%, rgba(34, 27, 36, 0.30) 47.08%, rgba(54, 38, 38, 0.30) 97.65%));
+            
+            @include media($md) {
+                grid-template-columns: repeat(7, 50%);
+            }
+        }
+        
+        &-days {
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-right: 1px solid #222231;
+            
+            @include media ($md) {
+                scroll-snap-align: start;
+            }
+
+            & > p {
+                font-size: 20px !important;
+                text-transform: capitalize;
+                & .is-active {
+                    color: #86489C !important;
+                }
+            }
+        }
+    }
+
+    &__item {
+        &-container {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+
+            @include media($md) {
+                grid-template-columns: repeat(7, 50%);
+                scroll-snap-align: start;
+            }
+        }
+
+        &-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        &-icon {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    &__day {
+        color: var(--04-text-main, #EEE0F1);
+        font-variant-numeric: lining-nums proportional-nums;
+        padding: 10px;
+
+        /* PC/H2 */
+        font-family: "Alegreya SC";
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 100%; /* 46px */
+        text-align: center;
+
+        & .is-active {
+            color: #86489C !important;
+        }
+    }
+
+    &__item {
+        background: var(--03-dark-2, #18171E);
+        border-right: 1px solid #222231;
+        //border-radius: 10px;
+
+        &-container {
+            margin-top: 20px;
+        }
+
+        // &-events {
+        //     margin-top: 50px;
+        // }
+
+        &-event {
+            padding: 20px 0;
+            padding: 10px;
+            transition: all 300ms;
+            outline: 1px solid #86489c34;
+            height: 212px;
+            width: 168px;
+
+            @include media($md) {
+                width: 99%;
+                margin-left: 1px;
+            }
+
+            &:hover {
+                background: #0000005a;
+            }
+        }
+
+        &-title {
+            color: var(--01-primary-color-4, #AA70BF);
+            font-variant-numeric: lining-nums proportional-nums;
+
+            /* PC/p3 */
+            font-family: Alegreya;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 120%; /* 24px */
+        }
+
+        &-marks {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+            margin-top: 10px;
+        }
+
+        &-mark {
+            padding: 5px;
+            color: var(--04-text-main, #EEE0F1);
+            font-family: Inter;
+            font-size: 13.409px;
+            font-style: normal;
+            font-weight: 300;
+            line-height: normal;
+            border-radius: 10px;
+        }
+
+        &-type {
+            background: #86489C;
+        }
+
+        &-setting {
+            background: #813333;
+        }
+
+        &-duration {
+            background: #335781;
+        }
+
+        &-room {
+            background: #813333;
+        }
+    }
+}

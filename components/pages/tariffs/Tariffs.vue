@@ -12,14 +12,13 @@
                     @swiper="onSwiper"
                     @slideChange="onSlideChange"
                     class="tariffs__slider"
-                    loop
                 >
                     <SwiperSlide 
-                        v-for="item in tariffsList"
+                        v-for="(item, index) in tariffsList"
                         :key="item"
                     >
-                        <div class="tariffs__item">
-                            <NuxtImg :src="item.image" alt="фон" format="webp" class="tariffs__item-img" />
+                        <div class="tariffs__item" :class="`tariffs__item-${index}`">
+                            <!-- <img :src="item.image" alt="фон" format="webp" class="tariffs__item-img" /> -->
                             <div class="tariffs__item-top">
                                 <h3 class="tariffs__item-title">
                                     {{ item.title }}
@@ -53,6 +52,12 @@
                                     <span class="red">*</span>
                                     {{ item.alert }}
                                 </p>
+                                <a target="_blank" rel="noopener noreferrer" :href="item.actions[0].href" class="tariffs__item-link">
+                                    <span class="tariffs__item-icon">
+                                        <Component :is="item.actions[0].icon" />
+                                    </span>
+                                    {{ item.actions[0].text }}
+                                </a>
                             </div>
                         </div>
                     </SwiperSlide>
@@ -66,65 +71,74 @@
 
     import { Swiper, SwiperSlide } from 'swiper/vue';
     import { Navigation, Autoplay } from 'swiper/modules';
-
+    
     import 'swiper/css';
     import 'swiper/css/navigation';
 
+    import BookIcon from '@/components/icons/tariffs/Book.vue';
+    import SearchIcon from '@/components/icons/tariffs/Search.vue';
+    import RoomIcon from '@/components/icons/tariffs/Room.vue';
+
     const modules = [Navigation, Autoplay];
-    
+
+
     const tariffsList = ref([
         {
             title: 'Игра c Мастером',
             alert: 'финальная цена всегда указана в анонсе События.',
             types: {
-                weekends: {
-                    price: 'от 2000₽',
-                },
-                weekdays: {
-                    price: 'от 2200₽',
-                },
-                friday: {
-                    price: 'от 2100₽',
-                }
+                weekends: { price: 'от 2200₽' },
+                weekdays: { price: 'от 2400₽' },
+                friday: { price: 'от 2300₽' },
             },
             type: 'с игрока',
-            image: '/images/tariffs/tariffs1.png'
+            image: '/images/tariffs/tariffs1.png',
+            actions: [
+                {
+                    text: 'Подобрать игру',
+                    icon: RoomIcon,
+                    href: 'https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/technical-work', 
+                },
+            ],
         },
         {
-            title: 'Аренды комнаты',
+            title: 'Аренда комнаты',
             alert: 'уточняйте стоимость и условия аренды у Смотрителя.',
             types: {
-                weekends: {
-                    price: 'от 5000₽',
-                },
-                weekdays: {
-                    price: 'от 7000₽',
-                },
-                friday: {
-                    price: 'от 6000₽',
-                }
+                weekends: { price: 'от 5000₽' },
+                weekdays: { price: 'от 7000₽' },
+                friday: { price: 'от 6000₽' },
             },
             type: 'с группы',
-            image: '/images/tariffs/tariffs2.png'
+            image: '/images/tariffs/tariffs2.png',
+            actions: [
+                {
+                    icon: BookIcon,
+                    text: 'Забронировать комнату',
+                    href: 'https://t.me/ChertogiGeroev', 
+                },
+            ],
         },
         {
             title: 'Заказная игра',
             alert: 'цена зависит от даты, Мастера и предпочтений группы.',
             types: {
-                weekends: {
-                    price: 'от 9000₽',
-                },
-                weekdays: {
-                    price: 'от 11000₽',
-                },
-                friday: {
-                    price: 'от 10000₽',
-                }
+                weekends: { price: 'от 10000₽' },
+                weekdays: { price: 'от 12000₽' },
+                friday: { price: 'от 11000₽' },
             },
             type: 'с группы',
-            image: '/images/tariffs/tariffs1.png'
+            image: '/images/tariffs/tariffs1.png',
+            actions: [
+                {
+                    text: 'Заказать игру',
+                    icon: SearchIcon,
+                    href: 'https://t.me/ChertogiGeroev',
+                },
+            ],
         },
-    ])
+    ]);
+
 
     const onSwiper = (swiper) => {
         console.log('Swiper instance:', swiper);
@@ -157,6 +171,8 @@
     onMounted(() => {
         checkSlidesCountInResize();
     });
+
+    
 
 </script>
 

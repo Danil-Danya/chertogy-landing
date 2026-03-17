@@ -3,7 +3,7 @@
         <div class="container">
             <div class="news__slider-content">
                 <h2 class="news__title title">К другим новостям</h2>
-                <div class="news__slider-buttons" v-if="!IsMobile">
+                <div class="news__slider-buttons" v-if="!isMobile">
                     <button class="news__button-prev news__button">
                         <span class="news__button-icon">
                             <ArrowPrevIcon />
@@ -17,34 +17,35 @@
                 </div>
             </div>
             <div class="news__slider">
-                 <Swiper
-                    :slides-per-view="slidesCount"
-                    :space-between="20"
-                    :navigation="{
-                        nextEl: '.news__button-next',
-                        prevEl: '.news__button-prev'
-                    }"
-                    :modules="modules"
-                    @swiper="onSwiper"
-                    @slideChange="onSlideChange"
-                    class="news__slider"
-                    loop
-                >
-                    <SwiperSlide 
-                        v-for="item in newsStore.allNews.rows"
-                        :key="item.id"
+                <ClientOnly>
+                    <Swiper
+                        :slides-per-view="slidesCount"
+                        :space-between="20"
+                        :navigation="{
+                            nextEl: '.news__button-next',
+                            prevEl: '.news__button-prev'
+                        }"
+                        :modules="modules"
+                        @swiper="onSwiper"
+                        @slideChange="onSlideChange"
+                        class="news__slider"
                     >
-                        <NewsCard 
-                            :title="truncateText(item.title, 36)"
-                            :date="item.createdAt"
-                            :text="truncateText(item.shortDescription, 100)"
-                            :image="`https://api.чертоги-героев.рф/images/${item.previewPath}`"
-                            :slug="item.slug"
-                            class="news__card-slider"
-                            isSlider="true"
-                        />
-                    </SwiperSlide>
-                </Swiper>
+                        <SwiperSlide 
+                            v-for="item in filteredNews"
+                            :key="item.id"
+                        >
+                            <NewsCard 
+                                :title="truncateText(item.title, 36)"
+                                :date="item.createdAt"
+                                :text="truncateText(item.shortDescription, 100)"
+                                :image="`https://api.чертоги-героев.рф/images/${item.previewPath}`"
+                                :slug="item.slug"
+                                class="news__card-slider"
+                                isSlider="true"
+                            />
+                        </SwiperSlide>
+                    </Swiper>
+                </ClientOnly>
             </div>
         </div>
     </div>
@@ -84,21 +85,29 @@
     }
 
     const fetchData = async () => {
-        await newsStore.fetchAllNews(1, 4);
+        await newsStore.fetchAllNews(1, 6);
     };
-
-    await fetchData();
 
     watch(() => route.fullPath, async () => await fetchData());
 
     let slidesCount = ref(3);
+
+    const filteredNews = computed(() => {
+        const rows = newsStore.allNews?.rows;
+
+        if (!Array.isArray(rows)) {
+            return [];
+        }
+
+        return rows.filter(item => item.slug !== route.params.slug);
+    });
 
     const checkSlidesCountInResize = () => {
         const windowWidth = window.innerWidth;
 
         switch (true) {
             case (windowWidth <= 420): 
-                slidesCount.value = 1.1;
+                slidesCount.value = 1.2;
                 break;
 
             case (windowWidth <= 768): 
@@ -115,7 +124,9 @@
         }
     };
 
-    onMounted(() => {
+    onMounted(async () => {
+        await fetchData();
+
         checkSlidesCountInResize();
         window.addEventListener('resize', checkSlidesCountInResize);
     });

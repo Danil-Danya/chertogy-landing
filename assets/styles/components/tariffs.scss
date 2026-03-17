@@ -20,12 +20,40 @@
         //width: 100%;
         border-radius: 10px;
         border: 1px solid var(--based-stroke, #18171E);
-        background: url(<path-to-image>) lightgray 241.336px -272.303px / 108.543% 174.456% no-repeat, linear-gradient(114deg, rgba(54, 38, 38, 0.30) -3.5%, rgba(34, 27, 36, 0.30) 47.08%, rgba(54, 38, 38, 0.30) 97.65%);
-        box-shadow: 0 0 30px 0 rgba(2, 2, 2, 0.34);
         backdrop-filter: blur(5px);
         padding: 30px;
         position: relative;
         overflow: hidden;
+
+        &-link {
+            display: block;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            align-items: center;
+            gap: 10px;
+            color: rgb(201, 89, 89);
+            font-family: "Alegreya SC";
+            font-weight: 500;
+            margin-top: 20px;
+            transition: all 300ms;
+
+            &:hover {
+                color: rgb(250, 0, 0);
+            }
+        }
+
+        &-0 {
+            background: linear-gradient(257deg, rgba(134, 72, 156, 0.20) -4.79%, rgba(58, 58, 58, 0.20) 86.4%);
+        }
+
+        &-1 {
+            background: linear-gradient(257deg, rgba(51, 87, 129, 0.20) -4.79%, rgba(58, 58, 58, 0.20) 86.4%);
+        }
+
+        &-2 {
+            background: linear-gradient(257deg, rgba(210, 60, 72, 0.20) -4.79%, rgba(58, 58, 58, 0.20) 86.4%);
+        }
 
         @include media ($lg) {
             //width: 100%;

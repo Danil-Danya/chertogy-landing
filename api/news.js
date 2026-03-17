@@ -5,7 +5,9 @@ const getAllNews = async (page, limit) => {
         const response = await api.get('/news', {
             params: {
                 page: page || 1,
-                limit: limit || 10
+                limit: limit || 10,
+                ordering: 'createdAt',
+                orderingType: 'DESC'
             }
         })
 

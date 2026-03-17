@@ -18,7 +18,7 @@
                         :key="index"
                         class="navigator__slide"
                     >
-                        <NuxtImg
+                        <img
                             :src="slide.image"
                             format="webp"
                             alt="Slide image"

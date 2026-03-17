@@ -5,46 +5,48 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
 
-const router = useRouter();
+    import { useRouter } from 'vue-router'
 
-const loading = ref(false);
-const progress = ref(0);
+    const router = useRouter();
 
-let interval = null;
+    const loading = ref(false);
+    const progress = ref(0);
 
-const startLoading = () => {
-    loading.value = true;
-    progress.value = 0;
+    let interval = null;
 
-    clearInterval(interval);
-
-    interval = setInterval(() => {
-        if (progress.value < 90) {
-            progress.value += Math.random() * 5;
-        }
-    }, 100)
-}
-
-const finishLoading = () => {
-    clearInterval(interval);
-    progress.value = 100;
-
-    setTimeout(() => {
-        loading.value = false;
+    const startLoading = () => {
+        loading.value = true;
         progress.value = 0;
-  }, 500)
-}
 
-router.beforeEach((to, from, next) => {
-    startLoading();
-    next();
-})
+        clearInterval(interval);
 
-router.afterEach(() => {
-    finishLoading();
-})
+        interval = setInterval(() => {
+            if (progress.value < 90) {
+                progress.value += Math.random() * 5;
+            }
+        }, 100)
+    }
+
+    const finishLoading = () => {
+        clearInterval(interval);
+            progress.value = 100;
+
+            setTimeout(() => {
+                loading.value = false;
+                progress.value = 0;
+        }, 500)
+    }
+
+    router.beforeEach((to, from, next) => {
+        startLoading();
+        next();
+    })
+
+    router.afterEach(() => {
+        finishLoading();
+    })
+
 </script>
 
 <style scoped>

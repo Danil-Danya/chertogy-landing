@@ -126,6 +126,7 @@
         color: var(--04-text-main, #EEE0F1);
         text-align: center;
         font-variant-numeric: lining-nums proportional-nums;
+        position: relative;
 
         /* mob button 1 */
         font-family: "Alegreya SC";
@@ -148,6 +149,12 @@
             gap: 10px;
         }
 
+        &-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 100%;
+        }
+
         &-link {
             display: block;
             display: flex;
@@ -166,6 +173,31 @@
             font-weight: 500;
             line-height: 120%; /* 24px */
             padding: 12px 24px;
+            position: relative;
+
+            &:hover {
+                background: var(--plate-03, linear-gradient(114deg, rgba(54, 38, 38, 0.596) -3.5%, rgba(34, 27, 36, 0.521) 47.08%, rgba(54, 38, 38, 0.30) 97.65%));
+            }
+        }
+    }
+
+    &__login {
+        display: flex;
+        gap: 10px;
+
+        &-dot {
+            position: absolute;
+            right: 20px;
+            top: 14px;
+            width: 10px;
+            height: 10px;
+            display: block;
+            background: red;
+            border-radius: 100%;
+
+            @include media ($md) {
+                right: 4px;
+            }
         }
     }
 
@@ -182,7 +214,7 @@
         &-content {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            //justify-content: space-between;
             align-items: flex-end;
             height: calc(100vh - 60px);
         }
@@ -196,18 +228,30 @@
             font-weight: 500;
             line-height: 100%; /* 22px */
             display: block;
-            margin-top: 20px;
+            //margin-top: 20px;
         }
 
         &-li {
             &:first-of-type {
-                margin-top: 40px;
+                //margin-top: 40px;
             }
         }
 
         &-help {
+            margin-top: 20px;
+            display: block;
+            display: flex;
+            width: 100%;
+            justify-content: flex-end;
+
+            &-orange {
+                color: #FF7E7E !important;
+            }
+
             &-link {
                 display: block;
+                display: flex;
+                width: 100%;
                 align-items: center;
                 gap: 10px;
                 display: flex;
@@ -218,11 +262,21 @@
                 font-style: normal;
                 font-weight: 500;
                 line-height: 100%; /* 22px */
-                margin-bottom: 24px;
+                justify-content: flex-end;
             }
         }
     }
 }
+
+.navbar__dropdown-li {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+    text-align: right;
+    margin-top: 12px;
+}
+
 
 
 .nav-button-enter-active,

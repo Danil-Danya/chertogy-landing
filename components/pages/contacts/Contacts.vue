@@ -10,7 +10,7 @@
                         <div class="contacts__info-top">
                             <div class="contacts__info-top-item">
                                 <h3 class="contacts__info-title">Мы находимся</h3>
-                                <a href="https://yandex.ru/maps/-/CHVGAFl1" class="contacts__link text">г. Москва, малый Николопесковский пер. 6</a>
+                                <a target="_blank" rel="noopener noreferrer" href="https://yandex.ru/maps/-/CHVGAFl1" class="contacts__link text">г. Москва, малый Николопесковский пер. 6</a>
                             </div>
                             <div class="contacts__info-top-item">
                                 <h3 class="contacts__info-title">Часы работы</h3>
@@ -31,7 +31,7 @@
                         <div class="contacts__info-bottom">
                             <div class="contacts__info-bottom-item">
                                 <h3 class="contacts__info-title">Администратор</h3>
-                                <a href="https://t.me/ChertogiGeroev" class="contacts__link text">Написать в телеграм</a>
+                                <a target="_blank" rel="noopener noreferrer" href="https://t.me/ChertogiGeroev" class="contacts__link text">Написать в телеграм</a>
                                 <p class="contacts__info-alert">Отвечаем с 10:00 до 22:00 в любой день</p>
                             </div>
                             <div class="contacts__info-bottom-item">
@@ -43,12 +43,12 @@
                         <!-- <iframe class="contacts__reviews" src="https://yandex.ru/sprav/widget/rating-badge/133180006455?type=rating&theme=dark" width="150" height="50" frameborder="0"></iframe> -->
                     </div>
                     <div class="contacts__line">
-                        <NuxtImg class="contacts__line-img" src="/images/contacts/line.png" alt="line" format="webp" />
+                        <img class="contacts__line-img" src="/images/contacts/line.png" alt="line" format="webp" />
                     </div>
                     <div class="contacts__socials">
                         <div class="contacts__socials-item" v-for="item in socialsLinks" :key="item">
                             <div class="contacts__socials-top">
-                                <a :href="item.link" class="contacts__socials-link">
+                                <a target="_blank" rel="noopener noreferrer" :href="item.link" class="contacts__socials-link">
                                     <span class="contacts__socials-icon">
                                         <Component :is="item.icon" />
                                     </span>

@@ -6,7 +6,7 @@
             </div>
             <div class="coast__container">
                 <div class="coast__item" v-for="item in coastList" :key="item">
-                    <NuxtImg loading="lazy" :src="item.image" alt="bg" format="webp" class="coast__item-bg" />
+                    <img loading="lazy" :src="item.image" alt="bg" format="webp" class="coast__item-bg" />
                     <p class="text coast__item-text">{{ item.text }}</p>
                 </div>
             </div>

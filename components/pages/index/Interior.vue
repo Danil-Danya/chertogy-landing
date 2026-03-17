@@ -5,7 +5,7 @@
                 <h2 class="title interior__title title-sticked">Наш интерьер</h2>
                 <div class="interior__content-slider">
                     <div class="interior__paginate">
-                        <div class="interior__swiper-paginate">
+                        <div class="interior__swiper-paginate" ref="paginateContainer">
                             <button 
                                 class="interior__paginate-button" 
                                 :class="index === activeSectionIndex ? 'interior__paginate-button-active' : null"
@@ -37,13 +37,13 @@
                             :key="index"
                             class="interior__slide"
                         >
-                            <NuxtImg
+                            <img
                                 @click="openZoom(slide)"
                                 :src="slide"
                                 format="webp"
                                 alt="Slide image"
                                 class="interior__slide-img"
-                            />
+                            >
                         </SwiperSlide>
                         <button class="interior__button-prev interior__button">
                             <span class="interior__button-icon">
@@ -127,7 +127,26 @@
 
 
     const swiperInstance = ref(null);
+    
+    const paginateContainer = ref(null);
     const paginate = ref([]);
+
+    const scrollToActiveButton = (index) => {
+        const button = paginate.value[index];
+
+        if (!button) {
+            return;
+        }
+
+        button.scrollIntoView({
+            behavior: 'smooth',
+            inline: 'center',
+            block: 'nearest',
+        });
+    };
+
+
+
 
     const onSwiper = (swiper) => {
         console.log('Swiper instance:', swiper);
@@ -146,8 +165,9 @@
         activeSectionIndex.value = index;
         
         if (isMobile.value) {
-            activeSectionIndex.value = 0;
-            ;[sections.value[0], sections.value[index]] = [sections.value[index], sections.value[0]]
+            nextTick(() => {
+                scrollToActiveButton(index);
+            });
         }
     }
 

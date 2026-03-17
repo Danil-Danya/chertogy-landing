@@ -1,36 +1,38 @@
 <template>
-    <div class="pagination">
+    <div class="pagination" v-if="totalPages > 1">
         <div class="pagination__container">
-            <NuxtLink :to="`/${page}/${prevPage ? `page-${prevPage}` : ''}`" class="pagination__button">
+            <NuxtLink
+                :to="prevTo"
+                class="pagination__button pagination__button-arrow"
+                :class="{ 'disabled': currentPage <= 1 }"
+                aria-label="Предыдущая страница"
+            >
                 <span class="pagination__button-icon">
                     <ArrowPrevIcon />
                 </span>
             </NuxtLink>
 
             <div class="pagination__counter">
-                <NuxtLink 
-                    :to="`/${page}/${index >= 1 ? `page-${index + 1}` : ''}`"
-                    class="pagination__button"
-                    :class="currentPage === index + 1 ? 'active' : null"
-                    v-for="(item, index) in 2"
-                    :key="item"
-                >
-                    0{{ item }}
-                </NuxtLink>
+                <template v-for="item in items" :key="item.key">
+                    <span v-if="item.type === 'dots'" class="pagination__space">...</span>
 
-                <span class="pagination__space">...</span>
-
-                <NuxtLink 
-                    :to="`/${page}/${`page-${totalPages}`}`"
-                    :class="currentPage === totalPages ? 'active' : null"
-                    class="pagination__button"
-                    :key="item"
-                >
-                    0{{ totalPages }}
-                </NuxtLink>
+                    <NuxtLink
+                        v-else
+                        :to="item.to"
+                        class="pagination__button"
+                        :class="{ 'active': item.page === currentPage }"
+                    >
+                        {{ formatPage(item.page) }}
+                    </NuxtLink>
+                </template>
             </div>
 
-            <NuxtLink :to="`/${page}/${nextPage ? `page-${nextPage}` : ''}`" class="pagination__button">
+            <NuxtLink
+                :to="nextTo"
+                class="pagination__button pagination__button-arrow"
+                :class="{ 'disabled': currentPage >= totalPages }"
+                aria-label="Следующая страница"
+            >
                 <span class="pagination__button-icon">
                     <ArrowNextIcon />
                 </span>
@@ -40,38 +42,32 @@
 </template>
 
 <script setup>
-
-    import { useRoute, useRouter } from 'vue-router';
+    import { computed, ref, watch } from 'vue';
+    import { useRoute } from 'vue-router';
 
     const ArrowPrevIcon = defineAsyncComponent(() => import('@/components/icons/pagination/ArrowPrev.vue'));
     const ArrowNextIcon = defineAsyncComponent(() => import('@/components/icons/pagination/ArrowNext.vue'));
 
     const route = useRoute();
-    const router = useRouter();
-
-    const currentPage = ref(1);
-    const prevPage = ref(0);
-    const nextPage = ref(2);
 
     const props = defineProps({
         page: {
             type: String,
             required: true
         },
-
         totalPages: {
             type: Number,
             required: true
         }
-    })
+    });
 
-    const updatePagination = () => {
-        const path = route.path;
-        const match = path.match(/page-(\d+)/);
+    const currentPage = ref(1);
 
-        let page = match ? +match[1] : 1;
+    const parsePageFromRoute = () => {
+        const match = route.path.match(/page-(\d+)/);
+        let page = match ? Number(match[1]) : 1;
 
-        if (page < 1) {
+        if (!Number.isFinite(page) || page < 1) {
             page = 1;
         }
 
@@ -80,18 +76,157 @@
         }
 
         currentPage.value = page;
-        prevPage.value = page > 1 ? page - 1 : 0;
-        nextPage.value = page < props.totalPages ? page + 1 : 0;
     };
 
-    updatePagination();
+    parsePageFromRoute();
 
     watch(() => route.path, () => {
-        updatePagination();
+        parsePageFromRoute();
     });
 
+    const buildTo = (p) => {
+        if (p <= 1) {
+            return `/${props.page}`;
+        }
+
+        return `/${props.page}/page-${p}`;
+    };
+
+    const prevTo = computed(() => {
+        const target = Math.max(1, currentPage.value - 1);
+        return buildTo(target);
+    });
+
+    const nextTo = computed(() => {
+        const target = Math.min(props.totalPages, currentPage.value + 1);
+        return buildTo(target);
+    });
+
+    const formatPage = (p) => {
+        if (p < 10) {
+            return `0${p}`;
+        }
+
+        return String(p);
+    };
+
+    const isMobile = ref(false);
+
+const updateIsMobile = () => {
+    isMobile.value = window.matchMedia('(max-width: 520px)').matches;
+};
+
+onMounted(() => {
+    updateIsMobile();
+    window.addEventListener('resize', updateIsMobile);
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', updateIsMobile);
+});
+
+const items = computed(() => {
+    const total = props.totalPages;
+    const cur = currentPage.value;
+
+    const makePage = (p) => {
+        return {
+            type: 'page',
+            page: p,
+            to: buildTo(p),
+            key: `p-${p}`
+        };
+    };
+
+    const makeDots = (key) => {
+        return {
+            type: 'dots',
+            key
+        };
+    };
+
+    const maxNumbers = isMobile.value ? 4 : 7;
+
+    if (total <= maxNumbers) {
+        const all = [];
+        for (let p = 1; p <= total; p += 1) {
+            all.push(makePage(p));
+        }
+        return all;
+    }
+
+    if (isMobile.value) {
+        const result = [];
+
+        if (cur <= 2) {
+            result.push(makePage(1));
+            result.push(makePage(2));
+            result.push(makePage(3));
+            result.push(makeDots('dots-right'));
+            result.push(makePage(total));
+            return result;
+        }
+
+        if (cur >= total - 1) {
+            result.push(makePage(1));
+            result.push(makeDots('dots-left'));
+            result.push(makePage(total - 2));
+            result.push(makePage(total - 1));
+            result.push(makePage(total));
+            return result;
+        }
+
+        result.push(makePage(1));
+        result.push(makeDots('dots-left'));
+        result.push(makePage(cur));
+        result.push(makePage(cur + 1));
+        result.push(makeDots('dots-right'));
+        result.push(makePage(total));
+
+        return result;
+    }
+
+    const result = [];
+
+    if (cur <= 3) {
+        result.push(makePage(1));
+        result.push(makePage(2));
+        result.push(makePage(3));
+        result.push(makePage(4));
+        result.push(makePage(5));
+        result.push(makeDots('dots-right'));
+        result.push(makePage(total));
+        return result;
+    }
+
+    if (cur >= total - 2) {
+        result.push(makePage(1));
+        result.push(makeDots('dots-left'));
+        result.push(makePage(total - 4));
+        result.push(makePage(total - 3));
+        result.push(makePage(total - 2));
+        result.push(makePage(total - 1));
+        result.push(makePage(total));
+        return result;
+    }
+
+    result.push(makePage(1));
+    result.push(makeDots('dots-left'));
+    result.push(makePage(cur - 1));
+    result.push(makePage(cur));
+    result.push(makePage(cur + 1));
+    result.push(makeDots('dots-right'));
+    result.push(makePage(total));
+
+    return result;
+});
 </script>
 
 <style lang="scss" scoped>
     @import '@/assets/styles/components/pagination.scss';
+
+    .pagination__button.disabled {
+        pointer-events: none;
+        opacity: 0.5;
+    }
 </style>

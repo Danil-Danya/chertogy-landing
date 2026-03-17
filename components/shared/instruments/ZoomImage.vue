@@ -2,7 +2,7 @@
     <section class="zoom" @click="$emit('close')">
         <div class="container">
             <div class="zoom__container">
-                <NuxtImg class="zoom__img" alt="Картинка увеличенная" :src="image" />
+                <img class="zoom__img" alt="Картинка увеличенная" :src="image" />
             </div>
         </div>
     </section>

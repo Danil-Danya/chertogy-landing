@@ -29,6 +29,7 @@ const animateAllSite = () => {
     gsap.from(".about__title", {
         scrollTrigger: {
             trigger: ".about__title",
+            once: true,
             start: "top 80%",
             toggleActions: "play none none reverse"
         },
@@ -43,6 +44,7 @@ const animateAllSite = () => {
         gsap.from(el, {
             scrollTrigger: {
                 trigger: el,
+                once: true,
                 start: "top 85%",
                 toggleActions: "play none none reverse"
             },
@@ -56,6 +58,7 @@ const animateAllSite = () => {
     gsap.from(".slogan__title", {
         scrollTrigger: {
             trigger: ".slogan__title",
+            once: true,
             start: "top 80%",
             toggleActions: "play none none reverse"
         },
@@ -71,6 +74,7 @@ const animateAllSite = () => {
             scrollTrigger: {
                 trigger: el,
                 start: "top 85%",
+                once: true,
                 toggleActions: "play none none reverse"
             },
             y: 40,
@@ -95,6 +99,7 @@ const animateAllSite = () => {
     gsap.from(".mission__title", {
         scrollTrigger: {
             trigger: ".mission__title",
+            once: true,
             start: "top 80%",
             toggleActions: "play none none reverse"
         },
@@ -108,6 +113,7 @@ const animateAllSite = () => {
     gsap.from(".mission__block", {
         scrollTrigger: {
             trigger: ".mission__block",
+            once: true,
             start: "top 85%",
             toggleActions: "play none none reverse"
         },
@@ -122,6 +128,7 @@ const animateAllSite = () => {
             scrollTrigger: {
                 trigger: el,
                 start: "top 85%",
+                once: true,
                 toggleActions: "play none none reverse"
             },
             y: 40,
@@ -135,6 +142,7 @@ const animateAllSite = () => {
         scrollTrigger: {
             trigger: ".coast__item-title",
             start: "top 85%",
+            once: true,
             toggleActions: "play none none reverse"
         },
         y: -40,
@@ -149,6 +157,7 @@ const animateAllSite = () => {
             scrollTrigger: {
                 trigger: el,
                 start: "top 85%",
+                once: true,
                 toggleActions: "play none none reverse"
             },
             y: 60,
@@ -163,6 +172,7 @@ const animateAllSite = () => {
     gsap.from(".conditions__title", {
         scrollTrigger: {
             trigger: ".conditions__title",
+            once: true,
             start: "top 85%",
             toggleActions: "play none none reverse"
         },
@@ -178,6 +188,7 @@ const animateAllSite = () => {
             scrollTrigger: {
                 trigger: el,
                 start: "top 85%",
+                once: true,
                 toggleActions: "play none none reverse"
             },
             y: 60,
@@ -192,6 +203,7 @@ const animateAllSite = () => {
     gsap.from(".conditions__banner-block", {
         scrollTrigger: {
             trigger: ".conditions__banner",
+            once: true,
             start: "top 90%",
             toggleActions: "play none none reverse"
         },
