@@ -22,18 +22,19 @@
                     <p class="event__author-name">{{ eventStore.oneEvent.creator.profile?.name }}</p>
                 </a>
                 <span class="start__icon">
-                    <StarIcon />
+                    <StarIcon v-if="isFollowingCreator" />
+                    <CrownIcon v-else />
                 </span>
             </div>
         </div>
         <div class="event__action" v-if="canSubscribe">
-            <button class="event__button-action" @click="subscribeAction" v-if="!isSubscribed && !isWaiting">
+            <button class="event__button-action" @click="openCaptchaModal" v-if="!isSubscribed && !isWaiting">
                 <span class="event__button-icon">
                     <EditIcon />
                 </span>
                 <span>Записаться</span>
             </button>
-            <button class="event__button-action waiting" @click="subscribeAction" v-if="!isSubscribed && isWaiting">
+            <button class="event__button-action waiting" @click="openCaptchaModal" v-if="!isSubscribed && isWaiting">
                 <span class="event__button-icon">
                     <ClockWaitIcon />
                 </span>
@@ -86,12 +87,28 @@
             @cancel="closeUnsubscribeModal"
         />
     </Transition>
+    <Transition name="modal">
+        <CaptchaModal
+            v-if="isCaptchaOpen"
+            @confirm="handleCaptchaConfirm"
+            @cancel="closeCaptchaModal"
+        />
+    </Transition>
+    <Transition name="modal">
+        <EventRejoinBlockedModal
+            v-if="isRejoinBlockedModalOpen"
+            @close="closeRejoinBlockedModal"
+        />
+    </Transition>
 </template>
 
 <script setup>
 
     import { useEvent } from '@/composables/useEvent';
+    import { useSubscriptionCaptcha } from '@/composables/useSubscriptionCaptcha';
+    import EventRejoinBlockedModal from '../shared/modals/EventRejoinBlockedModal.vue';
     import UnsubscribeModal from '../shared/modals/UnsubscribeModal.vue';
+    import CaptchaModal from '../shared/modals/CaptchaModal.vue';
 
     const SubscribeIcon = defineAsyncComponent(() => import('~/components/icons/events/cards/Subscribes.vue'));
 
@@ -100,6 +117,7 @@
 
     const ClockWaitIcon = defineAsyncComponent(() => import('@/components/icons/events/info/ClockWait.vue'));
     const StarIcon = defineAsyncComponent(() => import('@/components/icons/events/page/Star.vue'));
+    const CrownIcon = defineAsyncComponent(() => import('@/components/icons/events/page/Crown.vue'));
     const ClosedIcon = defineAsyncComponent(() => import('@/components/icons/events/info/Closed.vue'));
 
 
@@ -113,12 +131,14 @@
         userStore,
         isEventClosed,
         isFinished,
-        route
+        isFollowingCreator,
+        isRejoinBlockedModalOpen,
+        closeRejoinBlockedModal,
     } = useEvent();
-
-    console.log(myStatus.value);
+    const { shouldRequireCaptcha } = useSubscriptionCaptcha();
     
     const isUnSubscribe = ref(false);
+    const isCaptchaOpen = ref(false);
 
     const openUnsubscribeModal = () => {
         isUnSubscribe.value = true;
@@ -132,6 +152,28 @@
         closeUnsubscribeModal();
 
         await subscribeAction();
+    };
+
+    const openCaptchaModal = async () => {
+        const userId = userStore.profile?.id;
+        const eventId = eventStore.oneEvent?.id;
+
+        if (!shouldRequireCaptcha({ eventId, userId })) {
+            await subscribeAction();
+            return;
+        }
+
+        isCaptchaOpen.value = true;
+    };
+
+    const closeCaptchaModal = () => {
+        isCaptchaOpen.value = false;
+    };
+
+    const handleCaptchaConfirm = async () => {
+        closeCaptchaModal();
+
+        await subscribeAction({ resetCaptchaGate: true });
     };
 
 

@@ -4,7 +4,7 @@
         border: 1px solid #2B3927;
         background: radial-gradient(53.16% 91.21% at 48.3% 9.43%, rgba(44, 38, 47, 0.20) 0%, rgba(13, 12, 14, 0.20) 100%);
         backdrop-filter: blur(10px);
-        padding: 30px;
+        padding: 20px 30px;
         position: relative;
 
         &.purple {
@@ -161,6 +161,11 @@
             &-icon {
 
             }
+        }
+
+        &-text {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
         }
 
         &-system {
@@ -362,6 +367,23 @@
         &-icon {
             display: flex;
             align-items: center;
+            color: #4A7548;
+
+            &.green {
+                color: #4A7548;
+            }
+
+            &.yellow {
+                color: #886535 !important;
+            }
+
+            &.red {
+                color: #D23C48 !important;
+            }
+
+            &.purple {
+                color: #86489C;
+            }
         }
 
         &-closed {
@@ -440,6 +462,11 @@
             gap: 10px;
             width: 300px !important;
 
+            &-title {
+                font-weight: 500 !important;
+                font-size: 26px;
+            }
+
             @include media ($sm) {
                 color: var(--04-text-1, #CDC2D1);
                 /* mob h3 */
@@ -475,6 +502,18 @@
             font-style: normal;
             font-weight: 500;
             line-height: 120%; /* 24px */
+
+            &.green {
+                color: #4A7548;
+            }
+
+            &.yellow {
+                color: #886535 !important;
+            }
+
+            &.red {
+                color: #D23C48 !important;
+            }
 
             &.purple {
                 color: #86489C;

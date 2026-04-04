@@ -26,7 +26,7 @@
                         <span class="calendar__icon">
                             <ListIcon />
                         </span>
-                        <p class="calendar__text">Показать списком</p>
+                        <p class="calendar__text">Расписание в виде списка</p>
                     </div>
                     <div
                         v-else
@@ -36,7 +36,7 @@
                     <span class="calendar__icon">
                             <CalendarIcon />
                         </span>
-                        <p class="calendar__text">Показать календарь</p>
+                        <p class="calendar__text">Расписание в виде календаря</p>
                     </div>
 
                     <div class="calendar__right-content">
@@ -49,6 +49,8 @@
 </template>
 
 <script setup>
+
+    const EVENTS_WEEK_SCROLL_STATE_KEY = 'events-week-scroll-state';
 
     const PrevIcon = defineAsyncComponent(() => import('@/components/icons/events/calendary/Prev.vue'));
     const NextIcon = defineAsyncComponent(() => import('@/components/icons/events/calendary/Next.vue'));
@@ -104,6 +106,17 @@
 
 
     const countDate = (btn) => {
+        if (process.client) {
+            window.sessionStorage.setItem(
+                EVENTS_WEEK_SCROLL_STATE_KEY,
+                JSON.stringify({
+                    source: 'events-week-navigation',
+                    x: window.scrollX,
+                    y: window.scrollY
+                })
+            );
+        }
+
         const nextShift = btn === 'NEXT' ? weekShift.value + 1 : weekShift.value - 1;
 
         router.replace({

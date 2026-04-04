@@ -1,5 +1,22 @@
 import api from "./api.init";
 
+const mapSubscribeError = (error) => {
+    const responseData = error?.response?.data;
+    const errors = Array.isArray(responseData?.errors) ? responseData.errors : [];
+    const blockedError = errors.find((item) => item?.code === 'EVENT_REJOIN_BLOCKED');
+
+    if (!blockedError) {
+        return false;
+    }
+
+    return {
+        errorCode: blockedError.code,
+        blockedUntil: blockedError.blocked_until,
+        eventId: blockedError.event_id,
+        message: responseData?.message,
+    };
+};
+
 const getEvents = async (filter) => {
     try {
         const response = await api.post('/events', filter);
@@ -42,7 +59,7 @@ const subscribeEvent = async (data) => {
     }
     catch (error) {
         console.log(error);
-        return false;
+        return mapSubscribeError(error);
     }
 }
 

@@ -46,22 +46,13 @@
                     <p class="event__author-name">{{ eventStore.oneEvent.creator.profile?.name }}</p>
                 </a>
                 <span class="start__icon">
-                    <StarIcon />
+                    <StarIcon v-if="isFollowingCreator" />
+                    <CrownIcon v-else />
                 </span>
             </div>
         </div>
         <div class="event__subscribers" v-if="eventStore.oneEvent.subscribers && userStore.profile">
             <div class="event__subscribers-item" v-for="subscriber in eventStore.oneEvent.subscribers" :key="subscriber">
-                <a :href="`https://чертоги-героев.рф/panel/user/${subscriber.id}`" 
-                    class="event__subscribers-link blue" 
-                    :class="{ 
-                        'green': subscriber.id === userStore.profile?.id,
-                        'yellow': subscriber.eventSubscriptions.status === 'pending',
-                        'yellow-green': subscriber?.id === userStore.profile?.id && myStatus === 'pending'
-                    }"
-                >
-                    {{ subscriber.login }}
-                </a>
                 <input
                     class="event__subscribers-checkbox"
                     type="checkbox"
@@ -75,6 +66,16 @@
                     :for="`subscriber-${subscriber.id}`"
                 > 
                 </label>
+                <a :href="`https://чертоги-героев.рф/panel/user/${subscriber.id}`" 
+                    class="event__subscribers-link blue" 
+                    :class="{ 
+                        'green': subscriber.id === userStore.profile?.id,
+                        'yellow': subscriber.eventSubscriptions.status === 'pending',
+                        'yellow-green': subscriber?.id === userStore.profile?.id && myStatus === 'pending'
+                    }"
+                >
+                    {{ subscriber.login }}
+                </a>
             </div>
             <button class="event__center-status-button dark delete" @click="toggleDelete" v-if="hasSelectedUsers && !isFinished">
                 <span class="event__center-status-icon">
@@ -99,13 +100,13 @@
                 <span>Добавить игрока</span>
             </button>
             <div class="event__action" v-if="canSubscribe">
-                <button class="event__button-action" @click="subscribeAction" v-if="!isSubscribed && !isWaiting && !isFinished && canSubscribe">
+                <button class="event__button-action" @click="openCaptchaModal" v-if="!isSubscribed && !isWaiting && !isFinished && canSubscribe">
                     <span class="event__button-icon">
                         <EditIcon />
                     </span>
                     <span>Записаться</span>
                 </button>
-                <button class="event__button-action waiting" @click="subscribeAction" v-if="!isSubscribed && isWaiting && canSubscribe">
+                <button class="event__button-action waiting" @click="openCaptchaModal" v-if="!isSubscribed && isWaiting && canSubscribe">
                     <span class="event__button-icon">
                         <ClockWaitIcon />
                     </span>
@@ -174,6 +175,19 @@
             @cancel="closeUnsubscribeModal"
         />
     </Transition>
+    <Transition name="modal">
+        <CaptchaModal
+            v-if="isCaptchaOpen"
+            @confirm="handleCaptchaConfirm"
+            @cancel="closeCaptchaModal"
+        />
+    </Transition>
+    <Transition name="modal">
+        <EventRejoinBlockedModal
+            v-if="isRejoinBlockedModalOpen"
+            @close="closeRejoinBlockedModal"
+        />
+    </Transition>
 
 </template>
 
@@ -184,6 +198,9 @@
     import ApplyWaitingModal from '../shared/modals/ApplyWaitingModal.vue';
     import CancelModal from '../shared/modals/CancelModal.vue';
     import UnsubscribeModal from '../shared/modals/UnsubscribeModal.vue';
+    import CaptchaModal from '../shared/modals/CaptchaModal.vue';
+    import EventRejoinBlockedModal from '../shared/modals/EventRejoinBlockedModal.vue';
+    import { useSubscriptionCaptcha } from '@/composables/useSubscriptionCaptcha';
 
     import { applySubscribe, subscribeEvent, unSubscribeEvent, updateEventStatus } from '~/api/events';
     import { useEvent } from '@/composables/useEvent';
@@ -204,6 +221,7 @@
 
     const ClockWaitIcon = defineAsyncComponent(() => import('@/components/icons/events/info/ClockWait.vue'));
     const StarIcon = defineAsyncComponent(() => import('@/components/icons/events/page/Star.vue'));
+    const CrownIcon = defineAsyncComponent(() => import('@/components/icons/events/page/Crown.vue'));
     const ApplyWaitingIcon = defineAsyncComponent(() => import('@/components/icons/events/info/ApplyWaitings.vue'));
     const ClosedIcon = defineAsyncComponent(() => import('@/components/icons/events/info/Closed.vue'));
 
@@ -290,8 +308,12 @@
         userStore,
         isEventClosed,
         isFinished,
-        route
+        isFollowingCreator,
+        route,
+        isRejoinBlockedModalOpen,
+        closeRejoinBlockedModal,
     } = useEvent();
+    const { shouldRequireCaptcha } = useSubscriptionCaptcha();
 
     const hasSelectedPendingUsers = computed(() => {
         const selected = selectedUsers.value;
@@ -339,6 +361,7 @@
     
 
     const isUnSubscribe = ref(false);
+    const isCaptchaOpen = ref(false);
 
     const openUnsubscribeModal = () => {
         isUnSubscribe.value = true;
@@ -352,6 +375,28 @@
         closeUnsubscribeModal();
 
         await subscribeAction();
+    };
+
+    const openCaptchaModal = async () => {
+        const userId = userStore.profile?.id;
+        const eventId = eventStore.oneEvent?.id;
+
+        if (!shouldRequireCaptcha({ eventId, userId })) {
+            await subscribeAction();
+            return;
+        }
+
+        isCaptchaOpen.value = true;
+    };
+
+    const closeCaptchaModal = () => {
+        isCaptchaOpen.value = false;
+    };
+
+    const handleCaptchaConfirm = async () => {
+        closeCaptchaModal();
+
+        await subscribeAction({ resetCaptchaGate: true });
     };
     
 </script>

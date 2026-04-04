@@ -13,15 +13,15 @@
                                 <BigArrowIcon />
                             </span>
                         </NuxtLink>
-                    </div>
-                </div>
-                <div class="event__container">
-                    <div class="event__container-top">
                         <a :href="`https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/panel/events/update/${eventStore.oneEvent.id}`" class="event__update" v-if="isStaff && !isFinished && !eventStore.oneEvent.isCanceled">
                             <span class="event__update-icon">
                                 <EditIcon />
                             </span>
                         </a>
+                    </div>
+                </div>
+                <div class="event__container">
+                    <div class="event__container-top">
                         <div class="event__top-left">
                             <div class="event__container-img">
                                 <img :src="`${imageUrl}/${eventStore.oneEvent.previewPath}`" alt="Картинка" class="event__container-img" ref="img">
@@ -66,7 +66,7 @@
                         <div class="event__top-right">
                             <!-- <h2 class="title event__title-mini">{{ eventStore.oneEvent.game?.system }}</h2> -->
                             <div class="event__tag-container">
-                                <ul class="event__tag-list" v-if="eventTags[0].short_name" :class="isStaff ? 'creator' : null">
+                                <ul class="event__tag-list" v-if="eventTags.length" :class="isStaff ? 'creator' : null">
                                     <li class="event-tag" v-for="tag in eventTags" :key="tag">
                                         <button class="event__tag-button"
                                             :class="`event__tag-button-${categoryClassMap[tag.category]}`"
@@ -115,11 +115,11 @@
                         <EventStaffAction v-if="isStaff" />
                         <EventUserAction v-else />
                     </div>
-                    <div class="event__players">
-                        <div class="event__players-item" v-for="subscriber in eventStore.oneEvent?.subscribers?.length" :key="subscriber.id">
+                    <!-- <div class="event__players">
+                        <div class="event__players-item" v-for="subscriber in eventStore.oneEvent?.subscribers ?? []" :key="subscriber.id">
                             <h3 class="event__players-title">{{ subscriber.login }}</h3>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="event__container-bottom">
                         <div class="event__bottom-action">
                             <div class="event__bottom-action">
@@ -201,7 +201,9 @@
     const route = useRoute();
     const router = useRouter();
 
-    await eventStore.fetchOneEvent(route.params.slug);
+    const getRouteSlug = () => Array.isArray(route.params.slug) ? route.params.slug[0] : route.params.slug;
+
+    await eventStore.fetchOneEvent(getRouteSlug());
 
     const imageUrl = import.meta.env.VITE_APP_IMAGE_URL;
 
@@ -224,6 +226,35 @@
         'Опыт игрока': 'experience'
     };
 
+    const normalizeTextList = (value) => {
+        if (Array.isArray(value)) {
+            return value
+                .filter((item) => typeof item === 'string')
+                .map((item) => item.trim())
+                .filter((item) => item.length > 0);
+        }
+
+        if (typeof value === 'string') {
+            return value
+                .split(',')
+                .map((item) => item.trim())
+                .filter((item) => item.length > 0);
+        }
+
+        return [];
+    };
+
+    const splitDescription = (value) => {
+        if (typeof value !== 'string') {
+            return [];
+        }
+
+        return value
+            .split('\n')
+            .map((item) => item.replace('\r', '').trim())
+            .filter((item) => item.length > 0);
+    };
+
     const priceWithDiscount = computed(() => {
         const event = eventStore.oneEvent;
 
@@ -240,6 +271,17 @@
 
         return Math.ceil( price - (price * discount) / 100);
     });
+
+    watch(
+        () => getRouteSlug(),
+        async (slug, prevSlug) => {
+            if (!slug || slug === prevSlug) {
+                return;
+            }
+
+            await eventStore.fetchOneEvent(slug);
+        }
+    );
     
     watch(
         () => eventStore.oneEvent,
@@ -248,7 +290,11 @@
                 return;
             }
 
-            const game = event.game;
+            const game = {
+                ...(event.game ?? {}),
+                skill: normalizeTextList(event.game?.skill),
+                genre: normalizeTextList(event.game?.genre)
+            };
 
             const startRaw = event.startTime ?? event.start_time;
             const endRaw = event.endTime ?? event.end_time;
@@ -284,11 +330,10 @@
                     text: event.place || 'Локация не указана'
                 }
             ];
-
             eventInfoTitles.value = [
                 {
                     data: { title: 'Опыт игроков:' },
-                    text: game?.skill || 'Не указано'
+                    text: game?.skill.join(', ') || 'Не указано'
                 },
                 {
                     data: { title: 'Подготовка к игре:' },
@@ -318,20 +363,14 @@
                 }
             }
 
-            eventTags.value = tags;
+            eventTags.value = tags.filter((tag) => tag.short_name);
 
             const fullDescription = event.fullDescription ?? event.fullDescription ?? '';
-            eventDescription.value = fullDescription
-                .split('\n')
-                .map((t) => t.trim())
-                .filter((t) => t.length > 0);
+            eventDescription.value = splitDescription(fullDescription);
 
-            const rawMasterDescription = event?.aboutCreator;
+            const rawMasterDescription = event?.aboutCreator ?? '';
         
-            masterDescription.value = rawMasterDescription
-                .split('\n')
-                .map((t) => t.replace('\r', '').trim())
-                .filter((t) => t.length > 0);
+            masterDescription.value = splitDescription(rawMasterDescription);
         },
         { immediate: true }
     );

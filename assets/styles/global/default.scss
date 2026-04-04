@@ -126,13 +126,15 @@ input[type="number"] {
     left: 0;
     top: 0;
     width: 100%;
-    height: 100vh;
+    height: 100dvh;
     background: #0000006e;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 15px;
-    z-index: 99999;
+    z-index: 10000000;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 
     &__users {
         display: flex;

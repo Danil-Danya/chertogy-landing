@@ -44,7 +44,7 @@
                             <span class="navbar__button-icon">
                                 <LogoutIcon />
                             </span>
-                            Выйти
+                            <!-- Выйти -->
                         </a>
                     </div>
                     <div class="navbar__logout" v-else>
@@ -52,7 +52,7 @@
                             <span class="navbar__button-icon">
                                 <UserIcon />
                             </span>
-                            Войти
+                            <!-- Войти -->
                         </a>
                     </div>
                 </div>

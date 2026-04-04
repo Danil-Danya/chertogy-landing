@@ -18,12 +18,10 @@
         justify-content: center;
         align-items: center;
         color: #FFFFFF;
-        position: absolute;
-        right: 0;
-        top: 0;
         border-radius: 10px;
         z-index: 99;
         transition: 300ms;
+        margin-top: 10px;
 
         &:hover {
             background: #dd5863;
@@ -50,10 +48,17 @@
         //     }
         // }
 
+        &-button {
+            display: flex;
+            flex-direction: column;
+            align-content: space-between;
+            height: 120px;
+        }
+
         &-info {
             display: flex;
-            align-items: center;
-            gap: 50px;
+            flex-direction: column;
+            gap: 20px;
 
             @include media ($lg) {
                 flex-wrap: wrap;
@@ -389,6 +394,8 @@
 
     &__title {
         text-align: left;
+        font-size: 32px;
+        //max-width: 550px;
 
         &-mini {
             text-align: left;

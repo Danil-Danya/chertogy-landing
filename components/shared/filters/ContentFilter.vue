@@ -95,7 +95,7 @@
                                 v-model="filters[tagsCat.apiKey]"
                             />
                             {{ tagsCat.code }}
-                            <label :for="tag.id" class="content__filter-label">{{ tag.shortName }}</label>
+                            <label :for="tag.id" class="content__filter-label">{{ tag.fullName || tag.shortName }}</label>
                         </div>
                     </div>
                 </TransitionGroup>
@@ -146,7 +146,6 @@
         setting: [],
         duration: [],
         player_level: [],
-        necessary_player_preparation: [],
         min_price: null,
         max_price: null,
         lasted: true,
@@ -192,7 +191,7 @@
         "Сеттинг": "setting",
         "Длительность": "duration",
         "Подготовка": "necessary_player_preparation",
-        "Опыт игрока": "player_level"
+        "Опыт игрока": "skill"
     };
 
     allTags.value = tags.tagsWithCategories.rows
@@ -209,7 +208,7 @@
                 apiKey,
             };
         })
-        .filter(Boolean);
+        .filter((item) => item && item.apiKey !== 'necessary_player_preparation');
 
 
     const buildQuery = () => {
@@ -238,11 +237,15 @@
             filter.week_shift = route.query.week_shift;
         }
         
+        const nextQuery = {
+            ...route.query,
+            ...filter
+        };
+
+        delete nextQuery.necessary_player_preparation;
+
         router.push({
-            query: {
-                ...route.query,
-                ...filter
-            }
+            query: nextQuery
         });
         
         await eventsStore.fetchEvents(filter);

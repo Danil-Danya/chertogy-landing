@@ -1,13 +1,17 @@
 <template>
     <div class="events__card" :class="{
         'finished': isFinished,
-        [subscribesColor]: subscribesColor
+        [statusColor]: statusColor
     }">
         <NuxtLink :to="`/events/${slug}`" class="events__card-closed" v-if="isFinished"></NuxtLink>
         <div class="events__card-content">
             <div class="events__card-top">
                 <div class="events__card-head">
-                    <h2 class="title events__card-title">{{ title }}</h2>
+                    <h2 class="title events__card-title">
+                        <NuxtLink :to="`/events/${slug}`">
+                            {{ title }}
+                        </NuxtLink>
+                    </h2>
                 </div>
                 <div class="events__card-marks">
                     <p class="text events__card-type">{{ eventType }}</p>
@@ -15,7 +19,7 @@
                 </div>
                 <div class="events__card-params" v-if="isMobile">
                     <div class="events__card-date">
-                        <span class="events__card-icon">
+                        <span class="events__card-icon" :class="statusColor">
                             <CalendarIcon />
                         </span>
                         <h3 class="events__card-date-title">{{ date }}</h3>
@@ -23,13 +27,13 @@
                     <div
                         class="events__card-subscribes"
                         v-if="isMobile"
-                        :class="subscribesColor"
+                        :class="statusColor"
                     >
-                        <span class="events__card-counter" :class="subscribesColor">
+                        <span class="events__card-counter" :class="statusColor">
                             <SubscribeIcon />
                         </span>
 
-                        <p class="events__card-counter" :class="subscribesColor">
+                        <p class="events__card-counter" :class="statusColor">
                             {{ subscribers.length }}/{{ maxSubscribes }}
                         </p>
                     </div>
@@ -86,7 +90,7 @@
             </div>
             <div class="events__card-bottom">
                 <div class="events__card-date" v-if="!isMobile">
-                    <span class="events__card-icon" :class="subscribesColor">
+                    <span class="events__card-icon" :class="statusColor">
                         <CalendarIcon />
                     </span>
                     <h3 class="events__card-date-title">{{ date }}</h3>
@@ -94,13 +98,13 @@
                 <div class="events__card-bottom-block">
                     <div class="events__card-buttons">
                         <NuxtLink :to="`/events/${slug}`" class="events__card-link" v-if="!isFinished">Подробнее</NuxtLink>
-                        <button class="events__card-button" @click="subscribeAction" v-if="!isCreator && !isSubscribed && !isWaiting && !isFinished && registrationType === 'OPEN'">
+                        <button class="events__card-button" @click="openCaptchaModal" v-if="!isCreator && !isSubscribed && !isWaiting && !isFinished && registrationType === 'OPEN'">
                             <span class="events__card-icon">
                                 <EditIcon />
                             </span>
                             <span>Записаться</span>
                         </button>
-                        <button class="events__card-button waiting" @click="subscribeAction" v-if="!isCreator && !isSubscribed && isWaiting && !isFinished && registrationType === 'OPEN'">
+                        <button class="events__card-button waiting" @click="openCaptchaModal" v-if="!isCreator && !isSubscribed && isWaiting && !isFinished && registrationType === 'OPEN'">
                             <span class="events__card-icon">
                                 <ClockWaitIcon />
                             </span>
@@ -134,13 +138,13 @@
                     <div
                         class="events__card-subscribes"
                         v-if="!isMobile"
-                        :class="subscribesColor"
+                        :class="statusColor"
                     >
-                        <span class="events__card-counter" :class="subscribesColor">
+                        <span class="events__card-counter" :class="statusColor">
                             <SubscribeIcon />
                         </span>
 
-                        <p class="events__card-counter" :class="subscribesColor">
+                        <p class="events__card-counter" :class="statusColor">
                             {{ subscribers.length }}/{{ maxSubscribes }}
                         </p>
                     </div>
@@ -168,11 +172,25 @@
             @cancel="closeUnsubscribeModal"
         />
     </Transition>
+    <Transition name="modal">
+        <CaptchaModal
+            v-if="isShowCaptchaModal"
+            @confirm="handleCaptchaConfirm"
+            @cancel="closeCaptchaModal"
+        />
+    </Transition>
+    <Transition name="modal">
+        <EventRejoinBlockedModal
+            v-if="isShowRejoinBlockedModal"
+            @close="closeRejoinBlockedModal"
+        />
+    </Transition>
 </template>
 
 <script setup>
 
     import { useIsMobile } from '@/composables/useIsMobile';
+    import { useSubscriptionCaptcha } from '@/composables/useSubscriptionCaptcha';
     import { subscribeEvent, unSubscribeEvent } from '~/api/events';
     import { useUserStore } from '~/store/useUsers';
     import { useEventsStore } from '~/store/useEvents';
@@ -181,6 +199,8 @@
     import LoginAlertModal from '../modals/LoginAlertModal.vue';
     import CreatorModal from '../modals/CreatorModal.vue';
     import UnsubscribeModal from '../modals/UnsubscribeModal.vue';
+    import CaptchaModal from '../modals/CaptchaModal.vue';
+    import EventRejoinBlockedModal from '../modals/EventRejoinBlockedModal.vue';
     
     const SubscribeIcon = defineAsyncComponent(() => import('~/components/icons/events/cards/Subscribes.vue'));
     const PriceIcon = defineAsyncComponent(() => import('~/components/icons/events/cards/Price.vue'));
@@ -199,11 +219,22 @@
     const eventStore = useEventsStore();
     const route = useRoute();
     const router = useRouter();
+    const {
+        shouldRequireCaptcha,
+        incrementUnsubscribeAttempts,
+        clearUnsubscribeAttempts
+    } = useSubscriptionCaptcha();
 
     const img = ref('img');
 
     const isShowLoginModal = ref(false);
     const isShowCreatorModal = ref(false);
+    const isShowCaptchaModal = ref(false);
+    const isShowRejoinBlockedModal = ref(false);
+
+    const closeRejoinBlockedModal = () => {
+        isShowRejoinBlockedModal.value = false;
+    };
 
     const categoryClassMap = {
         "Длительность": "duration",
@@ -240,7 +271,7 @@
     }
     
 
-    const subscribeAction = async () => {
+    const subscribeAction = async ({ resetCaptchaGate = false } = {}) => {
         const userId = userStore.profile?.id;
         const creatorId = props.creator.id;
         const eventId = props.id;
@@ -267,7 +298,9 @@
             })
 
             if (unSubscribed) {
+                incrementUnsubscribeAttempts({ eventId, userId });
                 await eventStore.fetchEvents(params);
+                return true;
             }
         } 
         else {
@@ -276,13 +309,62 @@
                 userId
             })
 
+            if (subscribed?.errorCode === 'EVENT_REJOIN_BLOCKED') {
+                isShowRejoinBlockedModal.value = true;
+                return false;
+            }
+
             if (subscribed) {
+                if (resetCaptchaGate) {
+                    clearUnsubscribeAttempts({ eventId, userId });
+                }
+
                 await eventStore.fetchEvents(params);
+                return true;
             }
         }
+
+        return false;
     };
 
     const isShowUnsubscribeModal = ref(false);
+
+    const canOpenCaptchaModal = () => {
+        const userId = userStore.profile?.id;
+        const creatorId = props.creator?.id;
+
+        if (!userId) {
+            isShowLoginModal.value = true;
+            return false;
+        }
+
+        if (creatorId === userId) {
+            isShowCreatorModal.value = true;
+            return false;
+        }
+
+        return true;
+    };
+
+    const openCaptchaModal = async () => {
+        if (!canOpenCaptchaModal()) {
+            return;
+        }
+
+        const userId = userStore.profile?.id;
+        const eventId = props.id;
+
+        if (!shouldRequireCaptcha({ eventId, userId })) {
+            await subscribeAction();
+            return;
+        }
+
+        isShowCaptchaModal.value = true;
+    };
+
+    const closeCaptchaModal = () => {
+        isShowCaptchaModal.value = false;
+    };
     
     const openUnsubscribeModal = () => {
         isShowUnsubscribeModal.value = true;
@@ -296,6 +378,12 @@
         closeUnsubscribeModal();
 
         await subscribeAction();
+    };
+
+    const handleCaptchaConfirm = async () => {
+        closeCaptchaModal();
+
+        await subscribeAction({ resetCaptchaGate: true });
     };
 
     onMounted(() => {
@@ -429,7 +517,7 @@
         return mySubscription.value?.eventSubscriptions?.status ?? null;
     });
 
-    const subscribesColor = computed(() => {
+    const statusColor = computed(() => {
         if (myStatus.value === 'pending') {
             return 'yellow';
         }

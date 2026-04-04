@@ -2,13 +2,27 @@ import { useRoute, useRouter } from 'vue-router';
 import { useEventsStore } from '~/store/useEvents';
 import { useUserStore } from '~/store/useUsers';
 import { subscribeEvent, unSubscribeEvent, updateEventStatus, updateGame, updateMeeting } from '~/api/events';
+import { useSubscriptionCaptcha } from '@/composables/useSubscriptionCaptcha';
 
 export const useEvent = () => {
     const eventStore = useEventsStore();
     const userStore = useUserStore();
+    const {
+        incrementUnsubscribeAttempts,
+        clearUnsubscribeAttempts
+    } = useSubscriptionCaptcha();
 
     const router = useRouter();
     const route = useRoute();
+    const isRejoinBlockedModalOpen = ref(false);
+
+    const openRejoinBlockedModal = () => {
+        isRejoinBlockedModalOpen.value = true;
+    };
+
+    const closeRejoinBlockedModal = () => {
+        isRejoinBlockedModalOpen.value = false;
+    };
 
     const canSubscribe = computed(() => {
         const event = eventStore.oneEvent;
@@ -101,10 +115,34 @@ export const useEvent = () => {
         return isCreator || isAdmin;
     });
 
+    const isFollowingCreator = computed(() => {
+        const creatorId = eventStore.oneEvent?.creator?.id;
+        const profile = userStore.profile;
+        const following = profile?.following;
 
-    const subscribeAction = async () => {
+        if (!creatorId || !profile) {
+            return false;
+        }
+
+        if (profile.id === creatorId) {
+            return true;
+        }
+
+        if (!Array.isArray(following)) {
+            return false;
+        }
+
+        return following.some((user) => user?.id === creatorId);
+    });
+
+
+    const subscribeAction = async ({ resetCaptchaGate = false } = {}) => {
         const userId = userStore.profile?.id;
-        const eventId = eventStore.oneEvent.id;
+        const eventId = eventStore.oneEvent?.id;
+
+        if (!userId || !eventId) {
+            return false;
+        }
 
         if (isSubscribed.value) {
             const unSubscribed = await unSubscribeEvent({
@@ -113,7 +151,9 @@ export const useEvent = () => {
             })
 
             if (unSubscribed) {
+                incrementUnsubscribeAttempts({ eventId, userId });
                 await eventStore.fetchOneEvent(route.params.slug);
+                return true;
             }
         } 
         else {
@@ -122,26 +162,40 @@ export const useEvent = () => {
                 userId
             })
 
+            if (subscribed?.errorCode === 'EVENT_REJOIN_BLOCKED') {
+                openRejoinBlockedModal();
+                return false;
+            }
+
             if (subscribed) {
+                if (resetCaptchaGate) {
+                    clearUnsubscribeAttempts({ eventId, userId });
+                }
+
                 await eventStore.fetchOneEvent(route.params.slug);
+                return true;
             }
         }
+
+        return false;
     };
 
     const isFinished = computed(() => {
         const event = eventStore.oneEvent;
 
-        if (!event?.startTime) {
+        const endRaw = event?.endTime ?? event?.end_time;
+
+        if (!endRaw) {
             return false;
         }
 
-        const startMs = new Date(event.startTime).getTime();
+        const endMs = new Date(endRaw).getTime();
 
-        if (!Number.isFinite(startMs)) {
+        if (!Number.isFinite(endMs)) {
             return false;
         }
 
-        return Date.now() > startMs;
+        return Date.now() > endMs;
     });
 
 
@@ -191,6 +245,7 @@ export const useEvent = () => {
         isWaiting,
         myStatus,
         isStaff,
+        isFollowingCreator,
         isEventClosed,
         eventStore,
         userStore,
@@ -198,5 +253,7 @@ export const useEvent = () => {
         isFinished,
         subscribeAction,
         cancelEvent,
+        isRejoinBlockedModalOpen,
+        closeRejoinBlockedModal,
     }
 }

@@ -22,7 +22,7 @@
                         <div class="date__item-event" v-for="event in item.events" :key="event">
                             <RouterLink :to="`/events/${event.slug}`" v-if="event">
                                 <p class="text">{{ formatTime(event.startTime) }} - {{ formatTime(event.endTime) }}</p>
-                                <h3 class="date__item-title">{{ truncateText(event.title, 10) }}</h3>
+                                <h3 class="date__item-title">{{ truncateText(event.title, 20) }}</h3>
                                 <div class="date__item-marks">
                                     <span class="date__item-setting date__item-mark" v-if="event?.game?.system">
                                         {{ event.game.system.split(' ')[0] }}
@@ -33,7 +33,7 @@
                                 </div>
                                 <p class="text date__item-text">
                                     <span class="date__item-icon">
-                                        <StarIcon />
+                                        <CrownIcon />
                                     </span>
                                     {{ event?.creator?.profile.name }}
                                 </p>
@@ -43,12 +43,12 @@
                                     </span>
                                     {{ event?.subscribers.length }} / {{ event.maxPlayers }}
                                 </p>
-                                <p class="text date__item-text">
+                                <!-- <p class="text date__item-text">
                                     <span class="date__item-icon">
                                         <DoorIcon />
                                     </span>
                                     {{ event?.place }}
-                                </p>
+                                </p> -->
                             </RouterLink>
                         </div>
                     </div>
@@ -145,8 +145,6 @@
         },
         { immediate: true }
     );
-
-
 
     onMounted(async () => {
         await eventsStore.fetchEventsCalendar({ ...route.query });

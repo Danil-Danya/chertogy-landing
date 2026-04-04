@@ -44,8 +44,7 @@
             'system',
             'genre',
             'setting',
-            'player_level',
-            'necessary_player_preparation'
+            'player_level'
         ];
 
         multiKeys.forEach(key => {
@@ -68,7 +67,7 @@
         filter.week_shift = Number(query.week_shift) || 0;
 
         if (query.closed !== undefined) filter.closed = parseBool(query.closed);
-        if (query.lasted !== undefined) filter.lasted = parseBool(query.lasted);
+        filter.lasted = query.lasted !== undefined ? parseBool(query.lasted) : true;
         if (query.show_meetings) filter.show_meetings = String(query.show_meetings);
 
         return filter;
