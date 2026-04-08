@@ -52,7 +52,7 @@
                     Подписать
                 </button>
 
-                <button class="btn btn-blue" @click="onCancel">
+                <button class="btn btn-gray" @click="onCancel">
                     Отмена
                 </button>
             </div>

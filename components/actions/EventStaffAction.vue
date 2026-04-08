@@ -15,28 +15,30 @@
                     <p class="event__followers-text">{{ eventStore.oneEvent.subscribers.length }}/{{ eventStore.oneEvent.maxPlayers }}</p>
                 </div>
             </div>
-            <div class="event__center-status" v-if="eventStore.oneEvent.registrationType === 'OPEN' && !isFinished">
-                <button class="event__center-status-button red" @click="updatedRegistrationType">
+            <div class="event__center-buttons">
+                <div class="event__center-status" v-if="eventStore.oneEvent.registrationType === 'OPEN' && !isFinished">
+                    <button class="event__center-status-button red" @click="updatedRegistrationType">
+                        <span class="event__center-status-icon">
+                            <AlertIcon />
+                        </span>
+                        <span>Закрыть запись</span>
+                    </button>
+                </div>
+                <div class="event__center-status" v-else-if="!isFinished">
+                    <button class="event__center-status-button green" @click="updatedRegistrationType">
+                        <span class="event__center-status-icon">
+                            <KeyIcon />
+                        </span>
+                        <span>Открыть запись</span>
+                    </button>
+                </div>
+                <button class="event__center-cancel" @click="toggleCancel" v-if="!isFinished">
                     <span class="event__center-status-icon">
-                        <AlertIcon />
+                        <CancelIcon />
                     </span>
-                    <span>Закрыть запись</span>
+                    <span>Отменить событие</span>
                 </button>
             </div>
-            <div class="event__center-status" v-else-if="!isFinished">
-                <button class="event__center-status-button green" @click="updatedRegistrationType">
-                    <span class="event__center-status-icon">
-                        <KeyIcon />
-                    </span>
-                    <span>Открыть запись</span>
-                </button>
-            </div>
-            <button class="event__center-cancel" @click="toggleCancel" v-if="!isFinished">
-                <span class="event__center-status-icon">
-                    <CancelIcon />
-                </span>
-                <span>Отменить событие</span>
-            </button>
         </div>
         <div class="event__author">
             <h2 class="event__center-title">Мастер</h2>
@@ -47,7 +49,7 @@
                 </a>
                 <span class="start__icon">
                     <StarIcon v-if="isFollowingCreator" />
-                    <CrownIcon v-else />
+                    <!-- <CrownIcon v-else /> -->
                 </span>
             </div>
         </div>
@@ -77,6 +79,8 @@
                     {{ subscriber.login }}
                 </a>
             </div>
+        </div>
+        <div class="event__actions">
             <button class="event__center-status-button dark delete" @click="toggleDelete" v-if="hasSelectedUsers && !isFinished">
                 <span class="event__center-status-icon">
                     <UnSubscribeIcon />
@@ -99,26 +103,26 @@
                 </span>
                 <span>Добавить игрока</span>
             </button>
-            <div class="event__action" v-if="canSubscribe">
-                <button class="event__button-action" @click="openCaptchaModal" v-if="!isSubscribed && !isWaiting && !isFinished && canSubscribe">
+            <div class="event__action" v-if="canManageSubscription">
+                <button class="event__button-action" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && !isWaiting && !isFinished">
                     <span class="event__button-icon">
                         <EditIcon />
                     </span>
                     <span>Записаться</span>
                 </button>
-                <button class="event__button-action waiting" @click="openCaptchaModal" v-if="!isSubscribed && isWaiting && canSubscribe">
+                <button class="event__button-action waiting" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && isWaiting">
                     <span class="event__button-icon">
                         <ClockWaitIcon />
                     </span>
                     <span>Ожидать</span>
                 </button>
-                <button class="event__button-action bg-red" @click="openUnsubscribeModal" v-if="isSubscribed && myStatus !== 'pending' && canSubscribe">
+                <button class="event__button-action bg-red" @click="openUnsubscribeModal" v-if="isSubscribed && myStatus !== 'pending'">
                     <span class="event__button-icon">
                         <UnSubscribeIcon />
                     </span>
                     <span>Отменить запись</span>
                 </button>
-                <button class="event__button-action waiting" @click="openUnsubscribeModal" v-if="myStatus === 'pending' && isSubscribed && canSubscribe">Отменить ожидание</button>
+                <button class="event__button-action waiting" @click="openUnsubscribeModal" v-if="myStatus === 'pending' && isSubscribed">Отменить ожидание</button>
             </div>
             <button class="event__button-action locked" v-if="isFinished" type="button">
                 <span class="event__button-icon">
@@ -128,7 +132,7 @@
             </button>
             <button
                 class="event__button-action locked"
-                v-if="isEventClosed && !isFinished"
+                v-if="showClosedRegistrationNotice"
                 type="button"
             >
                 <span class="event__button-icon">
@@ -299,6 +303,7 @@
 
     const {
         canSubscribe,
+        canManageSubscription,
         isSubscribed,
         isWaiting,
         myStatus,
@@ -306,7 +311,7 @@
         cancelEvent,
         eventStore,
         userStore,
-        isEventClosed,
+        showClosedRegistrationNotice,
         isFinished,
         isFollowingCreator,
         route,

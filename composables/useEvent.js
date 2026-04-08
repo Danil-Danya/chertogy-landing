@@ -41,6 +41,25 @@ export const useEvent = () => {
         );
     });
 
+    const canManageSubscription = computed(() => {
+        const event = eventStore.oneEvent;
+        const profile = userStore.profile;
+
+        if (!profile || !event) {
+            return false;
+        }
+
+        if (profile.id === event?.creator?.id) {
+            return false;
+        }
+
+        if (!event.isAllowed || event.isDraft || isFinished.value || event.isCanceled) {
+            return false;
+        }
+
+        return isSubscribed.value || canSubscribe.value;
+    });
+
 
     const isEventClosed = computed(() => {
         const event = eventStore.oneEvent;
@@ -238,15 +257,21 @@ export const useEvent = () => {
         return null;
     });
 
+    const showClosedRegistrationNotice = computed(() => {
+        return isEventClosed.value && !isFinished.value && !isSubscribed.value;
+    });
+
     
     return {
         canSubscribe,
+        canManageSubscription,
         isSubscribed,
         isWaiting,
         myStatus,
         isStaff,
         isFollowingCreator,
         isEventClosed,
+        showClosedRegistrationNotice,
         eventStore,
         userStore,
         route,

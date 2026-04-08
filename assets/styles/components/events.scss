@@ -123,7 +123,7 @@
             background: #000;
             border-radius: 40px;
             border: 1px solid rgba(129, 86, 146, 0.13);
-            background: var(--03-dark-3, #422748);
+            background: var(--03-dark-3, #6a3b7b);
         }
 
         &-center {
@@ -179,7 +179,7 @@
             background: #4A7548;
         }
         &-genre {
-            background: #86489C;
+            background: #6e3284;
         }
         // &-preparation {
         //     background: #817933;
@@ -203,7 +203,7 @@
             position: absolute;
             right: 10px;
             top: 15px;
-            background: #18171E;
+            background: #1a1520;
             padding: 15px;
             border-radius: 10px;
         }
@@ -279,7 +279,7 @@
             font-family: Alegreya;
             font-size: 14px;
             padding: 10px 20px;
-            background: #742628;
+            background: #6a3b7b;
             display: flex;
             border-radius: 10px;
             gap: 10px;
@@ -332,7 +332,7 @@
             line-height: 120%; /* 24px */
             padding: 16px 24px;
             border-radius: 10px;
-            background: var(--03-dark-2, #18171E);
+            background: var(--03-dark-2, #1a1520);
             transition: 300ms;
 
             @include media ($md) {
@@ -352,7 +352,7 @@
             @include media ($md) {
                 width: 100%;
                 max-width: 100%;
-                height: auto;
+                // height: auto;
             }
         }
 
@@ -382,7 +382,7 @@
             }
 
             &.purple {
-                color: #86489C;
+                color: #6e3284;
             }
         }
 
@@ -400,7 +400,7 @@
 
         &-button {
             border-radius: 10px;
-            background: var(--01-primary-color-MAIN, #86489C);
+            background: var(--01-primary-color-MAIN, #6e3284);
             color: var(--04-text-main, #EEE0F1);
             text-align: center;
             font-variant-numeric: lining-nums proportional-nums;
@@ -417,7 +417,7 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 5px;
             justify-content: center;
 
             @include media ($md) {
@@ -516,7 +516,7 @@
             }
 
             &.purple {
-                color: #86489C;
+                color: #6e3284;
             }
         }
     }

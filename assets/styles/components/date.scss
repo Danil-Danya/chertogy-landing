@@ -3,7 +3,7 @@
 
     &__container {
         border-radius: 10px;
-        // border: 1px solid var(--based-stroke, #18171E);
+        // border: 1px solid var(--based-stroke, #1a1520);
         background: var(--plate-main, radial-gradient(103.75% 60.01% at 51.36% 54.36%, rgba(44, 38, 47, 0.30) 0%, rgba(21, 21, 22, 0.30) 100%));
     
         /* BG BLUR */
@@ -49,7 +49,7 @@
                 font-size: 20px !important;
                 text-transform: capitalize;
                 & .is-active {
-                    color: #86489C !important;
+                    color: #6e3284 !important;
                 }
             }
         }
@@ -71,7 +71,6 @@
             align-items: center;
             gap: 10px;
             font-size: 16px;
-            margin-bottom: 5px;
         }
 
         &-icon {
@@ -94,12 +93,12 @@
         text-align: center;
 
         & .is-active {
-            color: #86489C !important;
+            color: #6e3284 !important;
         }
     }
 
     &__item {
-        background: var(--03-dark-2, #18171E);
+        background: var(--03-dark-2, #1a1520);
         border-right: 1px solid #222231;
         //border-radius: 10px;
 
@@ -115,7 +114,7 @@
             padding: 20px 0;
             padding: 10px;
             transition: all 300ms;
-            outline: 1px solid #86489c34;
+            outline: 1px solid #6e328434;
             height: 212px;
             width: 168px;
             text-transform: uppercase;
@@ -140,14 +139,13 @@
             font-style: normal;
             font-weight: 400;
             line-height: 120%; /* 24px */
-            margin: 5px 0;
         }
 
         &-marks {
             display: flex;
             gap: 10px;
             flex-direction: column;
-            margin: 5px 0;
+            margin: 10px 0;
         }
 
         &-mark {
@@ -162,7 +160,7 @@
         }
 
         &-type {
-            background: #86489C;
+            background: #6e3284;
         }
 
         &-setting {

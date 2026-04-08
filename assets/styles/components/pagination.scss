@@ -13,7 +13,7 @@
         font-weight: 400;
         line-height: 120%; /* 19.2px */
         border-radius: 10px;
-        background: var(--03-dark-2, #18171E);
+        background: var(--03-dark-2, #1a1520);
         width: 40px;
         height: 40px;
         display: flex;
@@ -43,7 +43,7 @@
         
         &.active {
             border-radius: 10px;
-            background: var(--01-primary-color-MAIN, #86489C);
+            background: var(--01-primary-color-MAIN, #6e3284);
             color: #FFFFFF;
         }
     }

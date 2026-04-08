@@ -22,6 +22,10 @@
         text-align: center;
         font-variant-numeric: lining-nums proportional-nums;
 
+        &.events {
+            margin-top: 100px !important;
+        }
+
         @include media ($md) {
             margin-top: 100px;
             flex-wrap: wrap;
@@ -111,7 +115,7 @@
 
         &.vk {
             border-radius: 5px;
-            background: var(--01-primary-color-MAIN, #86489C);
+            background: var(--01-primary-color-MAIN, #6e3284);
             
             &:hover {
                 background: #9462a7;

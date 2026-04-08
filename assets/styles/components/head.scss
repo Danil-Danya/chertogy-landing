@@ -90,8 +90,8 @@
 
     &__button {
         border-radius: 10px;
-        background: linear-gradient(313deg, #6E3284 17.58%, #86489C 131.17%);
-        box-shadow: 0 4px 20.6px 0 rgba(134, 72, 156, 0.38);
+        background: linear-gradient(313deg, #aa70bf 17.58%, #6e3284 131.17%);
+        box-shadow: 0 4px 20.6px 0 rgba(110, 50, 132, 0.38);
         color: var(--04-text-main, #EEE0F1);
         text-align: center;
         font-variant-numeric: lining-nums proportional-nums;
@@ -118,7 +118,7 @@
         }
 
         &:hover {
-            background: linear-gradient(313deg, #6E3284 17.58%, #ad68c6 131.17%);
+            background: linear-gradient(313deg, #aa70bf 17.58%, #ad68c6 131.17%);
         }
     }
 }

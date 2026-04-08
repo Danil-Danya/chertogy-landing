@@ -7,7 +7,7 @@
     }
 
     &__events {
-        margin-left: 310px;
+        margin-left: 300px;
         display: flex;
         flex-direction: column;
         gap: 30px;
@@ -26,7 +26,7 @@
 
     &__data {
         display: flex;
-        gap: 30px;
+        gap: 40px;
 
         @include media ($md) {
             gap: 0;
@@ -47,7 +47,7 @@
             gap: 20px;
             background: var(--plate-main, radial-gradient(103.75% 60.01% at 51.36% 54.36%, rgba(44, 38, 47, 0.30) 0%, rgba(21, 21, 22, 0.30) 100%));
             border-radius: 15px;
-            border: 1px solid var(--based-stroke, #18171E);
+            border: 1px solid var(--based-stroke, #1a1520);
             width: 280px;
 
             @include media ($md) {
@@ -133,8 +133,8 @@
         }
 
         &-checkbox:checked + .content__filter-label::before {
-            background: #86489C;
-            border-color: #86489C;
+            background: #6e3284;
+            border-color: #6e3284;
         }
 
         &-checkbox:checked + .content__filter-label::after {
@@ -261,7 +261,7 @@
 
         &-tags {
             &-head {
-                color: var(--01-primary-color-MAIN, #86489C);
+                color: var(--01-primary-color-MAIN, #6e3284);
                 font-variant-numeric: lining-nums proportional-nums;
                 padding: 10px;
                 /* PC/Button 1 */
@@ -325,14 +325,16 @@
         &-input {
             width: 50%;
             border-radius: 4px;
-            border: 1px solid var(--based-stroke, #18171E);
+            border: 1px solid var(--based-stroke, #1a1520);
             background: var(--Imput-main, #1D1A1E);
             padding: 10px;
             margin-top: 10px;
             color: #FFFFFF;
+            font-family: Alegreya, "Alegreya Fallback: Arial";
+            font-size: 16px;
 
             &:focus {
-                outline: 2px solid #86489C;
+                outline: 2px solid #6e3284;
             }
         }
 
@@ -371,7 +373,7 @@
             font-weight: 500;
             line-height: 120%; /* 24px */
             border-radius: 10px;
-            background: var(--01-primary-color-MAIN, #86489C);
+            background: var(--01-primary-color-MAIN, #6e3284);
             transition: all 300ms;
 
             &.button {

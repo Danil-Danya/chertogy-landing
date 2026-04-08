@@ -1,5 +1,5 @@
 <template>
-    <div class="development__head">
+    <div class="development__head events">
         <span class="development__icon">
             <PenIcon />
         </span>

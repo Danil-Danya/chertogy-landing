@@ -6,8 +6,8 @@
 }
 
 ::selection {
-    background: #6e328484;
-    color: #fff; 
+    background: #aa70bf84;
+    color: #fff;
 }
 
 ::-webkit-scrollbar {
@@ -20,7 +20,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #6E3284;
+  background: #aa70bf;
 }
 
 
@@ -171,14 +171,14 @@ input[type="number"] {
 
     &__input {
         border-radius: 10px;
-        border: 1px solid var(--based-stroke, #18171E);
+        border: 1px solid var(--based-stroke, #1a1520);
         background: var(--Imput-main, #1D1A1E);
         padding: 15px;
         width: 100%;
         color: #FFFFFF;
 
         &:focus {
-            outline: 1px solid #86489C;
+            outline: 1px solid #6e3284;
         }
     }
 
@@ -186,6 +186,7 @@ input[type="number"] {
         font-size: 28px;
         text-align: left;
         margin-bottom: 20px;
+        text-align: center;
     }
 
     &__filter {
@@ -240,14 +241,18 @@ input[type="number"] {
         }
 
         &-checkbox:checked + &-label::before {
-            background: #86489C;
-            border-color: #86489C;
+            background: #6e3284;
+            border-color: #6e3284;
         }
 
         &-checkbox:checked + &-label::after {
             opacity: 1;
             transform: scale(1);
         }
+    }
+
+    &__text {
+        text-align: center;
     }
 
     &__actions {
@@ -381,7 +386,7 @@ input[type="number"] {
     background: var(--02-Accent-main, #E44653) !important;
 
     &:hover {
-        background: #df6a74 !important;
+        background: #dd5863 !important;
     }
 }
 

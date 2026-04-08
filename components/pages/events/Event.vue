@@ -3,19 +3,24 @@
         <div class="container">
             <div class="event__content">
                 <div class="event__head">
-                    <div class="event__head-info">
-                        <h1 class="title event__title">{{ eventStore.oneEvent.title }}</h1>
+                    <div class="event__head-row">
                         <h2 class="event__type">{{ eventStore.oneEvent.type === 'GAME' ? 'Игровая сессия' : 'Мероприятие' }}</h2>
-                    </div>
-                    <div class="event__head-button">
                         <NuxtLink to="/events" class="event__button-back" @click.prevent.stop="goBack()">
                             <span class="event__button-icon">
                                 <BigArrowIcon />
                             </span>
                         </NuxtLink>
-                        <a :href="`https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/panel/events/update/${eventStore.oneEvent.id}`" class="event__update" v-if="isStaff && !isFinished && !eventStore.oneEvent.isCanceled">
+                    </div>
+                    <div class="event__head-row event__head-row-title">
+                        <h1 class="title event__title">{{ eventStore.oneEvent.title }}</h1>
+                        <a :href="editEventUrl" class="event__update" v-if="showEditButton">
                             <span class="event__update-icon">
                                 <EditIcon />
+                            </span>
+                        </a>
+                        <a :href="copyEventUrl" class="event__update event__update-copy" v-if="showCopyButton">
+                            <span class="event__update-icon">
+                                <CopyIcon />
                             </span>
                         </a>
                     </div>
@@ -107,7 +112,7 @@
                                 </ul>
                             </div>
                             <div class="event__description">
-                                <p class="event__text text">{{ eventStore.oneEvent.shortDescription }}</p>
+                                <p class="event__text event__text-preserve text">{{ eventStore.oneEvent.shortDescription }}</p>
                             </div>
                         </div>
                     </div>
@@ -142,13 +147,7 @@
                         </div>
                         <div class="events__bottom-content">
                             <template v-if="activeTab === 'description'">
-                                <p
-                                    class="text event__text"
-                                    v-for="text in eventDescription"
-                                    :key="text"
-                                >
-                                    {{ text }}
-                                </p>
+                                <p class="text event__text event__text-preserve">{{ eventDescription }}</p>
                             </template>
 
                             <template v-else>
@@ -182,6 +181,7 @@
     import EventStaffAction from '~/components/actions/EventStaffAction.vue';
     import EventUserAction from '~/components/actions/EventUserAction.vue';
     import EditIcon from '~/components/icons/events/cards/Edit.vue';
+    import CopyIcon from '~/components/icons/events/cards/Copy.vue';
     import Unlock from '@/components/icons/events/info/Unlock.vue';
 
     const CalendarIcon = defineAsyncComponent(() => import('@/components/icons/events/info/Calendar.vue'));
@@ -210,7 +210,7 @@
     const eventTags = ref([]);
     const eventInfoIcons = ref([]);
     const eventInfoTitles = ref([]);
-    const eventDescription = ref([]);
+    const eventDescription = ref('');
     const masterDescription = ref([]);
 
     const img = ref('img');
@@ -255,6 +255,14 @@
             .filter((item) => item.length > 0);
     };
 
+    const normalizeMultilineText = (value) => {
+        if (typeof value !== 'string') {
+            return '';
+        }
+
+        return value.replace(/\r/g, '');
+    };
+
     const priceWithDiscount = computed(() => {
         const event = eventStore.oneEvent;
 
@@ -271,6 +279,11 @@
 
         return Math.ceil( price - (price * discount) / 100);
     });
+
+    const editEventUrl = computed(() => `https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/panel/events/update/${eventStore.oneEvent.id}`);
+    const copyEventUrl = computed(() => `https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/panel/events/copy/${eventStore.oneEvent.id}`);
+    const showEditButton = computed(() => isStaff.value && !isFinished.value && !eventStore.oneEvent.isCanceled);
+    const showCopyButton = computed(() => isStaff.value && isFinished.value);
 
     watch(
         () => getRouteSlug(),
@@ -366,7 +379,7 @@
             eventTags.value = tags.filter((tag) => tag.short_name);
 
             const fullDescription = event.fullDescription ?? event.fullDescription ?? '';
-            eventDescription.value = splitDescription(fullDescription);
+            eventDescription.value = normalizeMultilineText(fullDescription);
 
             const rawMasterDescription = event?.aboutCreator ?? '';
         

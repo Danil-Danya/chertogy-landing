@@ -23,18 +23,18 @@
                 </a>
                 <span class="start__icon">
                     <StarIcon v-if="isFollowingCreator" />
-                    <CrownIcon v-else />
+                    <!-- <CrownIcon v-else /> -->
                 </span>
             </div>
         </div>
-        <div class="event__action" v-if="canSubscribe">
-            <button class="event__button-action" @click="openCaptchaModal" v-if="!isSubscribed && !isWaiting">
+        <div class="event__action" v-if="canManageSubscription">
+            <button class="event__button-action" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && !isWaiting">
                 <span class="event__button-icon">
                     <EditIcon />
                 </span>
                 <span>Записаться</span>
             </button>
-            <button class="event__button-action waiting" @click="openCaptchaModal" v-if="!isSubscribed && isWaiting">
+            <button class="event__button-action waiting" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && isWaiting">
                 <span class="event__button-icon">
                     <ClockWaitIcon />
                 </span>
@@ -56,7 +56,7 @@
         </button>
         <button
             class="event__button-action locked"
-            v-if="isEventClosed && !isFinished"
+            v-if="showClosedRegistrationNotice"
             type="button"
         >
             <span class="event__button-icon">
@@ -123,13 +123,14 @@
 
     const {
         canSubscribe,
+        canManageSubscription,
         isSubscribed,
         isWaiting,
         myStatus,
         subscribeAction,
         eventStore,
         userStore,
-        isEventClosed,
+        showClosedRegistrationNotice,
         isFinished,
         isFollowingCreator,
         isRejoinBlockedModalOpen,

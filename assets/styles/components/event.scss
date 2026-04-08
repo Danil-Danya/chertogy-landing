@@ -21,48 +21,36 @@
         border-radius: 10px;
         z-index: 99;
         transition: 300ms;
-        margin-top: 10px;
+        flex-shrink: 0;
 
         &:hover {
             background: #dd5863;
+        }
+
+        &-copy {
+            background: #1a1520;
+
+            &:hover {
+                background: #2b2b2b;
+            }
         }
     }
 
     &__head {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
+        flex-direction: column;
+        gap: 10px;
         margin-bottom: 30px;
-        align-items: start;
 
-        // @include media ($lg) {
-        //     flex-wrap: wrap;
-        //     gap: 20px;
-        // }
-
-        // &-button {
-        //     @include media ($md) {
-        //         width: 100%;
-        //         display: flex;
-        //         justify-content: flex-end;
-        //     }
-        // }
-
-        &-button {
+        &-row {
+            width: 100%;
             display: flex;
-            flex-direction: column;
-            align-content: space-between;
-            height: 120px;
-        }
-
-        &-info {
-            display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
             gap: 20px;
 
-            @include media ($lg) {
-                flex-wrap: wrap;
-                gap: 20px;
+            @include media ($md) {
+                gap: 15px;
             }
         }
     }
@@ -86,7 +74,7 @@
         position: absolute;
         right: 10px;
         top: 15px;
-        background: #18171E;
+        background: #1a1520;
         padding: 15px;
         border-radius: 10px;
         z-index: 999;
@@ -96,7 +84,7 @@
         &-back {
             border: 0;
             border-radius: 10px;
-            background: var(--03-dark-2, #18171E);
+            background: var(--03-dark-2, #1a1520);
             color: var(--04-text-main, #EEE0F1);
             text-align: center;
             font-variant-numeric: lining-nums proportional-nums;
@@ -105,12 +93,16 @@
             font-style: normal;
             font-weight: 500;
             line-height: 120%;
-            padding: 15px 20px;
+            width: 50px;
+            height: 50px;
+            padding: 0;
             cursor: pointer;
             transition: all 300ms;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 20px;
+            flex-shrink: 0;
 
             &:hover {
                 background: rgb(43, 43, 43);
@@ -125,7 +117,7 @@
         &-bottom {
             border-radius: 5px;
             border: 1.341px solid var(--Hover-stroke, #1F1821);
-            background: var(--03-dark-3, #422748);
+            background: var(--03-dark-3, #6a3b7b);
             padding: 15px 30px;
             border: 0;
             color: var(--01-primary-color-5, #D5B0E4);
@@ -144,7 +136,7 @@
                 color: #FFFFFF;
                 border-radius: 5px;
                 border: 1.341px solid var(--Hover-stroke, #1F1821);
-                background: var(--03-dark-2, #18171E);
+                background: var(--03-dark-2, #1a1520);
                 cursor: pointer;
             }
         }
@@ -162,7 +154,7 @@
 
         &-action {
             border-radius: 10px;
-            background: var(--01-primary-color-MAIN, #86489C);
+            background: var(--01-primary-color-MAIN, #6e3284);
             color: var(--04-text-main, #EEE0F1);
             text-align: center;
             font-variant-numeric: lining-nums proportional-nums;
@@ -180,7 +172,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 5px;
 
             &.waiting {
                 background: #886535;
@@ -215,12 +207,14 @@
         font-size: 32px;
         font-style: normal;
         font-weight: 500;
-        line-height: 115%; 
+        line-height: 115%;
+        flex: 1;
+        min-width: 0;
     }
 
     &__container {
         border-radius: 15px;
-        border: 1px solid var(--based-stroke, #18171E);
+        border: 1px solid var(--based-stroke, #1a1520);
         background: var(--plate-main, radial-gradient(103.75% 60.01% at 51.36% 54.36%, rgba(44, 38, 47, 0.30) 0%, rgba(21, 21, 22, 0.30) 100%));
         //backdrop-filter: blur(10px);
         padding: 30px;
@@ -245,7 +239,7 @@
             width: 350px;
             height: 350px;
             border-radius: 10px;
-            //border: 2px solid #86489C;
+            //border: 2px solid #6e3284;
             position: relative;
 
             @include media ($md) {
@@ -329,11 +323,11 @@
             }
             
             &.yellow-green {
-                color: #886535 !important;
+                color: #ffbf66 !important;
                 text-shadow: 
-                    0 0 5px #bfa24a,
-                    0 0 20px #d4b24f,
-                    0 0 40px #e6c35c !important;
+                    0 0 5px #ffbf66,
+                    0 0 20px #ffbf66,
+                    0 0 40px #ffbf66 !important;
             }
 
             &.red {
@@ -376,8 +370,7 @@
 
     &__data {
         &-title {
-            color: var(--03-dark-3, #422748);
-            font-variant-numeric: lining-nums proportional-nums;
+            color: #8f3dad;
 
             /* PC/p3 */
             font-family: Alegreya;
@@ -388,13 +381,15 @@
         }
 
         &-icon {
-            color: var(--03-dark-3, #422748);
+            color: var(--03-dark-3, #6e3284);
         }
     }
 
     &__title {
         text-align: left;
         font-size: 32px;
+        flex: 1;
+        min-width: 0;
         //max-width: 550px;
 
         &-mini {
@@ -498,7 +493,7 @@
                 background: #4A7548;
             }
             &-genre {
-                background: #86489C;
+                background: #6e3284;
             }
 
             &-system {
@@ -509,6 +504,13 @@
 
     &__description {
         margin-top: 30px;
+    }
+
+    &__text {
+        &-preserve {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
     }
 
     &__subscribers {
@@ -569,8 +571,8 @@
         }
 
         &-checkbox:checked + &-label::before {
-            background: #86489C;
-            border-color: #86489C;
+            background: #6e3284;
+            border-color: #6e3284;
         }
 
         &-checkbox:checked + &-label::after {
@@ -579,19 +581,32 @@
         }
     }
 
+    &__actions {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        margin-top: 30px;
+    }
+
     &__center {
         &-title {
             color: var(--04-text-main, #EEE0F1);
             font-variant-numeric: lining-nums proportional-nums;
             font-family: "Alegreya SC";
-            font-size: 32px;
+            font-size: 24px;
             font-style: normal;
-            font-weight: 500;
+            font-weight: 400;
             line-height: 115%;
         }
 
+        &-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
         &-cancel {
-            color: var(--02-Accent-main, #742628);
+            color: var(--02-Accent-main, #D23C48);
             text-align: center;
             font-variant-numeric: lining-nums proportional-nums;
             /* PC/Button 1 */
@@ -602,13 +617,18 @@
             line-height: 120%; /* 24px */
             background: none;
             border: 0;
-            outline: 1px solid #742628;
+            outline: 1px solid #D23C48;
             padding: 15px 30px;
             border-radius: 10px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            gap: 5px;
             cursor: pointer;
+
+            & > .span {
+                height: 20px;
+            }
             
             &:hover {
                 outline: 1px solid #868686;
@@ -622,7 +642,7 @@
 
         &-top {
             display: flex;
-            //justify-content: space-between;
+            justify-content: space-between;
             gap: 30px;
             width: 100%;
             flex-wrap: wrap;
@@ -631,7 +651,7 @@
 
         &-status {
             display: flex;
-            gap: 20px;
+            gap: 5px;
             font-family: "Alegreya SC";
 
             @include media ($md) {
@@ -640,27 +660,28 @@
             }
 
             &-icon {
+                height: 20px;
+
                 &.green {
                     color: #4A9A46;
                 }
             }
 
             &-button {
-                padding: 16px;
+                padding: 15px 30px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 border: 0;
                 border-radius: 10px;
-                gap: 10px;
-                font-size: 18px;
+                gap: 5px;
+                font-size: 20px;
                 transition: 300ms;
-                font-family: "Alegreya SC";
+                font-family: "Alegreya SC", "Alegreya SC Fallback: Arial";
 
                 &.red {
                     background: #D23C48;
                     color: #FFFFFF !important;
-                    width: 300px;
                     cursor: pointer;
 
                     &:hover {
@@ -673,7 +694,7 @@
                 }
 
                 &.green {
-                    background: #649256;
+                    background: #79aa76;
                     color: #FFFFFF !important;
                     width: 300px;
                     cursor: pointer;
@@ -718,11 +739,15 @@
         align-items: center;
         gap: 10px;
 
+        &-icon {
+            height: 20px;
+        }
+
         &-data {
             display: flex;
             align-items: center;
             gap: 5px;
-            color: var(--01-primary-color-MAIN, #86489C);
+            color: var(--01-primary-color-MAIN, #6e3284);
             text-align: center;
             font-variant-numeric: lining-nums proportional-nums;
 
@@ -732,6 +757,7 @@
             font-style: normal;
             font-weight: 500;
             line-height: 120%; /* 24px */
+            height: 20px;
 
             &.green {
                 color: #4A7548;
@@ -740,6 +766,10 @@
              &.yellow {
                 color: #886535 !important;
             }
+        }
+
+        &-text {
+            height: 20px;
         }
     }
 
@@ -784,7 +814,7 @@
         &-action {
             color: #FFFFFF;
             border-radius: 5px;
-            background: var(--03-dark-2, #18171E);
+            background: var(--03-dark-2, #1a1520);
             cursor: pointer;
             max-width: 314px;
         }

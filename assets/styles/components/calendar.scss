@@ -1,5 +1,5 @@
 .calendar {
-    margin: 60px 0;
+    margin: 20px 0;
 
     &__button {
         &-container {
@@ -14,7 +14,7 @@
         align-items: center;
         padding: 30px;
         border-radius: 15px;
-        border: 1px solid var(--based-stroke, #18171E);
+        border: 1px solid var(--based-stroke, #1a1520);
         background: var(--plate-01, linear-gradient(257deg, rgba(90, 51, 98, 0.20) -4.79%, rgba(31, 24, 33, 0.20) 86.4%));
 
         @include media ($sm) {
@@ -57,7 +57,7 @@
         transition: 300ms;
 
         &:hover {
-            color: #86489C !important;
+            color: #6e3284 !important;
         }
     }
 
@@ -84,7 +84,7 @@
     }
 
     &__count {
-        color: var(--01-primary-color-MAIN, #86489C) !important;
+        color: var(--01-primary-color-MAIN, #6e3284) !important;
         text-align: center;
         /* PC/H4 */
         font-family: "Alegreya SC";

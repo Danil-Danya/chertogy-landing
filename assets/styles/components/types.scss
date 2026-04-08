@@ -25,7 +25,7 @@
 
     &__button {
         border-radius: 10px;
-        background: var(--03-dark-2, #18171E);
+        background: var(--03-dark-2, #1a1520);
         width: 40px;
         height: 40px;
         display: flex;
@@ -45,7 +45,7 @@
         max-width: 580px;
         width: 100%;
         border-radius: 15px;
-        border: 1px solid var(--based-stroke, #18171E);
+        border: 1px solid var(--based-stroke, #1a1520);
         background: var(--plate-02, linear-gradient(109deg, rgba(0, 0, 0, 0.30) -1.6%, rgba(22, 19, 23, 0.30) 48.61%, rgba(0, 0, 0, 0.30) 98.83%));
 
         box-shadow: 0 0 22px 0 rgba(129, 86, 146, 0.15);
@@ -59,7 +59,7 @@
         }
 
         &-title {
-            color: var(--01-primary-color-MAIN, #86489C);
+            color: var(--01-primary-color-MAIN, #6e3284);
             font-variant-numeric: lining-nums proportional-nums;
 
             /* PC/H3 */
@@ -78,7 +78,7 @@
             display: block;
             padding: 8px 16px;border-radius: 40px;
             border: 1px solid rgba(129, 86, 146, 0.13);
-            background: var(--02-Accent-dark, #742628);
+            background: var(--02-Accent-dark, #6a3b7b);
             color: var(--01-primary-color-5, #D5B0E4);
             font-family: Alegreya;
             font-size: 16px;
@@ -106,7 +106,7 @@
             display: block !important;
             display: flex !important;
             align-items: center;
-            color: var(--02-Accent-main, #D23C48);
+           color: #d23c48;
             font-variant-numeric: lining-nums proportional-nums;
 
             /* PC/Button 2 */
@@ -119,7 +119,7 @@
             transition: all 300ms;
 
             &:hover {
-                color: var(--02-Accent-main, #f0626e);
+                color: #dd5863;
             }
         }
 

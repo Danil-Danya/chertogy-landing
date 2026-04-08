@@ -110,16 +110,16 @@
                             </span>
                             <span>Ожидать</span>
                         </button>
-                        <button class="events__card-button bg-red"  @click="openUnsubscribeModal" v-if="!isCreator && isSubscribed && !isFinished && myStatus !== 'pending' && registrationType === 'OPEN'">
+                        <button class="events__card-button bg-red"  @click="openUnsubscribeModal" v-if="!isCreator && isSubscribed && !isFinished && myStatus !== 'pending'">
                             <span class="events__card-icon">
                                 <UnSubscribeIcon />
                             </span>
                             <span>Отменить запись</span>
                         </button>
-                        <button class="events__card-button waiting"  @click="openUnsubscribeModal" v-if="!isCreator && myStatus === 'pending' && !isFinished && registrationType === 'OPEN'">
+                        <button class="events__card-button waiting"  @click="openUnsubscribeModal" v-if="!isCreator && myStatus === 'pending' && !isFinished">
                             <span>Отменить ожидание</span>
                         </button>
-                        <button class="events__card-button closed" v-if="registrationType === 'CLOSED' && !isFinished && !isCreator">
+                        <button class="events__card-button closed" v-if="registrationType === 'CLOSED' && !isFinished && !isCreator && !isSubscribed">
                             <span class="events__card-icon">
                                 <ClosedIcon />
                             </span>
