@@ -5,7 +5,7 @@
                 <h1 class="head__title">Чертоги Героев</h1>
                 <h2 class="head__title-mini">Аутентичный клуб для настольных ролевых игр в самом сердце Москвы</h2>
                 <p class="head__text">Погружайтесь в незабываемые приключения вместе с нами!</p>
-                <NuxtLink to="/technical-work" class="head__button">К приключениям!</NuxtLink>
+                <NuxtLink to="/events" class="head__button">К приключениям!</NuxtLink>
             </div>
         </div>
         <span class="head__phone"></span>

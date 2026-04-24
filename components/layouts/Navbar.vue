@@ -90,7 +90,7 @@
     const navLinks = ref([
         { text: 'О клубе', path: '/' },
         { text: 'Тарифы', path: '/tariffs' },
-        { text: 'К приключениям', path: '/technical-work', target: true },
+        { text: 'К приключениям', path: '/events', target: true },
         { text: 'Новости', path: '/news' },
         { text: 'Контакты', path: '/contacts' },
     ])

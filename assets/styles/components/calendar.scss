@@ -57,7 +57,7 @@
         transition: 300ms;
 
         &:hover {
-            color: #6e3284 !important;
+            color: var(--04-text-main, #e7c4f0);
         }
     }
 

@@ -22,7 +22,9 @@
 
     const loading = ref(true);
     const router = useRouter();
+    const { public: { yandexMetrikaId } } = useRuntimeConfig();
     let removeAfterEachHook = null;
+    let animationRestartTimeout = null;
 
     const handlePopState = () => {
         loading.value = true;
@@ -66,16 +68,51 @@
         }
     };
 
-    onMounted(() => {
-        setTimeout(() => {
-            loading.value = false;
-        }, 500)
+    const restartSiteAnimations = (delay = 0) => {
+        if (!process.client || !animateAllSite) {
+            return;
+        }
 
+        if (animationRestartTimeout) {
+            window.clearTimeout(animationRestartTimeout);
+        }
+
+        animationRestartTimeout = window.setTimeout(async () => {
+            loading.value = false;
+
+            await nextTick();
+
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    animateAllSite();
+                });
+            });
+        }, delay);
+    };
+
+    const trackMetrikaPage = (path, referer = null) => {
+        if (!process.client || !yandexMetrikaId || typeof window.ym !== 'function') {
+            return;
+        }
+
+        if (referer) {
+            window.ym(yandexMetrikaId, 'hit', path, { referer });
+            return;
+        }
+
+        window.ym(yandexMetrikaId, 'hit', path);
+    };
+
+    onMounted(() => {
         window.addEventListener('popstate', handlePopState);
 
-        animateAllSite()
+        restartSiteAnimations(500);
 
         removeAfterEachHook = router.afterEach((to, from) => {
+            if (to.fullPath !== from.fullPath) {
+                trackMetrikaPage(to.fullPath, from.fullPath);
+            }
+
             const preservedScroll = consumeEventsWeekScrollState(to, from);
 
             requestAnimationFrame(() => {
@@ -95,19 +132,19 @@
 
             loading.value = true;
 
-            setTimeout(() => {
-                loading.value = false;
-                animateAllSite();
-            }, 300)
+            restartSiteAnimations(300);
         });
     })
 
     onBeforeUnmount(() => {
         window.removeEventListener('popstate', handlePopState);
         removeAfterEachHook?.();
+
+        if (animationRestartTimeout) {
+            window.clearTimeout(animationRestartTimeout);
+        }
     })
 
 </script>
-
 
 

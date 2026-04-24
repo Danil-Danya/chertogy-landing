@@ -20,7 +20,7 @@
                 <ClientOnly>
                     <Swiper
                         :slides-per-view="slidesCount"
-                        :space-between="20"
+                        :space-between="spaceBetween"
                         :navigation="{
                             nextEl: '.news__button-next',
                             prevEl: '.news__button-prev'
@@ -91,6 +91,7 @@
     watch(() => route.fullPath, async () => await fetchData());
 
     let slidesCount = ref(3);
+    let spaceBetween = ref(20);
 
     const filteredNews = computed(() => {
         const rows = newsStore.allNews?.rows;
@@ -106,20 +107,14 @@
         const windowWidth = window.innerWidth;
 
         switch (true) {
-            case (windowWidth <= 420): 
-                slidesCount.value = 1.2;
-                break;
-
-            case (windowWidth <= 768): 
-                slidesCount.value = 2.2;
-                break;
-
             case (windowWidth <= 992): 
-                slidesCount.value = 2.5;
+                slidesCount.value = 1;
+                spaceBetween.value = 0;
                 break;
 
             default:
                 slidesCount.value = 3; 
+                spaceBetween.value = 20;
                 break;
         }
     };

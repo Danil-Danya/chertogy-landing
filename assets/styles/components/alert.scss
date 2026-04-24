@@ -1,5 +1,5 @@
 .alert {
-    padding: 60px 0 0 0;
+    padding: 120px 0 0 0;
 
     &__content {
         display: flex;
@@ -145,8 +145,8 @@
                 background: #4A7548;
 
                 &:hover {
-                background: #79aa76;
-            }
+                    background: #79aa76;
+                }
             }
 
             &:hover {

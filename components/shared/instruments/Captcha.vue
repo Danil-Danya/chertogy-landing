@@ -23,7 +23,7 @@
             class="captcha__message"
             :class="{ 'is-error': captchaError }"
         >
-            {{ captchaError || 'Выберите правильную картинку, чтобы подписаться на событие' }}
+            {{ captchaError || 'Выберите правильную картинку, чтобы записаться на событие' }}
         </p>
 
         <div class="captcha__mosaic">

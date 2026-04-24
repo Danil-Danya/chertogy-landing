@@ -48,7 +48,7 @@
             content: [
                 { 
                     text: 'г. Москва, м. Арбатская Малый Николопесковский переулок, 6',
-                    link: 'https://yandex.uz/maps/org/halls_of_heroes/133180006455/?ll=37.593210%2C55.750829&utm_source=share&z=17'
+                    link: 'https://yandex.ru/maps/org/chertogi_geroyev/133180006455/'
                 }
             ],
             icon: TGIcon,

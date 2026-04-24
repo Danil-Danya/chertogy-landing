@@ -694,17 +694,17 @@
                 }
 
                 &.green {
-                    background: #79aa76;
+                    background: #4A7548;
                     color: #FFFFFF !important;
                     width: 300px;
                     cursor: pointer;
-
+                    
                     @include media ($md) {
                         width: 100%;
                     }
-
+                    
                     &:hover {
-                        background: #7aa56d;
+                        background: #79aa76;
                     }
 
                 }

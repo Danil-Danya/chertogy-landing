@@ -3,7 +3,34 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const clearSiteAnimations = () => {
+    gsap.killTweensOf("*");
+    ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+};
+
+const refreshSiteAnimations = () => {
+    requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+    });
+
+    window.setTimeout(() => {
+        ScrollTrigger.refresh();
+    }, 250);
+
+    document.fonts?.ready
+        ?.then(() => {
+            ScrollTrigger.refresh();
+        })
+        .catch(() => {});
+};
+
 const animateAllSite = () => {
+    if (typeof window === "undefined") {
+        return;
+    }
+
+    clearSiteAnimations();
+
     gsap.from(".head__title", {
         x: -50,
         opacity: 0,
@@ -213,6 +240,8 @@ const animateAllSite = () => {
         ease: "power3.out",
         delay: 0.3
     })
+
+    refreshSiteAnimations();
 }
 
 export default animateAllSite;

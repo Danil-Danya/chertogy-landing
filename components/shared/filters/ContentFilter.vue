@@ -115,7 +115,6 @@
 <script setup>
 
     import { useTagsStore } from '~/store/useTags';
-    import { useEventsStore } from '~/store/useEvents';
     import { useRoute, useRouter } from 'vue-router';
     // import { useIsMobile } from '#imports';
 
@@ -123,7 +122,6 @@
     const ArrowIcon = defineAsyncComponent(() => import('~/components/icons/events/filters/Arrow.vue'));
 
     const tags = useTagsStore();
-    const eventsStore = useEventsStore();
 
     const isMobile = useIsMobile();
 
@@ -138,7 +136,7 @@
 
     const isTypeActive = ref(true);
 
-    const filters = ref({
+    const createDefaultFilters = () => ({
         type: null,
         system: [],
         skill: [],
@@ -149,12 +147,27 @@
         min_price: null,
         max_price: null,
         lasted: true,
-        closed: false
-        // page: 1,
-        // limit: 10,
-        // ordering: "created_at",
-        // orderingType: "asc"
+        closed: false,
+        show_meetings: false
     });
+
+    const filters = ref(createDefaultFilters());
+
+    const parseBooleanQueryValue = (value, defaultValue = false) => {
+        if (value === undefined) {
+            return defaultValue;
+        }
+
+        return value === true || value === 'true' || value === 1 || value === '1';
+    };
+
+    const getQueryValue = (value) => {
+        if (Array.isArray(value)) {
+            return value[value.length - 1];
+        }
+
+        return value;
+    };
 
     allTags.value = tags.tagsWithCategories.rows.map((item, index) => ({
         ...item,
@@ -226,29 +239,60 @@
         return query;
     };
 
+    const syncFiltersFromQuery = (query) => {
+        const nextFilters = createDefaultFilters();
+
+        Object.keys(nextFilters).forEach((key) => {
+            if (Array.isArray(nextFilters[key])) {
+                if (query[key]) {
+                    nextFilters[key] = Array.isArray(query[key])
+                        ? [...query[key]]
+                        : [query[key]];
+                }
+
+                return;
+            }
+
+            if (key === 'min_price' || key === 'max_price') {
+                const value = getQueryValue(query[key]);
+                nextFilters[key] = value !== undefined && value !== '' ? Number(value) : null;
+                return;
+            }
+
+            if (key === 'lasted') {
+                nextFilters[key] = parseBooleanQueryValue(getQueryValue(query[key]), true);
+                return;
+            }
+
+            if (key === 'closed' || key === 'show_meetings') {
+                nextFilters[key] = parseBooleanQueryValue(getQueryValue(query[key]));
+                return;
+            }
+
+            const value = getQueryValue(query[key]);
+
+            if (value !== undefined) {
+                nextFilters[key] = value;
+            }
+        });
+
+        filters.value = nextFilters;
+    };
+
 
     const applyFilters = async () => {
-        const filter = buildQuery();
-
-        filter.orderingType = 'DESC';
-        filter.ordering = 'start_time';
-
-        if (route.query.week_shift) {
-            filter.week_shift = route.query.week_shift;
-        }
-        
         const nextQuery = {
-            ...route.query,
-            ...filter
+            ...buildQuery(),
+            view: getQueryValue(route.query.view) || 'list'
         };
 
-        delete nextQuery.necessary_player_preparation;
+        if (route.query.week_shift !== undefined) {
+            nextQuery.week_shift = getQueryValue(route.query.week_shift);
+        }
 
-        router.push({
+        await router.push({
             query: nextQuery
         });
-        
-        await eventsStore.fetchEvents(filter);
 
         if (isMobile.value) {
             closeFilter();
@@ -256,28 +300,23 @@
     };
 
 
-    const clearFilter = () => {
-        const cleanUrl = route.path;
-
-        window.location.replace(cleanUrl);
+    const clearFilter = async () => {
+        await router.push({
+            query: {
+                view: getQueryValue(route.query.view) || 'list',
+                week_shift: getQueryValue(route.query.week_shift) || 0
+            }
+        });
     };
 
 
-    onMounted(() => {
-        const query = route.query;
-
-        Object.keys(filters.value).forEach((key) => {
-            if (Array.isArray(filters.value[key]) && query[key]) {
-                filters.value[key] = Array.isArray(query[key])
-                    ? [...query[key]]
-                    : [query[key]];
-            }
-
-            if (!Array.isArray(filters.value[key]) && query[key] !== undefined) {
-                filters.value[key] = query[key];
-            }
-        });
-    });
+    watch(
+        () => route.query,
+        (query) => {
+            syncFiltersFromQuery(query);
+        },
+        { immediate: true, deep: true }
+    );
 
 </script>
 

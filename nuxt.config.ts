@@ -4,12 +4,33 @@ import fs from 'fs';
 import path from 'path';
 import fse from 'fs-extra';
 
+const yandexMetrikaId = 108677896;
+const yandexMetrikaInitScript = `
+(function(m,e,t,r,i,k,a){
+    m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();
+    for (var j = 0; j < document.scripts.length; j++) {
+        if (document.scripts[j].src === r) {
+            return;
+        }
+    }
+    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a);
+})(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+ym(${yandexMetrikaId}, "init", {
+    clickmap: true,
+    trackLinks: true,
+    accurateTrackBounce: true,
+    webvisor: true
+});
+`.trim();
+
 export default defineNuxtConfig({
     compatibilityDate: '2025-05-15',
     ssr: true,
 
     server: {
-        port: process.env.NITRO_PORT || 8000,
+        port: process.env.NITRO_PORT || 7000,
         host: process.env.NITRO_HOST || '127.0.0.1'
     },
 
@@ -35,6 +56,13 @@ export default defineNuxtConfig({
                     name: 'keywords', 
                     content: 'Чертоги героев, клуб D&D Москва, настольные ролевые игры, подземелья и драконы, ролевые вечера, клуб настольных игр, мастер D&D' 
                 }
+            ],
+            script: [
+                {
+                    id: 'yandex-metrika',
+                    innerHTML: yandexMetrikaInitScript,
+                    tagPosition: 'head'
+                }
             ]
         },
         pageTransition: { name: 'page', mode: 'out-in' },
@@ -46,13 +74,14 @@ export default defineNuxtConfig({
 
     runtimeConfig: {
         public: {
-            siteBaseURL: process.env.SITE_BASE_URL
+            siteBaseURL: process.env.SITE_BASE_URL,
+            yandexMetrikaId
         }
     },
 
 
     devtools: { enabled: true },
-    modules: ['@nuxt/fonts', '@nuxt/image'],
+    modules: ['@nuxt/image'],
     //plugins: ['~/plugins/animations/gsap.cleaner.js'],
 
     image: {

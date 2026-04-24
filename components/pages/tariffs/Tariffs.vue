@@ -4,178 +4,173 @@
             <div class="tariffs__content">
                 <h1 class="title tariffs__title">Тарифы</h1>
             </div>
-            <div class="tariffs__container">
-                <Swiper
-                    :slides-per-view="slidesCount"
-                    :space-between="20"
-                    :modules="modules"
-                    @swiper="onSwiper"
-                    @slideChange="onSlideChange"
-                    class="tariffs__slider"
+            <Transition name="modal">
+                <SocialModal
+                    v-if="isSocialModalOpen"
+                    @close="closeSocialModal"
+                />
+            </Transition>
+            <Swiper
+                :breakpoints="swiperBreakpoints"
+                :space-between="16"
+                :slides-per-view="1.08"
+                :watch-overflow="true"
+                class="tariffs__slider"
+            >
+                <SwiperSlide
+                    v-for="(item, index) in tariffsList"
+                    :key="item.title"
+                    class="tariffs__slide"
                 >
-                    <SwiperSlide 
-                        v-for="(item, index) in tariffsList"
-                        :key="item"
+                    <article
+                        class="tariffs__item"
+                        :class="`tariffs__item-${index}`"
                     >
-                        <div class="tariffs__item" :class="`tariffs__item-${index}`">
-                            <!-- <img :src="item.image" alt="фон" format="webp" class="tariffs__item-img" /> -->
-                            <div class="tariffs__item-top">
-                                <h3 class="tariffs__item-title">
-                                    {{ item.title }}
-                                </h3>
-                            </div>
-                            <div class="tariffs__item-center">
-                                <div class="tariffs__item-type">
-                                    <h4 class="tariffs__item-date">В будние дни:</h4>
-                                    <div class="tariffs__item-block">
-                                        <p class="tariffs__item-text text">{{ item.type }}</p>
-                                        <p class="tariffs__item-price">{{ item.types.weekends.price }}</p>
-                                    </div>
-                                </div>
-                                <div class="tariffs__item-type">
-                                    <h4 class="tariffs__item-date">В пятницу:</h4>
-                                    <div class="tariffs__item-block">
-                                        <p class="tariffs__item-text text">{{ item.type }}</p>
-                                        <p class="tariffs__item-price">{{ item.types.friday.price }}</p>
-                                    </div>
-                                </div>
-                                <div class="tariffs__item-type">
-                                    <h4 class="tariffs__item-date">В выходные:</h4>
-                                    <div class="tariffs__item-block">
-                                        <p class="tariffs__item-text text">{{ item.type }}</p>
-                                        <p class="tariffs__item-price">{{ item.types.weekdays.price }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tariffs__item-bottom">
-                                <p class="tariffs__item-alert text">
-                                    <span class="red">*</span>
-                                    {{ item.alert }}
-                                </p>
-                                <a target="_blank" rel="noopener noreferrer" :href="item.actions[0].href" class="tariffs__item-link">
-                                    <span class="tariffs__item-icon">
-                                        <Component :is="item.actions[0].icon" />
-                                    </span>
-                                    {{ item.actions[0].text }}
-                                </a>
-                            </div>
+                        <div class="tariffs__item-top">
+                            <h3 class="tariffs__item-title">{{ item.title }}</h3>
+                            <p class="tariffs__item-description text">{{ item.description }}</p>
                         </div>
-                    </SwiperSlide>
-                </Swiper>
-            </div>
+                        <div class="tariffs__item-center">
+                            <p class="tariffs__item-price">{{ item.price }}</p>
+                            <p class="tariffs__item-rate">{{ item.rate }}</p>
+                        </div>
+                        <ul class="tariffs__item-notes">
+                            <li
+                                v-for="note in item.notes"
+                                :key="note"
+                                class="tariffs__item-note text"
+                            >
+                                {{ note }}
+                            </li>
+                        </ul>
+                        <a
+                            v-if="item.action.modal"
+                            href="#"
+                            class="tariffs__item-link"
+                            @click.prevent="openSocialModal"
+                        >
+                            <span class="tariffs__item-icon">
+                                <Component :is="item.action.icon" />
+                            </span>
+                            <span>{{ item.action.text }}</span>
+                        </a>
+                        <a
+                            v-else-if="item.action.external"
+                            :href="item.action.href"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="tariffs__item-link"
+                        >
+                            <span class="tariffs__item-icon">
+                                <Component :is="item.action.icon" />
+                            </span>
+                            <span>{{ item.action.text }}</span>
+                        </a>
+                        <NuxtLink
+                            v-else
+                            :to="item.action.href"
+                            class="tariffs__item-link"
+                        >
+                            <span class="tariffs__item-icon">
+                                <Component :is="item.action.icon" />
+                            </span>
+                            <span>{{ item.action.text }}</span>
+                        </NuxtLink>
+                    </article>
+                </SwiperSlide>
+            </Swiper>
         </div>
     </section>
 </template>
 
 <script setup>
-
     import { Swiper, SwiperSlide } from 'swiper/vue';
-    import { Navigation, Autoplay } from 'swiper/modules';
-    
     import 'swiper/css';
-    import 'swiper/css/navigation';
 
     import BookIcon from '@/components/icons/tariffs/Book.vue';
     import SearchIcon from '@/components/icons/tariffs/Search.vue';
     import RoomIcon from '@/components/icons/tariffs/Room.vue';
 
-    const modules = [Navigation, Autoplay];
+    import SocialModal from '~/components/shared/modals/SocialModal.vue';
 
+    const isSocialModalOpen = ref(false);
 
-    const tariffsList = ref([
+    const openSocialModal = () => {
+        isSocialModalOpen.value = true;
+    };
+
+    const closeSocialModal = () => {
+        isSocialModalOpen.value = false;
+    };
+
+    const swiperBreakpoints = {
+        576: {
+            slidesPerView: 1.15,
+            spaceBetween: 16,
+        },
+        768: {
+            slidesPerView: 2.1,
+            spaceBetween: 18,
+        },
+        992: {
+            slidesPerView: 3,
+            spaceBetween: 20,
+            allowTouchMove: false,
+        },
+    };
+
+    const tariffsList = [
         {
-            title: 'Игра c Мастером',
-            alert: 'финальная цена всегда указана в анонсе События.',
-            types: {
-                weekends: { price: 'от 2200₽' },
-                weekdays: { price: 'от 2400₽' },
-                friday: { price: 'от 2300₽' },
-            },
-            type: 'с игрока',
-            image: '/images/tariffs/tariffs1.png',
-            actions: [
-                {
-                    text: 'Подобрать игру',
-                    icon: RoomIcon,
-                    href: 'https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/technical-work', 
-                },
+            title: 'Игра с Мастером',
+            description: 'Участие в игре под руководством нашего Мастера, куда может прийти любой желающий.',
+            price: 'от 2200₽',
+            rate: 'за сессию с игрока',
+            notes: [
+                'финальная стоимость всегда указана в анонсе События',
+                'сессия длится около 4,5 часов',
             ],
+            action: {
+                text: 'Подобрать игру',
+                icon: RoomIcon,
+                href: '/events',
+                external: false,
+            },
         },
         {
             title: 'Аренда комнаты',
-            alert: 'уточняйте стоимость и условия аренды у Смотрителя.',
-            types: {
-                weekends: { price: 'от 5000₽' },
-                weekdays: { price: 'от 7000₽' },
-                friday: { price: 'от 6000₽' },
-            },
-            type: 'с группы',
-            image: '/images/tariffs/tariffs2.png',
-            actions: [
-                {
-                    icon: BookIcon,
-                    text: 'Забронировать комнату',
-                    href: 'https://t.me/ChertogiGeroev', 
-                },
+            description: 'Бронирование игровой комнаты для вашей компании, в том числе для игры со своим Мастером.',
+            price: 'от 5000₽',
+            rate: 'за 4,5 часа с группы',
+            notes: [
+                'финальную стоимость и условия уточните при бронировании, возможно согласование',
             ],
+            action: {
+                text: 'Забронировать комнату',
+                icon: BookIcon,
+                href: '#',
+                external: false,
+                modal: true,
+            },
         },
         {
             title: 'Заказная игра',
-            alert: 'цена зависит от даты, Мастера и предпочтений группы.',
-            types: {
-                weekends: { price: 'от 10000₽' },
-                weekdays: { price: 'от 12000₽' },
-                friday: { price: 'от 11000₽' },
-            },
-            type: 'с группы',
-            image: '/images/tariffs/tariffs1.png',
-            actions: [
-                {
-                    text: 'Заказать игру',
-                    icon: SearchIcon,
-                    href: 'https://t.me/ChertogiGeroev',
-                },
+            description: 'Игра под ключ для вашей компании от профессионального ведущего — нашего Мастера.',
+            price: 'от 10 000₽',
+            rate: 'за сессию с группы',
+            notes: [
+                'финальную стоимость и условия уточняйте при заказе',
+                'сессия длится около 4,5 часов',
             ],
+            action: {
+                text: 'Заказать приключение',
+                icon: SearchIcon,
+                href: '#',
+                external: false,
+                modal: true,
+            },
         },
-    ]);
-
-
-    const onSwiper = (swiper) => {
-        console.log('Swiper instance:', swiper);
-    }
-
-    const onSlideChange = () => {
-        console.log('Slide changed');
-    }
-
-    let slidesCount = ref(3);
-
-    const checkSlidesCountInResize = () => {
-        const windowWidth = window.innerWidth;
-
-        switch (true) {
-            case (windowWidth <= 768): 
-                slidesCount.value = 1.1;
-                break;
-
-            case (windowWidth <= 992): 
-                slidesCount.value = 2.5;
-                break;
-
-            default:
-                slidesCount.value = 3; 
-                break;
-        }
-    };
-
-    onMounted(() => {
-        checkSlidesCountInResize();
-    });
-
-    
-
+    ];
 </script>
-
 
 <style lang="scss">
     @import '@/assets/styles/components/tariffs.scss';

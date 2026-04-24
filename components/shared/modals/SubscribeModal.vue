@@ -2,7 +2,7 @@
     <div class="modal">
         <div class="modal__content">
             <h2 class="modal__title title">
-                Подписать пользователей
+                Записать пользователей
             </h2>
 
             <input
@@ -49,7 +49,7 @@
 
             <div class="modal__actions">
                 <button class="btn btn-red" @click="onConfirm">
-                    Подписать
+                    Записать
                 </button>
 
                 <button class="btn btn-gray" @click="onCancel">

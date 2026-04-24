@@ -32,6 +32,18 @@
         return events.length;
     })
 
+    const getQueryValue = (value) => {
+        if (Array.isArray(value)) {
+            return value[value.length - 1];
+        }
+
+        return value;
+    };
+
+    const parseBool = (value) => {
+        return value === true || value === 'true' || value === 1 || value === '1';
+    };
+
     const buildFilterFromQuery = () => {
         const query = route.query;
         const filter = {};
@@ -42,6 +54,7 @@
         const multiKeys = [
             'duration',
             'system',
+            'skill',
             'genre',
             'setting',
             'player_level'
@@ -53,22 +66,18 @@
             }
         });
 
-        const parseBool = (v) => {
-            if (v === true || v === 'true' || v === 1 || v === '1') {
-                return true;
-            }
+        const minPrice = getQueryValue(query.min_price);
+        const maxPrice = getQueryValue(query.max_price);
+        const weekShift = getQueryValue(query.week_shift);
 
-            return false;
-        };
+        if (minPrice !== undefined && minPrice !== '') filter.min_price = Number(minPrice);
+        if (maxPrice !== undefined && maxPrice !== '') filter.max_price = Number(maxPrice);
 
-        if (query.min_price) filter.min_price = Number(query.min_price);
-        if (query.max_price) filter.max_price = Number(query.max_price);
-
-        filter.week_shift = Number(query.week_shift) || 0;
+        filter.week_shift = Number(weekShift) || 0;
 
         if (query.closed !== undefined) filter.closed = parseBool(query.closed);
         filter.lasted = query.lasted !== undefined ? parseBool(query.lasted) : true;
-        if (query.show_meetings) filter.show_meetings = String(query.show_meetings);
+        if (query.show_meetings !== undefined) filter.show_meetings = parseBool(query.show_meetings);
 
         return filter;
     };

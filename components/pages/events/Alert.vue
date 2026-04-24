@@ -1,16 +1,16 @@
 <template>
-    <div class="development__head events">
+    <!-- <div class="development__head events">
         <span class="development__icon">
             <PenIcon />
         </span>
         <h2 class="development__head-text">Раздел находится в разработке</h2>
-    </div>
+    </div> -->
     <section class="alert">
         <div class="container">
             <div class="alert__container">
                 <h1 class="title">Все игры и события клуба</h1>
             </div>
-            <div class="alert__content">
+            <div class="alert__content" v-if="showHelpBlock">
                 <div class="alert__information">
                     <div class="alert__information-item" v-for="item in information" :key="item">
                         <span class="alert__icon">
@@ -25,7 +25,7 @@
                     <p class="text alert__help-text">Жмите кнопку снизу, и мы поможем подобрать вам игру!</p>
                     <a target="_blank" rel="noopener noreferrer" href="https://t.me/ChertogiGeroev" class="alert__help-button">Помогите, я новичок!</a>
                 </div>
-                <div class="alert__help" v-else>
+                    <div class="alert__help" v-else>
                     <img src="@/assets/images/events/bg.png" alt="bg" class="alert__help-bg">
                     <h2 class="alert__help-title">Нет подходящего события?</h2>
                     <p class="text alert__help-text">Так создайте его сами!</p>
@@ -60,6 +60,20 @@
 
     const role = computed(() => {
         return userStore.profile?.role || 'GUEST';
+    });
+
+    const subscribedEventsCount = computed(() => {
+        const subscribedEvents = userStore.profile?.subscribedEvents;
+
+        if (Array.isArray(subscribedEvents)) {
+            return subscribedEvents.length;
+        }
+
+        return Number(subscribedEvents) || 0;
+    });
+
+    const showHelpBlock = computed(() => {
+        return !(role.value === 'USER' && subscribedEventsCount.value >= 3);
     });
 
     const information = [
