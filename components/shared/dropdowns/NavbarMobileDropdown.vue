@@ -3,9 +3,24 @@
         <div class="container">
             <div class="navbar__dropdown-content">
                 <ul class="navbar__dropdown-list">
-                    <li class="navbar__dropdown-li" v-for="link in navLinks" :key="link">
-                        <NuxtLink :to="link.path" class="navbar__dropdown-link" @click="emit('closeDropdown')">{{ link.text }}</NuxtLink>
-                        <span class="navbar__dropdown-icon">
+                    <li
+                        class="navbar__dropdown-li"
+                        :class="{ 'navbar__dropdown-li-featured': link.featured }"
+                        v-for="link in navLinks"
+                        :key="link"
+                    >
+                        <NuxtLink
+                            :to="link.path"
+                            class="navbar__dropdown-link"
+                            :class="{ 'navbar__dropdown-link-featured': link.featured }"
+                            @click="emit('closeDropdown')"
+                        >
+                            {{ link.text }}
+                        </NuxtLink>
+                        <span
+                            class="navbar__dropdown-icon"
+                            :class="{ 'navbar__dropdown-icon-featured': link.featured }"
+                        >
                             <Component :is="link.icon" width="32px" height="32px" />
                         </span>
                     </li>
@@ -51,22 +66,30 @@
                         </div>
                     </div>
                     <div class="navbar__dropdown-help" v-if="profile?.role === 'USER' || !profile">
-                        <a href="https://t.me/ChertogiGeroev" class="navbar__dropdown-help-link">
+                        <button type="button" class="navbar__dropdown-help-link" @click="openSocialModal">
                             <p class="navbar__dropdown-help-text">Помогите мне</p>
                             <span class="navbar__dropdown-help-icon">
                                 <HelpIcon width="32px" height="32px" />
                             </span>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <Transition name="modal">
+            <SocialModal
+                v-if="isSocialModalOpen"
+                @close="closeSocialModal"
+            />
+        </Transition>
     </div>
 </template>
 
 <script setup>
 
     import HelpIcon from '@/components/icons/navbar/Help.vue';
+    import SocialModal from '~/components/shared/modals/SocialModal.vue';
 
     import ProfileIcon from '@/components/icons/navbar/login/Profile.vue';
     import SettingsIcon from '@/components/icons/navbar/login/Settings.vue';
@@ -89,6 +112,7 @@
     const userStore = useUserStore();
 
     const profile = computed(() => userStore.profile);
+    const isSocialModalOpen = ref(false);
 
     const emit = defineEmits(['closeDropdown']);
     
@@ -97,7 +121,7 @@
     const navLinks = ref([
         { text: 'О клубе', path: '/', icon: AboutIcon },
         { text: 'Тарифы', path: '/tariffs', icon: TariffIcon },
-        { text: 'К приключениям', path: '/events', icon: TravelIcon },
+        { text: 'К приключениям', path: '/events', icon: TravelIcon, featured: true },
         { text: 'Новости', path: '/news', icon: NewsIcon },
         { text: 'Контакты', path: '/contacts', icon: ContactsIcon },
     ])
@@ -151,6 +175,14 @@
         userStore.$reset();
         window.location.href = 'https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/panel/login';
     }
+
+    const openSocialModal = () => {
+        isSocialModalOpen.value = true;
+    };
+
+    const closeSocialModal = () => {
+        isSocialModalOpen.value = false;
+    };
 
     onMounted(async () => {
         await userStore.fetchProfile();

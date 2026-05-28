@@ -184,9 +184,20 @@
 
             &.locked {
                 background: #38393F;
+                cursor: not-allowed;
 
                 &:hover {
                     background: #38393F;
+                }
+            }
+
+            &[data-state="in-progress"] {
+                & > span:not(.event__button-icon) {
+                    display: none;
+                }
+
+                &::after {
+                    content: "\0421\043E\0431\044B\0442\0438\0435\0020\0438\0434\0435\0442";
                 }
             }
 
@@ -449,6 +460,10 @@
             display: inline-block;
             border-radius: 10px;
             background: #D23C48;
+
+            @media (max-width: 366px) {
+                font-size: 14px;
+            }
 
             &.closed {
                 background: #38393F;

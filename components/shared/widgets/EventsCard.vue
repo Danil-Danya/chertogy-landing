@@ -98,32 +98,38 @@
                 <div class="events__card-bottom-block">
                     <div class="events__card-buttons">
                         <NuxtLink :to="`/events/${slug}`" class="events__card-link" v-if="!isFinished">Подробнее</NuxtLink>
-                        <button class="events__card-button" @click="openCaptchaModal" v-if="!isCreator && !isSubscribed && !isWaiting && !isFinished && registrationType === 'OPEN'">
+                        <button class="events__card-button" @click="openCaptchaModal" v-if="!isCreator && !isSubscribed && !isWaiting && !isInProgress && !isFinished && registrationType === 'OPEN'">
                             <span class="events__card-icon">
                                 <EditIcon />
                             </span>
                             <span>Записаться</span>
                         </button>
-                        <button class="events__card-button waiting" @click="openCaptchaModal" v-if="!isCreator && !isSubscribed && isWaiting && !isFinished && registrationType === 'OPEN'">
+                        <button class="events__card-button waiting" @click="openCaptchaModal" v-if="!isCreator && !isSubscribed && isWaiting && !isInProgress && !isFinished && registrationType === 'OPEN'">
                             <span class="events__card-icon">
                                 <ClockWaitIcon />
                             </span>
                             <span>Ожидать</span>
                         </button>
-                        <button class="events__card-button bg-red"  @click="openUnsubscribeModal" v-if="!isCreator && isSubscribed && !isFinished && myStatus !== 'pending'">
+                        <button class="events__card-button bg-red"  @click="openUnsubscribeModal" v-if="!isCreator && isSubscribed && !isInProgress && !isFinished && myStatus !== 'pending'">
                             <span class="events__card-icon">
                                 <UnSubscribeIcon />
                             </span>
                             <span>Отменить запись</span>
                         </button>
-                        <button class="events__card-button waiting"  @click="openUnsubscribeModal" v-if="!isCreator && myStatus === 'pending' && !isFinished">
+                        <button class="events__card-button waiting"  @click="openUnsubscribeModal" v-if="!isCreator && myStatus === 'pending' && !isInProgress && !isFinished">
                             <span>Отменить ожидание</span>
                         </button>
-                        <button class="events__card-button closed" v-if="registrationType === 'CLOSED' && !isFinished && !isCreator && !isSubscribed">
+                        <button class="events__card-button closed" v-if="registrationType === 'CLOSED' && !isInProgress && !isFinished && !isCreator && !isSubscribed">
                             <span class="events__card-icon">
                                 <ClosedIcon />
                             </span>
                             <span>Запись закрыта</span>
+                        </button>
+                        <button class="events__card-button finished" type="button" v-if="isInProgress">
+                            <span class="events__card-icon">
+                                <HourglassIcon />
+                            </span>
+                            <span>Событие идет</span>
                         </button>
                         <button class="events__card-button finished" @click="subscribeAction" v-if="isFinished">
                             <span>Событие завершено</span>
@@ -185,12 +191,19 @@
             @close="closeRejoinBlockedModal"
         />
     </Transition>
+    <Transition name="modal">
+        <SubscriptionSuccessModal
+            v-if="isSubscriptionSuccessModalOpen"
+            @close="closeSubscriptionSuccessModal"
+        />
+    </Transition>
 </template>
 
 <script setup>
 
     import { useIsMobile } from '@/composables/useIsMobile';
     import { useSubscriptionCaptcha } from '@/composables/useSubscriptionCaptcha';
+    import { useSubscriptionSuccessModal } from '@/composables/useSubscriptionSuccessModal';
     import { subscribeEvent, unSubscribeEvent } from '~/api/events';
     import { useUserStore } from '~/store/useUsers';
     import { useEventsStore } from '~/store/useEvents';
@@ -201,6 +214,7 @@
     import UnsubscribeModal from '../modals/UnsubscribeModal.vue';
     import CaptchaModal from '../modals/CaptchaModal.vue';
     import EventRejoinBlockedModal from '../modals/EventRejoinBlockedModal.vue';
+    import SubscriptionSuccessModal from '../modals/SubscriptionSuccessModal.vue';
     
     const SubscribeIcon = defineAsyncComponent(() => import('~/components/icons/events/cards/Subscribes.vue'));
     const PriceIcon = defineAsyncComponent(() => import('~/components/icons/events/cards/Price.vue'));
@@ -212,6 +226,8 @@
 
     const LockIcon = defineAsyncComponent(() => import('@/components/icons/events/info/Lock.vue'));
     const UnlockIcon = defineAsyncComponent(() => import('@/components/icons/events/info/Unlock.vue'));
+
+    const HourglassIcon = defineAsyncComponent(() => import('@/components/icons/events/info/Hourglass.vue'));
     
 
     const isMobile = useIsMobile();
@@ -224,6 +240,11 @@
         incrementUnsubscribeAttempts,
         clearUnsubscribeAttempts
     } = useSubscriptionCaptcha();
+    const {
+        isSubscriptionSuccessModalOpen,
+        openSubscriptionSuccessModal,
+        closeSubscriptionSuccessModal,
+    } = useSubscriptionSuccessModal();
 
     const img = ref('img');
 
@@ -280,6 +301,10 @@
 
         params.ordering = 'start_time';
         params.ordering_type = 'DESC';
+
+        if (props.isInProgress || props.isFinished) {
+            return false;
+        }
         
         if (!userId) {
             isShowLoginModal.value = true;
@@ -320,6 +345,7 @@
                 }
 
                 await eventStore.fetchEvents(params);
+                openSubscriptionSuccessModal();
                 return true;
             }
         }
@@ -353,6 +379,10 @@
 
         const userId = userStore.profile?.id;
         const eventId = props.id;
+
+        if (props.isInProgress || props.isFinished) {
+            return;
+        }
 
         if (!shouldRequireCaptcha({ eventId, userId })) {
             await subscribeAction();
@@ -472,6 +502,11 @@
             required: false
         },
 
+        isInProgress: {
+            type: Boolean,
+            required: false
+        },
+
         isAllowed: {
             type: String,
             required: false
@@ -500,7 +535,12 @@
         registrationType: {
             type: String,
             required: true
-        }
+        },
+
+        isCanceled: {
+            type: Boolean,
+            required: false
+        },
     })
 
     const isWaiting = computed(() => {
@@ -560,6 +600,10 @@
         const isAdmin = profile.role === 'ADMIN';
 
         return isCreator || isAdmin;
+    });
+
+    const isCanceled = computed(() => {
+        return props.isCanceled;
     });
 
     onMounted(() => {

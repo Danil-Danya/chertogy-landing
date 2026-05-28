@@ -4,6 +4,12 @@
             <div class="contacts__content">
                 <h2 class="title contacts__title">Ждём вас в гости!</h2>
             </div>
+            <Transition name="modal">
+                <SocialModal
+                    v-if="isSocialModalOpen"
+                    @close="closeSocialModal"
+                />
+            </Transition>
             <div class="contacts__container">
                 <div class="contacts__left">
                     <div class="contacts__info">
@@ -30,8 +36,8 @@
                         </div>
                         <div class="contacts__info-bottom">
                             <div class="contacts__info-bottom-item">
-                                <h3 class="contacts__info-title">Администратор</h3>
-                                <a target="_blank" rel="noopener noreferrer" href="https://t.me/ChertogiGeroev" class="contacts__link text">Написать в телеграм</a>
+                                <h3 class="contacts__info-title" @click="openSocialModal">Администратор</h3>
+                                <p class="contacts__link text" @click="openSocialModal">Связаться с нами</p>
                                 <p class="contacts__info-alert">Отвечаем с 10:00 до 22:00 в любой день</p>
                             </div>
                             <div class="contacts__info-bottom-item">
@@ -75,9 +81,20 @@
 </template>
 
 <script setup>
+import SocialModal from '~/components/shared/modals/SocialModal.vue';
 
 // Тут в рамках макета не получилось стандартизировать все выерхние ссылки,
 // так как они слишком разные, по этому стандартизирую внутри js только нижние
+
+const isSocialModalOpen = ref(false);
+
+const openSocialModal = () => {
+    isSocialModalOpen.value = true;
+};
+
+const closeSocialModal = () => {
+    isSocialModalOpen.value = false;
+};
 
 const VKIcon = defineAsyncComponent(() => import('@/components/icons/contacts/VK.vue'));
 const TGIcon = defineAsyncComponent(() => import('@/components/icons/contacts/Telegram.vue'));

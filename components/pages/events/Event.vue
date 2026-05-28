@@ -63,7 +63,7 @@
                                     </template>
                                 </div>
                                 <span class="event__locked" v-if="isStaff">
-                                    <LockIcon v-if="eventStore.oneEvent.registrationType === 'OPEN' && !isFinished" />
+                                    <LockIcon v-if="eventStore.oneEvent.registrationType === 'OPEN' && !isFinished && !isCanceled" />
                                     <UnlockIcon v-else />
                                 </span>
                             </div>
@@ -204,6 +204,7 @@
     const getRouteSlug = () => Array.isArray(route.params.slug) ? route.params.slug[0] : route.params.slug;
 
     await eventStore.fetchOneEvent(getRouteSlug());
+    if (!eventStore.oneEvent?.id) await router.replace('/event-not-found');
 
     const imageUrl = import.meta.env.VITE_APP_IMAGE_URL;
 
@@ -410,7 +411,9 @@
         router.go(-1)
     }
 
-
+    const isCanceled = computed(() => {
+        return eventStore.oneEvent.isCanceled;
+    });
 
 </script>
 

@@ -89,32 +89,46 @@
     const modules = [Navigation, Autoplay];
 
     const slidesAllZone = [
-        '/images/interior/all_zone/IMG_4615.png',
-        '/images/interior/all_zone/IMG_4927.png',
-        '/images/interior/all_zone/IMG_4929.png',
-        '/images/interior/all_zone/IMG_4939.png',
-        '/images/interior/all_zone/IMG_5169.png',
+        '/images/interior/all_zone/Общая Зона 01.jpg',
+        '/images/interior/all_zone/Общая Зона 02.jpg',
+        '/images/interior/all_zone/Общая Зона 03.jpg',
+        '/images/interior/all_zone/Общая Зона 04.jpg',
+        '/images/interior/all_zone/Общая Зона 05.jpg',
+        '/images/interior/all_zone/Общая Зона 06.jpg',
+        '/images/interior/all_zone/Общая Зона 07.jpg',
+        '/images/interior/all_zone/Общая Зона 08.jpg',
+        '/images/interior/all_zone/Общая Зона - Ресепшн 01.jpg',
+        '/images/interior/all_zone/Общая Зона - Ресепшн 02.jpg',
     ];
 
     const slidesGreenZone = [
-        '/images/interior/green_zone/IMG_4935.jpg',
+        '/images/interior/green_zone/Зеленая 01.jpg',
+        '/images/interior/green_zone/Зеленая 02.jpg',
+        '/images/interior/green_zone/Зеленая 03.jpg',
     ];
 
     const slidesPurpleZone = [
-        '/images/interior/purple_zone/IMG_4933.jpg',
+        '/images/interior/purple_zone/Фиолетовая 01.jpg',
+        '/images/interior/purple_zone/Фиолетовая 02.jpg',
+        '/images/interior/purple_zone/Фиолетовая 03.jpg',
+        '/images/interior/purple_zone/Фиолетовая 04.jpg',
+        '/images/interior/purple_zone/Фиолетовая 05.jpg',
     ];
 
     const slidesTaverna = [
-        '/images/interior/taverna/IMG_5218.png',
-        '/images/interior/taverna/IMG_5219.png',
-        '/images/interior/taverna/IMG_5220.png',
-        '/images/interior/taverna/IMG_5223.png',
+        '/images/interior/taverna/Таверна 01.jpg',
+        '/images/interior/taverna/Таверна 02.jpg',
+        '/images/interior/taverna/Таверна 03.jpg',
+        '/images/interior/taverna/Таверна 04.jpg',
+        '/images/interior/taverna/Таверна 05.jpg',
     ];
 
     const slidesZamok = [
-        '/images/interior/zamok/camphoto_544561601.jpg',
-        '/images/interior/zamok/IMG_5977.jpg',
-        '/images/interior/zamok/photo_2025-03-25_20-57-37 (4).jpg',
+        '/images/interior/zamok/Замок 01.jpg',
+        '/images/interior/zamok/Замок 02.jpg',
+        '/images/interior/zamok/Замок 03.jpg',
+        '/images/interior/zamok/Замок 04.jpg',
+        '/images/interior/zamok/Замок 05.jpg',
     ];
 
     const sections = ref([
@@ -144,9 +158,6 @@
             block: 'nearest',
         });
     };
-
-
-
 
     const onSwiper = (swiper) => {
         console.log('Swiper instance:', swiper);

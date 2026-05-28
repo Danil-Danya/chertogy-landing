@@ -3,7 +3,9 @@ export const mapEventToCard = (event) => {
         return {};
     }
 
-    const dateObj = new Date(event.startTime);
+    const startRaw = event.startTime ?? event.start_time;
+    const endRaw = event.endTime ?? event.end_time;
+
     const formattedDate = (date) => {
         const dateObj = new Date(date);
 
@@ -52,10 +54,16 @@ export const mapEventToCard = (event) => {
         ? Math.round(basePrice * (1 - discount / 100))
         : basePrice;
 
-    const now = new Date();
-    const endDate = event.endTime ? new Date(event.endTime) : null;
-    
-    const isFinished = now > endDate;
+    const nowMs = Date.now();
+    const startMs = startRaw ? new Date(startRaw).getTime() : Number.NaN;
+    const endMs = endRaw ? new Date(endRaw).getTime() : Number.NaN;
+    const hasValidStart = Number.isFinite(startMs);
+    const hasValidEnd = Number.isFinite(endMs);
+
+    const isFinished = hasValidEnd ? nowMs > endMs : false;
+    const isInProgress = hasValidStart && hasValidEnd
+        ? nowMs >= startMs && !isFinished
+        : false;
     
     return {
         id: event.id,
@@ -81,12 +89,14 @@ export const mapEventToCard = (event) => {
 
         tagsList,
         isFinished,
+        isCanceled: event.isCanceled,
+        isInProgress,
         registrationType: event.registrationType,
 
         description: event.shortDescription,
 
-        date: formattedDate(event.startTime),
-        endTime: event.endTime,
+        date: startRaw ? formattedDate(startRaw) : '',
+        endTime: endRaw,
         creator: event.creator,
 
         subscribes: event.currentPlayers || 0,

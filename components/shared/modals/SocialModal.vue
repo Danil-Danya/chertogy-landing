@@ -39,7 +39,7 @@
         {
             icon: VKIcon,
             text: '@chertogi.club',
-            link: 'https://vk.com/chertogi.club'
+            link: 'https://vk.me/chertogi.club'
         }
     ])
 

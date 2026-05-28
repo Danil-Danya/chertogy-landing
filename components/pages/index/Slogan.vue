@@ -7,38 +7,78 @@
                     <div class="slogan__divider">
                         <img loading="lazy" class="slogan__divider-img" src="/images/slogan/divider.png" alt="Делитель" format="webp" v-if="!isMobile" />
                     </div>
-                    <div class="slogan__item" v-for="item in sloganList" :key="item">
+                    <div class="slogan__item" v-for="item in sloganList" :key="item.title">
                         <img loading="lazy" class="slogan__item-number" :src="item.number" alt="Нумерация" format="webp" />
                         <div class="slogan__item-top">
                             <h3 class="slogan__item-title">{{ item.title }}</h3>
                             <img loading="lazy" class="slogan__item-icon" :src="item.icon" alt="Иконка" format="webp" />
                         </div>
                         <div class="slogan__item-bottom">
-                            <p class="text slogan__item-text" v-html="item.text" />
+                            <p v-if="item.socialModal" class="text slogan__item-text">
+                                {{ item.textBefore }}
+                                <button type="button" class="slogan__item-link red" @click="openSocialModal">
+                                    {{ item.triggerText }}
+                                </button>
+                                {{ item.textAfter }}
+                            </p>
+                            <p v-else class="text slogan__item-text">
+                                {{ item.text }}
+                            </p>
                         </div>
                     </div>
                 </div>
                 <div class="slogan__block">
                     <div class="slogan__block-item">
-                        <p class="slogan__block-text">Наш клуб всегда рад новичкам и готов помочь вам сделать первые шаги в удивительный мир настольных ролевых игр!</p>
+                        <p class="slogan__block-text">Наш клуб всегда рад новичкам и готов помочь вам сделать первые шаги в удивительный мир настольных ролевых игр!</p>
                         <img loading="lazy" class="slogan__block-img" src="/images/logos/logo-slogan.png" alt="Лого" format="webp"/>
                     </div>
                 </div>
             </div>
         </div>
+
+        <Transition name="modal">
+            <SocialModal
+                v-if="isSocialModalOpen"
+                :title="socialModalContent.title"
+                :description="socialModalContent.description"
+                :icon-src="socialModalContent.iconSrc"
+                :icon-alt="socialModalContent.iconAlt"
+                @close="closeSocialModal"
+            />
+        </Transition>
     </section>
 </template>
 
 <script setup>
-
+    import SocialModal from '~/components/shared/modals/SocialModal.vue';
     import { useIsMobile } from '@/composables/useIsMobile.js';
 
-    const sloganList = ref([
+    const isSocialModalOpen = ref(false);
+
+    const openSocialModal = () => {
+        isSocialModalOpen.value = true;
+    };
+
+    const closeSocialModal = () => {
+        isSocialModalOpen.value = false;
+    };
+
+    const socialModalContent = {
+        title: 'Запишитесь на игру',
+        description: 'Выберите игру в расписании или обратитесь к Смотрителю — мы подберем для Вас наиболее подходящую игру.',
+        iconSrc: '/images/slogan/PencilSimpleLine.png',
+        iconAlt: 'Иконка записи на игру',
+    };
+
+    const sloganList = [
         {
             icon: '/images/slogan/PencilSimpleLine.png',
             number: '/images/slogan/1.png',
             title: 'Запишитесь на игру',
-            text: 'Выберите игру в расписании или обратитесь к <a href="https://t.me/ChertogiGeroev" target="_blank" rel="noopener noreferrer" class="red">Смотрителю</a> — мы подберем для Вас наиболее подходящую игру.'
+            textBefore: 'Выберите игру в расписании или обратитесь к ',
+            triggerText: 'Смотрителю',
+            textAfter: ' — мы подберем для Вас наиболее подходящую игру.',
+            socialModal: true,
         },
         {
             icon: '/images/slogan/Users.png',
@@ -64,11 +104,9 @@
             title: 'Наслаждайтесь процессом!',
             text: 'Самое важное — это просто расслабиться и получать удовольствие. Не бойтесь задавать вопросы и экспериментировать!'
         },
-    ])
-
+    ];
 
     const isMobile = useIsMobile();
-
 </script>
 
 <style lang="scss" scoped>

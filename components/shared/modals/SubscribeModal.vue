@@ -27,7 +27,7 @@
             </div>
 
             <div class="modal__users">
-                <div class="modal__users-item" v-for="user in filteredUsers" :key="user">
+                <div class="modal__users-item" v-for="user in filteredUsers" :key="user.id">
                     <div class="modal__filter-user">
                         <input
                             type="checkbox"
@@ -154,10 +154,22 @@
 
     const filteredUsers = computed(() => {
         const users = userStore.users ?? [];
+        const selectedIds = new Set(selectedUsers.value);
 
-        return users.filter((user) => {
-            return !excludedIds.value.has(user.id);
-        });
+        return users
+            .filter((user) => {
+                return !excludedIds.value.has(user.id);
+            })
+            .sort((firstUser, secondUser) => {
+                const firstSelected = selectedIds.has(firstUser.id);
+                const secondSelected = selectedIds.has(secondUser.id);
+
+                if (firstSelected === secondSelected) {
+                    return 0;
+                }
+
+                return firstSelected ? -1 : 1;
+            });
     });
 
     

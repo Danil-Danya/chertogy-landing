@@ -26,7 +26,7 @@
                         <span class="calendar__icon">
                             <ListIcon />
                         </span>
-                        <p class="calendar__text">Расписание в виде списка</p>
+                        <p class="calendar__text">Показать список</p>
                     </div>
                     <div
                         v-else
@@ -36,7 +36,7 @@
                     <span class="calendar__icon">
                             <CalendarIcon />
                         </span>
-                        <p class="calendar__text">Расписание в виде календаря</p>
+                        <p class="calendar__text">Показать календарь</p>
                     </div>
 
                     <div class="calendar__right-content">
@@ -50,6 +50,11 @@
 
 <script setup>
 
+    import { translateDateISOToWordsNoYear } from '@/utils/dateHelper';
+    import { getEventWord } from '@/utils/getEventWord';
+    import { useRoute, useRouter } from 'vue-router';
+    import { startOfWeek, addWeeks, endOfWeek } from 'date-fns';
+
     const EVENTS_WEEK_SCROLL_STATE_KEY = 'events-week-scroll-state';
 
     const PrevIcon = defineAsyncComponent(() => import('@/components/icons/events/calendary/Prev.vue'));
@@ -58,10 +63,16 @@
     const CalendarIcon = defineAsyncComponent(() => import('~/components/icons/events/info/Calendar.vue'));
     const ListIcon = defineAsyncComponent(() => import('~/components/icons/events/info/List.vue'));
 
-    import { translateDateISOToWordsNoYear } from '@/utils/dateHelper';
-    import { useRoute, useRouter } from 'vue-router';
-
-    import { startOfWeek, addWeeks, endOfWeek } from 'date-fns';
+    const props = defineProps({
+        eventsLength: {
+            type: Number,
+            required: true
+        },
+        showViewToggle: {
+            type: Boolean,
+            default: true
+        }
+    });
 
     const route = useRoute();
     const router = useRouter();
@@ -70,29 +81,11 @@
         return +route.query.week_shift || 0;
     });
 
-    const props = defineProps({
-        eventsLength: {
-            type: Number,
-            required: true
-        }
-    })
-
     const activeView = computed(() => {
         return route.query.view === 'calendar'
             ? 'calendar'
             : 'list';
     });
-
-    const setView = (view) => {
-        router.replace({
-            query: {
-                ...route.query,
-                view
-            }
-        });
-    };
-
-    const date = new Date();
 
     const dateFrom = computed(() => {
         const base = addWeeks(new Date(), weekShift.value);
@@ -104,6 +97,14 @@
         return endOfWeek(base, { weekStartsOn: 1 }).toISOString();
     });
 
+    const setView = (view) => {
+        router.replace({
+            query: {
+                ...route.query,
+                view
+            }
+        });
+    };
 
     const countDate = (btn) => {
         if (process.client) {

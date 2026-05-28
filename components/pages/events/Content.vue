@@ -19,16 +19,22 @@
                                     />
                                 </div>
                             </Transition>
-                            <div class="content__events" v-if="mappedEvents.length">
-                                <EventsCard
-                                    v-for="event in mappedEvents"
-                                    :key="event.id"
-                                    v-bind="event"
-                                />
-                            </div>
+                            <div class="content__events">
+                                <template v-if="mappedEvents.length">
+                                    <EventsCard
+                                        v-for="event in mappedEvents"
+                                        :key="event.id"
+                                        v-bind="event"
+                                    />
+                                </template>
+                                <h2 v-else class="content__event-title title">События не были найдены</h2>
 
-                            <div class="content__events" v-else>
-                                <h2 class="content__event-title title">События не были найдены</h2>
+                                <div class="content__events-footer">
+                                    <WeekNavigation
+                                        :events-length="mappedEvents.length"
+                                        :show-view-toggle="false"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -52,6 +58,7 @@
     
     import EventsCard from '~/components/shared/widgets/EventsCard.vue';
     import Date from './Date.vue';
+    import WeekNavigation from './WeekNavigation.vue';
     
     const ContentFilter = defineAsyncComponent(() => import('@/components/shared/filters/ContentFilter.vue'));
     const FilterIcon = defineAsyncComponent(() => import('@/components/icons/events/filters/Filters.vue'));
@@ -162,6 +169,7 @@
                     view: 'list',
                     closed: route.query.closed ? route.query.closed : false,
                     lasted: route.query.lasted ? route.query.lasted : true,
+                    show_meetings: route.query.show_meetings ? route.query.show_meetings : true,
                     week_shift: 0
                 }
             })
@@ -177,4 +185,8 @@
 
 <style lang="scss">
     @import '@/assets/styles/components/events.scss';
+
+    .content__events-footer {
+        margin-top: 10px;
+    }
 </style>

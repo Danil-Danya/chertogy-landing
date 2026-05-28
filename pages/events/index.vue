@@ -77,7 +77,7 @@
 
         if (query.closed !== undefined) filter.closed = parseBool(query.closed);
         filter.lasted = query.lasted !== undefined ? parseBool(query.lasted) : true;
-        if (query.show_meetings !== undefined) filter.show_meetings = parseBool(query.show_meetings);
+        filter.show_meetings = query.show_meetings !== undefined ? parseBool(query.show_meetings) : true;
 
         return filter;
     };

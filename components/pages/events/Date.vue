@@ -35,7 +35,7 @@
                                     <span class="date__item-icon">
                                         <CrownIcon />
                                     </span>
-                                    {{ event?.creator?.profile.name }}
+                                    {{ truncateText(event?.creator?.profile.name, 10) }}
                                 </p>
                                 <p class="text date__item-text">
                                     <span class="date__item-icon">

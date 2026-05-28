@@ -297,8 +297,8 @@
                 align-items: center;
                 justify-content: space-between;
                 gap: 30px;
-                width: 100%;
-                max-width: 490px;
+                flex: 1 1 auto;
+                min-width: 0;
             }
 
             @include media ($md) {
@@ -309,6 +309,8 @@
         &-buttons {
             display: flex;
             gap: 10px;
+            flex: 1 1 auto;
+            min-width: 0;
 
             @include media ($md) {
                 width: 100%;
@@ -334,6 +336,8 @@
             border-radius: 10px;
             background: var(--03-dark-2, #1a1520);
             transition: 300ms;
+            flex-shrink: 0;
+            white-space: nowrap;
 
             @include media ($md) {
                 width: 100%;
@@ -419,6 +423,8 @@
             align-items: center;
             gap: 5px;
             justify-content: center;
+            flex: 1 1 auto;
+            min-width: 0;
 
             @include media ($md) {
                 width: 100% !important;
@@ -430,10 +436,15 @@
 
             &.finished {
                 background: #301e2e;
-                width: 400px;
+                width: auto;
 
                 @include media ($md) {
                     width: 100%;
+                }
+
+                &:hover {
+                    cursor: auto;
+                    background: #301e2e;
                 }
             }
 
@@ -481,6 +492,7 @@
         &-subscribes {
             display: flex;
             gap: 10px;
+            flex-shrink: 0;
 
             // &.red {
             //     color: red !important;

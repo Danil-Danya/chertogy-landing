@@ -217,9 +217,29 @@
         &-content {
             display: flex;
             flex-direction: column;
-            //justify-content: space-between;
             align-items: flex-end;
             height: calc(100vh - 60px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 24px 0 28px;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+
+            &::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.06);
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: rgba(170, 112, 191, 0.55);
+                border-radius: 999px;
+            }
+
+            scrollbar-width: thin;
+            scrollbar-color: rgba(170, 112, 191, 0.55) rgba(255, 255, 255, 0.06);
         }
 
         &-link {
@@ -231,13 +251,35 @@
             font-weight: 500;
             line-height: 100%; /* 22px */
             display: block;
-            //margin-top: 20px;
+            transition: color 200ms ease, text-shadow 200ms ease;
         }
 
-        &-li {
-            &:first-of-type {
-                //margin-top: 40px;
-            }
+        &-icon {
+            transition: filter 200ms ease, transform 200ms ease;
+        }
+
+        &-li-featured {
+            margin-top: 12px;
+        }
+
+        &-link-featured {
+            color: #dca7ff;
+            text-shadow:
+                0 0 8px rgba(220, 167, 255, 0.55),
+                0 0 18px rgba(170, 112, 191, 0.5),
+                0 0 30px rgba(128, 62, 168, 0.35);
+        }
+
+        &-icon-featured {
+            filter:
+                drop-shadow(0 0 10px rgba(220, 167, 255, 0.45))
+                drop-shadow(0 0 18px rgba(170, 112, 191, 0.35));
+        }
+
+        &-bottom {
+            width: 100%;
+            margin-top: auto;
+            padding-top: 24px;
         }
 
         &-help {
@@ -266,6 +308,11 @@
                 font-weight: 500;
                 line-height: 100%; /* 22px */
                 justify-content: flex-end;
+                border: 0;
+                padding: 0;
+                background: transparent;
+                appearance: none;
+                cursor: pointer;
             }
         }
     }

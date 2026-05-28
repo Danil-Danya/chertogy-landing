@@ -3,6 +3,7 @@ import { useEventsStore } from '~/store/useEvents';
 import { useUserStore } from '~/store/useUsers';
 import { subscribeEvent, unSubscribeEvent, updateEventStatus, updateGame, updateMeeting } from '~/api/events';
 import { useSubscriptionCaptcha } from '@/composables/useSubscriptionCaptcha';
+import { useSubscriptionSuccessModal } from '@/composables/useSubscriptionSuccessModal';
 
 export const useEvent = () => {
     const eventStore = useEventsStore();
@@ -11,6 +12,11 @@ export const useEvent = () => {
         incrementUnsubscribeAttempts,
         clearUnsubscribeAttempts
     } = useSubscriptionCaptcha();
+    const {
+        isSubscriptionSuccessModalOpen,
+        openSubscriptionSuccessModal,
+        closeSubscriptionSuccessModal,
+    } = useSubscriptionSuccessModal();
 
     const router = useRouter();
     const route = useRoute();
@@ -23,6 +29,41 @@ export const useEvent = () => {
     const closeRejoinBlockedModal = () => {
         isRejoinBlockedModalOpen.value = false;
     };
+
+    const getEventTimeData = () => {
+        const event = eventStore.oneEvent;
+        const startRaw = event?.startTime ?? event?.start_time;
+        const endRaw = event?.endTime ?? event?.end_time;
+        const startMs = startRaw ? new Date(startRaw).getTime() : Number.NaN;
+        const endMs = endRaw ? new Date(endRaw).getTime() : Number.NaN;
+
+        return {
+            hasValidStart: Number.isFinite(startMs),
+            hasValidEnd: Number.isFinite(endMs),
+            startMs,
+            endMs,
+        };
+    };
+
+    const isFinished = computed(() => {
+        const { hasValidEnd, endMs } = getEventTimeData();
+
+        if (!hasValidEnd) {
+            return false;
+        }
+
+        return Date.now() > endMs;
+    });
+
+    const isInProgress = computed(() => {
+        const { hasValidStart, hasValidEnd, startMs } = getEventTimeData();
+
+        if (!hasValidStart || !hasValidEnd) {
+            return false;
+        }
+
+        return Date.now() >= startMs && !isFinished.value;
+    });
 
     const canSubscribe = computed(() => {
         const event = eventStore.oneEvent;
@@ -37,6 +78,7 @@ export const useEvent = () => {
             event.isAllowed &&
             !event.isDraft &&
             !isEventClosed.value &&
+            !isInProgress.value &&
             !isFinished.value
         );
     });
@@ -50,6 +92,10 @@ export const useEvent = () => {
         }
 
         if (profile.id === event?.creator?.id) {
+            return false;
+        }
+
+        if (isInProgress.value) {
             return false;
         }
 
@@ -163,6 +209,10 @@ export const useEvent = () => {
             return false;
         }
 
+        if (isInProgress.value || isFinished.value) {
+            return false;
+        }
+
         if (isSubscribed.value) {
             const unSubscribed = await unSubscribeEvent({
                 eventId,
@@ -192,31 +242,13 @@ export const useEvent = () => {
                 }
 
                 await eventStore.fetchOneEvent(route.params.slug);
+                openSubscriptionSuccessModal();
                 return true;
             }
         }
 
         return false;
     };
-
-    const isFinished = computed(() => {
-        const event = eventStore.oneEvent;
-
-        const endRaw = event?.endTime ?? event?.end_time;
-
-        if (!endRaw) {
-            return false;
-        }
-
-        const endMs = new Date(endRaw).getTime();
-
-        if (!Number.isFinite(endMs)) {
-            return false;
-        }
-
-        return Date.now() > endMs;
-    });
-
 
     const cancelEvent = async () => {
         const event = eventStore.oneEvent;
@@ -226,16 +258,16 @@ export const useEvent = () => {
         if (event.type === 'GAME') {
             const updatedEvent = await updateGame(event.id, event.game.id, changedEvent);
 
-            if (updatedEvent) {
-                router.replace('/events')
-            }
+            // if (updatedEvent) {
+            //     router.replace('/events')
+            // }
         }
         else {
             const updatedEvent = await updateMeeting(event.id, changedEvent);
             
-            if (updatedEvent) {
-                router.replace('/events')
-            }
+            // if (updatedEvent) {
+            //     router.replace('/events')
+            // }
         }
     }
 
@@ -258,7 +290,7 @@ export const useEvent = () => {
     });
 
     const showClosedRegistrationNotice = computed(() => {
-        return isEventClosed.value && !isFinished.value && !isSubscribed.value;
+        return isEventClosed.value && !isInProgress.value && !isFinished.value && !isSubscribed.value;
     });
 
     
@@ -275,10 +307,13 @@ export const useEvent = () => {
         eventStore,
         userStore,
         route,
+        isInProgress,
         isFinished,
         subscribeAction,
         cancelEvent,
         isRejoinBlockedModalOpen,
         closeRejoinBlockedModal,
+        isSubscriptionSuccessModalOpen,
+        closeSubscriptionSuccessModal,
     }
 }

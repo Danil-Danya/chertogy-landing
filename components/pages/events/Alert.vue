@@ -87,11 +87,7 @@
         },
         {
             icon: Message,
-            text: 'Нажимайте на <span class="alert__text-purple">Событие</span> для отображения подробной информации'
-        },
-        {
-            icon: Heart,
-            text: 'Обратите внимание на тип <span class="alert__text-purple">События</span> — Игровая сессия или Мероприятие'
+            text: 'Жмите на <span class="alert__text-purple">Событие</span> для отображения подробной информации'
         },
         {
             icon: Pen,

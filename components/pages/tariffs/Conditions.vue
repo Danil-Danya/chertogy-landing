@@ -4,6 +4,12 @@
             <div class="conditions__content">
                 <h2 class="title conditions__title">Условия посещения клуба</h2>
             </div>
+            <Transition name="modal">
+                <SocialModal
+                    v-if="isSocialModalOpen"
+                    @close="closeSocialModal"
+                />
+            </Transition>
             <div class="conditions__container">
                 <div class="conditions__item" v-for="item in conditionsList" :key="item">
                     <p class="conditions__text text">{{ item.text }}</p>
@@ -12,7 +18,10 @@
             </div>
             <div class="conditions__banner">
                 <div class="conditions__banner-block">
-                    <h3 class="conditions__banner-slogan">Хотите посетить клуб на особых условиях? Обращайтесь к <a href="https://t.me/ChertogiGeroev" target="_blank" rel="noopener noreferrer" class="red">Смотрителю</a></h3>
+                    <h3 class="conditions__banner-slogan">
+                        Хотите посетить клуб на особых условиях? Обращайтесь к
+                        <button type="button" class="conditions__banner-link red" @click="openSocialModal">Смотрителю</button>
+                    </h3>
                 </div>
             </div>
         </div>
@@ -20,6 +29,17 @@
 </template>
 
 <script setup>
+    import SocialModal from '~/components/shared/modals/SocialModal.vue';
+
+    const isSocialModalOpen = ref(false);
+
+    const openSocialModal = () => {
+        isSocialModalOpen.value = true;
+    };
+
+    const closeSocialModal = () => {
+        isSocialModalOpen.value = false;
+    };
 
     const conditionsList = ref([
         {

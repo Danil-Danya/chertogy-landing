@@ -5,6 +5,11 @@
         &-container {
             display: flex;
             gap: 10px;
+            &-info {
+                display: flex;
+                gap: 20px;
+                align-items: center;
+            }
         }
     }
 
@@ -50,11 +55,13 @@
 
     &__type {
         color: #FFFFFF;
-        font-size: 20px;
+        font-size: 18px;
         display: flex;
         gap: 10px;
         cursor: pointer;
         transition: 300ms;
+        font-family: "Alegreya SC";
+        //text-transform: uppercase;
 
         &:hover {
             color: var(--04-text-main, #e7c4f0);

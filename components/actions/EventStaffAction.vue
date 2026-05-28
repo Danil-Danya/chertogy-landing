@@ -15,8 +15,8 @@
                     <p class="event__followers-text">{{ eventStore.oneEvent.subscribers.length }}/{{ eventStore.oneEvent.maxPlayers }}</p>
                 </div>
             </div>
-            <div class="event__center-buttons">
-                <div class="event__center-status" v-if="eventStore.oneEvent.registrationType === 'OPEN' && !isFinished">
+            <div class="event__center-buttons" v-if="!isCanceled">
+                <div class="event__center-status" v-if="eventStore.oneEvent.registrationType === 'OPEN' && !isInProgress && !isFinished">
                     <button class="event__center-status-button red" @click="updatedRegistrationType">
                         <span class="event__center-status-icon">
                             <AlertIcon />
@@ -24,7 +24,7 @@
                         <span>Закрыть запись</span>
                     </button>
                 </div>
-                <div class="event__center-status" v-else-if="!isFinished">
+                <div class="event__center-status" v-else-if="!isInProgress && !isFinished">
                     <button class="event__center-status-button green" @click="updatedRegistrationType">
                         <span class="event__center-status-icon">
                             <KeyIcon />
@@ -32,11 +32,16 @@
                         <span>Открыть запись</span>
                     </button>
                 </div>
-                <button class="event__center-cancel" @click="toggleCancel" v-if="!isFinished">
+                <button class="event__center-cancel" @click="toggleCancel" v-if="!isInProgress && !isFinished">
                     <span class="event__center-status-icon">
                         <CancelIcon />
                     </span>
                     <span>Отменить событие</span>
+                </button>
+            </div>
+            <div class="event__center-status" v-if="isCanceled">
+                <button class="event__center-status-button red" type="button">
+                    <span>Событие отменено</span>
                 </button>
             </div>
         </div>
@@ -54,7 +59,7 @@
             </div>
         </div>
         <div class="event__subscribers" v-if="eventStore.oneEvent.subscribers && userStore.profile">
-            <div class="event__subscribers-item" v-for="subscriber in eventStore.oneEvent.subscribers" :key="subscriber">
+            <div class="event__subscribers-item" v-for="subscriber in eventStore.oneEvent.subscribers" :key="subscriber" v-if="!isCanceled">
                 <input
                     class="event__subscribers-checkbox"
                     type="checkbox"
@@ -81,7 +86,7 @@
             </div>
         </div>
         <div class="event__actions">
-            <button class="event__center-status-button dark delete" @click="toggleDelete" v-if="hasSelectedUsers && !isFinished">
+            <button class="event__center-status-button dark delete" @click="toggleDelete" v-if="hasSelectedUsers && !isInProgress && !isFinished">
                 <span class="event__center-status-icon">
                     <UnSubscribeIcon />
                 </span>
@@ -89,7 +94,7 @@
             </button>
             <button
                 class="event__center-status-button dark delete"
-                v-if="hasSelectedPendingUsers && !isFinished"
+                v-if="hasSelectedPendingUsers && !isInProgress && !isFinished"
                 @click="toggleApply"
             >
                 <span class="event__center-status-icon green">
@@ -97,26 +102,26 @@
                 </span>
                 <span>Утвердить ожидающих</span>
             </button>
-            <button class="event__button-action" @click="toggleSubscribe" v-if="!isFinished">
+            <button class="event__button-action" @click="toggleSubscribe" v-if="!isInProgress && !isFinished && !isCanceled">
                 <span class="event__button-icon">
                     <UserIcon />
                 </span>
                 <span>Добавить игрока</span>
             </button>
             <div class="event__action" v-if="canManageSubscription">
-                <button class="event__button-action" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && !isWaiting && !isFinished">
+                <button class="event__button-action" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && !isWaiting && !isFinished && !isCanceled">
                     <span class="event__button-icon">
                         <EditIcon />
                     </span>
                     <span>Записаться</span>
                 </button>
-                <button class="event__button-action waiting" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && isWaiting">
+                <button class="event__button-action waiting" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && isWaiting && !isCanceled">
                     <span class="event__button-icon">
                         <ClockWaitIcon />
                     </span>
                     <span>Ожидать</span>
                 </button>
-                <button class="event__button-action bg-red" @click="openUnsubscribeModal" v-if="isSubscribed && myStatus !== 'pending'">
+                <button class="event__button-action bg-red" @click="openUnsubscribeModal" v-if="isSubscribed && myStatus !== 'pending' && !isCanceled">
                     <span class="event__button-icon">
                         <UnSubscribeIcon />
                     </span>
@@ -124,7 +129,13 @@
                 </button>
                 <button class="event__button-action waiting" @click="openUnsubscribeModal" v-if="myStatus === 'pending' && isSubscribed">Отменить ожидание</button>
             </div>
-            <button class="event__button-action locked" v-if="isFinished" type="button">
+            <button class="event__button-action locked" v-if="isInProgress" type="button" data-state="in-progress">
+                <span class="event__button-icon">
+                    <ClockWaitIcon />
+                </span>
+                <span>Событие идет</span>
+            </button>
+            <button class="event__button-action locked" v-if="isFinished && !isCanceled" type="button">
                 <span class="event__button-icon">
                     <ClosedIcon />
                 </span>
@@ -132,7 +143,7 @@
             </button>
             <button
                 class="event__button-action locked"
-                v-if="showClosedRegistrationNotice"
+                v-if="showClosedRegistrationNotice && !isCanceled"
                 type="button"
             >
                 <span class="event__button-icon">
@@ -192,6 +203,12 @@
             @close="closeRejoinBlockedModal"
         />
     </Transition>
+    <Transition name="modal">
+        <SubscriptionSuccessModal
+            v-if="isSubscriptionSuccessModalOpen"
+            @close="closeSubscriptionSuccessModal"
+        />
+    </Transition>
 
 </template>
 
@@ -204,6 +221,7 @@
     import UnsubscribeModal from '../shared/modals/UnsubscribeModal.vue';
     import CaptchaModal from '../shared/modals/CaptchaModal.vue';
     import EventRejoinBlockedModal from '../shared/modals/EventRejoinBlockedModal.vue';
+    import SubscriptionSuccessModal from '../shared/modals/SubscriptionSuccessModal.vue';
     import { useSubscriptionCaptcha } from '@/composables/useSubscriptionCaptcha';
 
     import { applySubscribe, subscribeEvent, unSubscribeEvent, updateEventStatus } from '~/api/events';
@@ -241,6 +259,10 @@
     });
 
     const updatedRegistrationType = async () => {
+        if (isInProgress.value || isFinished.value) {
+            return;
+        }
+
         const updatedStatus = await updateEventStatus(eventStore.oneEvent.id);
         if (updatedStatus) {
             await eventStore.fetchOneEvent(eventStore.oneEvent.slug);
@@ -248,6 +270,11 @@
     }
 
     const handleSubscribe = async (users) => {
+        if (isInProgress.value || isFinished.value) {
+            toggleSubscribe();
+            return;
+        }
+
         for (const userId of users) {
             await subscribeEvent({
                 eventId: eventStore.oneEvent.id,
@@ -271,6 +298,11 @@
     };
 
     const handleSubscribeWaiting = async () => {
+        if (isInProgress.value || isFinished.value) {
+            toggleApply();
+            return;
+        }
+
         for (const user of selectedUsers.value) {
             await applySubscribe({
                 eventId: eventStore.oneEvent.id,
@@ -312,11 +344,14 @@
         eventStore,
         userStore,
         showClosedRegistrationNotice,
+        isInProgress,
         isFinished,
         isFollowingCreator,
         route,
         isRejoinBlockedModalOpen,
         closeRejoinBlockedModal,
+        isSubscriptionSuccessModalOpen,
+        closeSubscriptionSuccessModal,
     } = useEvent();
     const { shouldRequireCaptcha } = useSubscriptionCaptcha();
 
@@ -386,6 +421,10 @@
         const userId = userStore.profile?.id;
         const eventId = eventStore.oneEvent?.id;
 
+        if (isInProgress.value || isFinished.value) {
+            return;
+        }
+
         if (!shouldRequireCaptcha({ eventId, userId })) {
             await subscribeAction();
             return;
@@ -403,5 +442,10 @@
 
         await subscribeAction({ resetCaptchaGate: true });
     };
+
+    const isCanceled = computed(() => {
+        return eventStore.oneEvent.isCanceled;
+    });
+    
     
 </script>

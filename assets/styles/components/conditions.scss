@@ -61,5 +61,13 @@
                 font-size: 22px;
             }
         }
+
+        &-link {
+            background: transparent;
+            border: 0;
+            padding: 0;
+            cursor: pointer;
+            font: inherit;
+        }
     }
 }

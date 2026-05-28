@@ -28,27 +28,38 @@
             </div>
         </div>
         <div class="event__action" v-if="canManageSubscription">
-            <button class="event__button-action" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && !isWaiting">
+            <button class="event__button-action" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && !isWaiting && !isCanceled">
                 <span class="event__button-icon">
                     <EditIcon />
                 </span>
                 <span>Записаться</span>
             </button>
-            <button class="event__button-action waiting" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && isWaiting">
+            <button class="event__button-action waiting" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && isWaiting && !isCanceled">
                 <span class="event__button-icon">
                     <ClockWaitIcon />
                 </span>
                 <span>Ожидать</span>
             </button>
-            <button class="event__button-action bg-red" @click="openUnsubscribeModal" v-if="isSubscribed && myStatus !== 'pending'">
+            <button class="event__button-action bg-red" @click="openUnsubscribeModal" v-if="isSubscribed && myStatus !== 'pending' && !isCanceled">
                 <span class="event__button-icon">
                     <UnSubscribeIcon />
                 </span>
                 <span>Отменить запись</span>
             </button>
-            <button class="event__button-action waiting" @click="openUnsubscribeModal" v-if="myStatus === 'pending'">Отменить ожидание</button>
+            <button class="event__button-action waiting" @click="openUnsubscribeModal" v-if="myStatus === 'pending' && !isCanceled">
+                <span class="event__button-icon">
+                    <ClockWaitIcon />
+                </span>
+                <span>Отменить ожидание</span>
+            </button>
         </div>
-        <button class="event__button-action locked" v-if="isFinished" type="button">
+        <button class="event__button-action locked" v-if="isInProgress && !isCanceled" type="button" data-state="in-progress">
+            <span class="event__button-icon">
+                <ClockWaitIcon />
+            </span>
+            <span>Событие идет</span>
+        </button>
+        <button class="event__button-action locked" v-if="isFinished && !isCanceled" type="button">
             <span class="event__button-icon">
                 <ClosedIcon />
             </span>
@@ -56,7 +67,7 @@
         </button>
         <button
             class="event__button-action locked"
-            v-if="showClosedRegistrationNotice"
+            v-if="showClosedRegistrationNotice && !isCanceled"
             type="button"
         >
             <span class="event__button-icon">
@@ -64,7 +75,12 @@
             </span>
             <span>Запись закрыта</span>
         </button>
-        <div class="event__subscribers">
+        <div class="event__center-status" v-if="isCanceled">
+                <button class="event__center-status-button red" type="button">
+                    <span>Событие отменено</span>
+                </button>
+            </div>
+        <div class="event__subscribers" v-if="!isCanceled">
             <div class="event__subscribers-item" v-for="subscriber in eventStore.oneEvent.subscribers" :key="subscriber">
                 <a :href="`https://чертоги-героев.рф/panel/user/${subscriber.id}`" 
                     class="event__subscribers-link blue" 
@@ -100,6 +116,12 @@
             @close="closeRejoinBlockedModal"
         />
     </Transition>
+    <Transition name="modal">
+        <SubscriptionSuccessModal
+            v-if="isSubscriptionSuccessModalOpen"
+            @close="closeSubscriptionSuccessModal"
+        />
+    </Transition>
 </template>
 
 <script setup>
@@ -107,8 +129,10 @@
     import { useEvent } from '@/composables/useEvent';
     import { useSubscriptionCaptcha } from '@/composables/useSubscriptionCaptcha';
     import EventRejoinBlockedModal from '../shared/modals/EventRejoinBlockedModal.vue';
+    import SubscriptionSuccessModal from '../shared/modals/SubscriptionSuccessModal.vue';
     import UnsubscribeModal from '../shared/modals/UnsubscribeModal.vue';
     import CaptchaModal from '../shared/modals/CaptchaModal.vue';
+import { is } from 'date-fns/locale';
 
     const SubscribeIcon = defineAsyncComponent(() => import('~/components/icons/events/cards/Subscribes.vue'));
 
@@ -131,10 +155,13 @@
         eventStore,
         userStore,
         showClosedRegistrationNotice,
+        isInProgress,
         isFinished,
         isFollowingCreator,
         isRejoinBlockedModalOpen,
         closeRejoinBlockedModal,
+        isSubscriptionSuccessModalOpen,
+        closeSubscriptionSuccessModal,
     } = useEvent();
     const { shouldRequireCaptcha } = useSubscriptionCaptcha();
     
@@ -159,6 +186,10 @@
         const userId = userStore.profile?.id;
         const eventId = eventStore.oneEvent?.id;
 
+        if (isInProgress.value || isFinished.value) {
+            return;
+        }
+
         if (!shouldRequireCaptcha({ eventId, userId })) {
             await subscribeAction();
             return;
@@ -177,5 +208,8 @@
         await subscribeAction({ resetCaptchaGate: true });
     };
 
+    const isCanceled = computed(() => {
+        return eventStore.oneEvent.isCanceled;
+    });
 
 </script>

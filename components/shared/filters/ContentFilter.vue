@@ -18,7 +18,7 @@
                             v-model="filters.show_meetings"
                         />
                         <label for="type-event" class="content__filter-label">
-                            Показать и мероприятия
+                            Показать мероприятия
                         </label>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                         v-model="filters.lasted"
                     />
                     <label for="filter-lasted" class="content__filter-label">
-                        Показать и прошедшие
+                        Показать прошедшие
                     </label>
                 </div>
                 <div class="content__filter-checkbox-container">
@@ -41,7 +41,7 @@
                         v-model="filters.closed"
                     />
                     <label for="filter-closed" class="content__filter-label">
-                        Показать и закрытые
+                        Показать закрытые
                     </label>
                 </div>
             </TransitionGroup>
@@ -148,7 +148,7 @@
         max_price: null,
         lasted: true,
         closed: false,
-        show_meetings: false
+        show_meetings: true
     });
 
     const filters = ref(createDefaultFilters());
@@ -264,8 +264,13 @@
                 return;
             }
 
-            if (key === 'closed' || key === 'show_meetings') {
+            if (key === 'closed') {
                 nextFilters[key] = parseBooleanQueryValue(getQueryValue(query[key]));
+                return;
+            }
+
+            if (key === 'show_meetings') {
+                nextFilters[key] = parseBooleanQueryValue(getQueryValue(query[key]), true);
                 return;
             }
 
