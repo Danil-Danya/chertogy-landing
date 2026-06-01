@@ -182,7 +182,6 @@
     import EventUserAction from '~/components/actions/EventUserAction.vue';
     import EditIcon from '~/components/icons/events/cards/Edit.vue';
     import CopyIcon from '~/components/icons/events/cards/Copy.vue';
-    import Unlock from '@/components/icons/events/info/Unlock.vue';
 
     const CalendarIcon = defineAsyncComponent(() => import('@/components/icons/events/info/Calendar.vue'));
     const ClockIcon = defineAsyncComponent(() => import('@/components/icons/events/info/Clock.vue'));
@@ -320,10 +319,12 @@
                 {
                     data: { icon: CalendarIcon },
                     text: start
-                        ? start.toLocaleDateString('ru-RU', {
+                        ? `${start.toLocaleDateString('ru-RU', {
+                            weekday: 'short',
+                        }).replace('.', '').toUpperCase()}, ${start.toLocaleDateString('ru-RU', {
                             day: 'numeric',
-                            month: 'long'
-                        })
+                            month: 'long',
+                        })}`
                         : 'Дата не указана'
                 },
                 {
@@ -344,21 +345,19 @@
                     text: event.place || 'Локация не указана'
                 }
             ];
+
             eventInfoTitles.value = [
                 {
                     data: { title: 'Опыт игроков:' },
-                    text: game?.skill.join(', ') || 'Не указано'
+                    text: game?.skill?.join(', ') || 'Не указано'
                 },
                 {
                     data: { title: 'Подготовка к игре:' },
-                    text:
-                        game?.necessaryPlayerPreparation ||
-                        'Не указано'
-                    },
-                    {
-                        data: { title: 'Уровень персонажа:' },
-                        text: game?.playerLevel || 'Не указано'
-                    
+                    text: game?.necessaryPlayerPreparation || 'Не указано'
+                },
+                {
+                    data: { title: 'Уровень персонажа:' },
+                    text: game?.playerLevel || 'Не указано'
                 }
             ];
 

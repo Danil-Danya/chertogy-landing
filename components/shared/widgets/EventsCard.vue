@@ -83,6 +83,12 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="events__creator-info">
+                        <div class="events__creator-avatar">
+                            <img :src="`https://api.чертоги-героев.рф/images/${creator.profile.avatarPath}`" alt="Мастер" class="events__creator-img">
+                        </div>
+                        <h3 class="events__creator-name">{{ creator.profile.name }}</h3>
+                    </div>
                     <div class="events__card-description">
                         <p class="events__card-text text">{{ description }}</p>
                     </div>

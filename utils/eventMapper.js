@@ -9,6 +9,10 @@ export const mapEventToCard = (event) => {
     const formattedDate = (date) => {
         const dateObj = new Date(date);
 
+        const weekdayPart = dateObj.toLocaleDateString('ru-RU', {
+            weekday: 'short',
+        }).replace('.', '').toUpperCase();
+
         const datePart = dateObj.toLocaleDateString('ru-RU', {
             day: '2-digit',
             month: 'long',
@@ -19,7 +23,7 @@ export const mapEventToCard = (event) => {
             minute: '2-digit',
         });
 
-        return `${datePart}, ${timePart}`;
+        return `${weekdayPart}, ${datePart}, ${timePart}`;
     };
 
 

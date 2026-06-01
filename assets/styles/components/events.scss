@@ -532,6 +532,31 @@
             }
         }
     }
+
+    &__creator {
+        &-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        &-img {
+            width: 30px;
+            height: 30px;
+            object-fit: cover;
+            border-radius: 100%;
+        }
+
+        &-name {
+            color: var(--04-text-main, #EEE0F1);
+            font-family: "Alegreya SC";
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 120%; /* 21.6px */
+        }
+    }
 }
 
 .yellow {
