@@ -144,7 +144,7 @@
         }
         
         &-text {
-            color: var(--08-unavailable-main, #38393F);
+            color: #FFFFFF;
             text-align: center;
 
             /* PC/Helper text */
@@ -153,6 +153,12 @@
             font-style: normal;
             font-weight: 400;
             line-height: 120%; /* 16.8px */
+
+            & > a {
+                color: #FFFFFF;
+                text-decoration: underline;
+            }
+
             @include media ($sm) {
                 margin-top: 10px;
             }

@@ -193,9 +193,12 @@
 
         &-right {
             position: relative;
+            max-height: 300px;
+            margin-bottom: 20px;
 
             @include media ($md) {
                 width: 100%;
+                max-height: auto;
             }
         }
 

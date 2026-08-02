@@ -4,6 +4,11 @@ import fs from 'fs';
 import path from 'path';
 import fse from 'fs-extra';
 
+const siteUrl = 'https://xn----dtbbbhdau6cfpgt1e.xn--p1ai';
+const siteTitle = 'Чертоги героев — аутентичный клуб для игр в D&D в Москве';
+const siteDescription = 'Чертоги героев — атмосферный клуб настольных ролевых игр D&D в Москве. Играйте в подземелья и драконов с опытными мастерами и уютной компанией.';
+const siteImage = `${siteUrl}/images/og/logo-og.jpg`;
+
 const yandexMetrikaId = 108677896;
 const yandexMetrikaInitScript = `
 (function(m,e,t,r,i,k,a){
@@ -30,7 +35,7 @@ export default defineNuxtConfig({
     ssr: true,
 
     server: {
-        port: process.env.NITRO_PORT || 7000,
+        port: process.env.NITRO_PORT || 9800,
         host: process.env.NITRO_HOST || '127.0.0.1'
     },
 
@@ -45,29 +50,104 @@ export default defineNuxtConfig({
 
     app: {
         head: {
-            title: 'Чертоги героев — аутентичный клуб для игр в D&D в Москве',
+            title: siteTitle,
+            htmlAttrs: {
+                lang: 'ru'
+            },
             meta: [
-                { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-                { 
-                    name: 'description', 
-                    content: 'Чертоги героев — атмосферный клуб настольных ролевых игр D&D в Москве. Играйте в подземелья и драконов с опытными мастерами и уютной компанией.' 
+                {
+                    charset: 'utf-8'
                 },
-                { 
-                    name: 'keywords', 
-                    content: 'Чертоги героев, клуб D&D Москва, настольные ролевые игры, подземелья и драконы, ролевые вечера, клуб настольных игр, мастер D&D' 
+                {
+                    name: 'viewport',
+                    content: 'width=device-width, initial-scale=1'
+                },
+
+                {
+                    name: 'description',
+                    content: siteDescription
+                },
+                {
+                    name: 'keywords',
+                    content: 'Чертоги героев, клуб D&D Москва, настольные ролевые игры, подземелья и драконы, ролевые вечера, клуб настольных игр, мастер D&D'
+                },
+
+                {
+                    property: 'og:type',
+                    content: 'website'
+                },
+                {
+                    property: 'og:site_name',
+                    content: 'Чертоги героев'
+                },
+                {
+                    property: 'og:title',
+                    content: siteTitle
+                },
+                {
+                    property: 'og:description',
+                    content: siteDescription
+                },
+                {
+                    property: 'og:url',
+                    content: `${siteUrl}/`
+                },
+                {
+                    property: 'og:image',
+                    content: siteImage
+                },
+                {
+                    property: 'og:image:secure_url',
+                    content: siteImage
+                },
+                {
+                    property: 'og:image:type',
+                    content: 'image/png'
+                },
+                {
+                    property: 'og:image:width',
+                    content: '1200'
+                },
+                {
+                    property: 'og:image:height',
+                    content: '630'
+                },
+
+                {
+                    name: 'twitter:card',
+                    content: 'summary_large_image'
+                },
+                {
+                    name: 'twitter:title',
+                    content: siteTitle
+                },
+                {
+                    name: 'twitter:description',
+                    content: siteDescription
+                },
+                {
+                    name: 'twitter:image',
+                    content: siteImage
+                }
+            ],
+            link: [
+                {
+                    rel: 'canonical',
+                    href: `${siteUrl}/`
                 }
             ],
             script: [
                 {
                     id: 'yandex-metrika',
                     innerHTML: yandexMetrikaInitScript,
-                    tagPosition: 'head'
+                    tagPosition: 'bodyClose'
                 }
             ]
         },
         pageTransition: { name: 'page', mode: 'out-in' },
         scrollBehavior(to, from, savedPosition) {
             if (savedPosition) return savedPosition
+
             return { top: 0, left: 0 }
         }
     },

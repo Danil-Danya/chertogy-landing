@@ -98,7 +98,7 @@
         if (!isMobile.value) {
             const filterEl = filter.value;
             const contentEl = content.value;
-
+            
             const height = filterEl.getBoundingClientRect().height + 60;
 
             contentEl.style.minHeight = `${height}px`;

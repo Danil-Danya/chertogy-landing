@@ -42,7 +42,7 @@
             <div class="events__card-center">
                 <div class="events__card-right">
                     <NuxtLink :to="`/events/${slug}`">
-                        <img :src="`https://api.чертоги-героев.рф/images/${image}`" alt="Картинка" class="events__card-img" ref="img">
+                        <img :src="getImageUrl(image)" alt="Картинка" class="events__card-img" ref="img">
                     </NuxtLink>
                     <div class="events__card-marks-block">
                         <span class="events__card-price" 
@@ -63,7 +63,7 @@
                                 'closed': isFinished || isClosed
                             }"
                         >
-                            - {{ discount }} %
+                            - {{ Math.round(discount) }} %
                         </span>
                     </div>
                     <span class="events__card-locked" v-if="isStaff">
@@ -85,7 +85,7 @@
                     </div>
                     <div class="events__creator-info">
                         <div class="events__creator-avatar">
-                            <img :src="`https://api.чертоги-героев.рф/images/${creator.profile.avatarPath}`" alt="Мастер" class="events__creator-img">
+                            <img :src="getImageUrl(creator.profile.avatarPath)" alt="Мастер" class="events__creator-img">
                         </div>
                         <h3 class="events__creator-name">{{ creator.profile.name }}</h3>
                     </div>
@@ -210,6 +210,7 @@
     import { useIsMobile } from '@/composables/useIsMobile';
     import { useSubscriptionCaptcha } from '@/composables/useSubscriptionCaptcha';
     import { useSubscriptionSuccessModal } from '@/composables/useSubscriptionSuccessModal';
+    import getImageUrl from '@/utils/getImageUrl.js';
     import { subscribeEvent, unSubscribeEvent } from '~/api/events';
     import { useUserStore } from '~/store/useUsers';
     import { useEventsStore } from '~/store/useEvents';

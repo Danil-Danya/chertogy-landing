@@ -19,7 +19,11 @@
                         <h2 class="date__day" :class="{ 'is-active': item.isActive }">{{ item.dateText }}</h2>
                     </div>
                     <div class="date__item-events" v-if="item.events.length">
-                        <div class="date__item-event" v-for="event in item.events" :key="event">
+                        <div
+                            class="date__item-event"
+                            v-for="(event, index) in item.events"
+                            :key="`${item.key}-${event?.id ?? index}`"
+                        >
                             <RouterLink :to="`/events/${event.slug}`" v-if="event">
                                 <p class="text">{{ formatTime(event.startTime) }} - {{ formatTime(event.endTime) }}</p>
                                 <h3 class="date__item-title">{{ truncateText(event.title, 20) }}</h3>
@@ -79,6 +83,7 @@
 
     const eventsStore = useEventsStore();
     const route = useRoute();
+    const MAX_EVENTS_PER_DAY = 4;
 
     const today = new Date();
     const daysList = ref([]);
@@ -121,9 +126,10 @@
             daysList.value = daysList.value.map((day) => {
                 const dayEvents = allEvents
                     .filter(event => event.startTime && format(new Date(event.startTime), 'yyyy-MM-dd') === day.key)
-                    .slice(0, 3);
+                    .sort((firstEvent, secondEvent) => new Date(firstEvent.startTime) - new Date(secondEvent.startTime))
+                    .slice(0, MAX_EVENTS_PER_DAY);
 
-                while (dayEvents.length < 3) {
+                while (dayEvents.length < MAX_EVENTS_PER_DAY) {
                     dayEvents.push(null);
                 }
 

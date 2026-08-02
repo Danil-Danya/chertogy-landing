@@ -38,7 +38,7 @@
                             </span>
                         </a>
                         <a href="https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/panel/profile" class="navbar__button-link">
-                            <img :src="`${imageUrl}/${profile.profile.avatarPath}`" alt="Аватарка" class="navbar__button-img">
+                            <img :src="getImageUrl(profile.profile.avatarPath)" alt="Аватарка" class="navbar__button-img">
                         </a>
                         <a href="https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/panel/login" class="navbar__button-link" @click.prevent.stop="logout">
                             <span class="navbar__button-icon">
@@ -67,6 +67,7 @@
     import { useRouter } from 'vue-router';
     import { useUserStore } from '@/store/useUsers';
     import { useNotificationsStore } from '~/store/notification';
+    import getImageUrl from '@/utils/getImageUrl.js';
 
     import VKIcon from '@/components/icons/navbar/VK.vue';
     import TGIcon from '@/components/icons/navbar/Telegram.vue';
@@ -84,8 +85,6 @@
     
 
     const profile = computed(() => userStore.profile);
-
-    const imageUrl = import.meta.env.VITE_APP_IMAGE_URL;
 
     const navLinks = ref([
         { text: 'О клубе', path: '/' },

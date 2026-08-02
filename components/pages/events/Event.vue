@@ -29,7 +29,7 @@
                     <div class="event__container-top">
                         <div class="event__top-left">
                             <div class="event__container-img">
-                                <img :src="`${imageUrl}/${eventStore.oneEvent.previewPath}`" alt="Картинка" class="event__container-img" ref="img">
+                                <img :src="getImageUrl(eventStore.oneEvent.previewPath)" alt="Картинка" class="event__container-img" ref="img">
                                 <div class="event__container-glass" v-if="isFinished"></div>
                                 <div class="event__price-list">
                                     <template v-if="eventStore.oneEvent.discount && eventStore.oneEvent.discount > 0">
@@ -48,7 +48,7 @@
                                             class="event__price-sale"
                                             :class="isEventClosed || isFinished ? 'closed' : null"
                                         >
-                                            - {{ eventStore.oneEvent.discount }} %
+                                            - {{ Math.round(eventStore.oneEvent.discount) }} %
                                         </span>
                                     </template>
 
@@ -176,6 +176,7 @@
     import { useRoute, useRouter } from 'vue-router';
     import { useUserStore } from '@/store/useUsers';
     import { useEvent } from '@/composables/useEvent';
+    import getImageUrl from '@/utils/getImageUrl.js';
     import { subscribeEvent, unSubscribeEvent, updateEventStatus } from '~/api/events';
 
     import EventStaffAction from '~/components/actions/EventStaffAction.vue';
@@ -204,8 +205,6 @@
 
     await eventStore.fetchOneEvent(getRouteSlug());
     if (!eventStore.oneEvent?.id) await router.replace('/event-not-found');
-
-    const imageUrl = import.meta.env.VITE_APP_IMAGE_URL;
 
     const eventTags = ref([]);
     const eventInfoIcons = ref([]);

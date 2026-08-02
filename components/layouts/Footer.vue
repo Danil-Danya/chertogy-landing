@@ -32,6 +32,9 @@
                 <p class="footer__bottom-text">
                     <a class="footer__bottom-text" target="_blank" rel="noopener noreferrer" href="https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/panel/privacy-policy">Политика обработки персональных данных и конфиденциальности</a>
                 </p>
+                <p class="footer__bottom-text">
+                    <a class="footer__bottom-text" target="_blank" rel="noopener noreferrer" href="https://m.vk.ru/@chertogi.club-oferta">Публичная оферта</a>
+                </p>
             </div>
         </div>
     </section>

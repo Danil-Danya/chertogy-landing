@@ -12,9 +12,10 @@
 
 <script setup>
 
-    import { computed, watchEffect, onMounted } from 'vue';
+    import { computed, onMounted } from 'vue';
     import { useRoute } from 'vue-router';
     import { useNewsStore } from '@/store/useNews.js';
+    import getImageUrl from '@/utils/getImageUrl.js';
 
     import Post from "@/components/pages/news/slug/Post.vue";
     import NewsSlider from "@/components/pages/news/slug/NewsSlider.vue";
@@ -28,10 +29,35 @@
 
     await newsStore.fetchOneNews(slug.value);
 
-    const previewImage = computed(() => {
-        const path = newsStore.oneNews?.previewPath;
-        return path ? `https://api.чертоги-героев.рф/images/${path}` : null;
-    });
+    // useHead(() => {
+    //     const title = newsStore.oneNews?.title || 'Чертоги Героев';
+    //     const description = newsStore.oneNews?.shortDescription || 'Чертоги Героев — аутентичный клуб настольных ролевых игр.';
+    //     const url = `https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/news/${slug.value}`;
+    //     const image = newsStore.oneNews?.previewPath
+    //         ? `https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/share-images/${newsStore.oneNews.previewPath}`
+    //         : 'https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/images/logos/logo-nav.png';
+
+    //     return {
+    //         title,
+    //         meta: [
+    //             { name: 'description', content: description },
+    //             { name: 'keywords', content: 'Чертоги Героев, клуб D&D Москва, настольные ролевые игры, Dungeons and Dragons, клуб настолок' },
+    //             { property: 'og:type', content: 'website' },
+    //             { property: 'og:title', content: title },
+    //             { property: 'og:description', content: description },
+    //             { property: 'og:url', content: url },
+    //             { property: 'og:image', content: image },
+    //             { property: 'og:image:width', content: '1200' },
+    //             { property: 'og:image:height', content: '630' },
+    //             { name: 'twitter:card', content: 'summary_large_image' },
+    //             { name: 'twitter:title', content: title },
+    //             { name: 'twitter:description', content: description },
+    //             { name: 'twitter:image', content: image }
+    //         ]
+    //     };
+    // });
+
+    const previewImage = computed(() => getImageUrl(newsStore.oneNews?.previewPath));
 
 
     const description = computed(() => {
@@ -47,21 +73,6 @@
             .split('\n')
             .map(line => line.trim())
             .filter(Boolean);
-    });
-
-
-    watchEffect(() => {
-        if (newsStore.oneNews) {
-            useHead({
-                title: newsStore.oneNews.title || 'Чертоги Героев',
-                meta: [
-                    { name: 'description', content: newsStore.oneNews.shortDescription || 'Чертоги Героев — аутентичный клуб настольных ролевых игр.' },
-                    { name: 'keywords', content: 'Чертоги Героев, клуб D&D Москва, настольные ролевые игры, Dungeons and Dragons, клуб настолок' },
-                    { property: 'og:title', content: newsStore.oneNews.title || 'Чертоги Героев — клуб настольных ролевых игр в Москве' },
-                    { property: 'og:description', content: newsStore.oneNews.shortDescription || 'Аутентичный клуб настольных ролевых игр в центре Москвы.' }
-                ]
-            });
-        }
     });
 
     watch(slug, async (newSlug) => {

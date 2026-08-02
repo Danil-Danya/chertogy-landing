@@ -4,9 +4,9 @@ services:
   nuxt-app:
     build: .
     ports:
-      - "7000:7000"
+      - "9801:9801"
     environment:
-      NITRO_PORT: 7000
+      NITRO_PORT: 9801
       NITRO_HOST: 0.0.0.0
     volumes:
       - .:/app

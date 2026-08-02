@@ -38,7 +38,7 @@
                                 :title="truncateText(item.title, 36)"
                                 :date="item.createdAt"
                                 :text="truncateText(item.shortDescription, 100)"
-                                :image="`https://api.чертоги-героев.рф/images/${item.previewPath}`"
+                                :image="getImageUrl(item.previewPath)"
                                 :slug="item.slug"
                                 class="news__card-slider"
                                 isSlider="true"
@@ -62,6 +62,7 @@
 
     import NewsCard from '@/components/shared/widgets/NewsCard.vue';
 
+    import getImageUrl from '@/utils/getImageUrl.js';
     import truncateText from '@/utils/truncateText.js';
 
     import 'swiper/css';

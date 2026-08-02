@@ -20,6 +20,27 @@
                     </a>
                 </div>
             </div>
+
+            <p class="modal__consent text">
+                Нажимая кнопку, вы соглашаетесь с
+                <a
+                    href="https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/panel/privacy-policy"
+                    class="modal__consent-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Политикой обработки персональных данных и конфиденциальности
+                </a>
+                и условиями
+                <a
+                    href="https://m.vk.ru/@chertogi.club-oferta"
+                    class="modal__consent-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Публичной оферты
+                </a>
+            </p>
         </div>
     </div>
 </template>
@@ -52,3 +73,21 @@
     };
 
 </script>
+
+<style scoped lang="scss">
+    .modal__consent {
+        margin-top: 24px;
+        text-align: center;
+        color: #EEE0F1;
+    }
+
+    .modal__consent-link {
+        color: #AA70BF;
+        text-decoration: none;
+        transition: color 300ms ease;
+
+        &:hover {
+            color: #C88BE0;
+        }
+    }
+</style>

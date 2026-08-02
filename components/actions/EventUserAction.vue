@@ -18,7 +18,7 @@
             <h2 class="event__center-title">Мастер</h2>
             <div class="event__author-data">
                 <a :href="`https://чертоги-героев.рф/panel/user/${eventStore.oneEvent.creator.id}`" class="event__author-data">
-                    <img :src="`https://api.чертоги-героев.рф/images/${eventStore.oneEvent.creator.profile?.avatarPath}`" alt="avatar" class="event__author-avatar">
+                    <img :src="getImageUrl(eventStore.oneEvent.creator.profile?.avatarPath)" alt="avatar" class="event__author-avatar">
                     <p class="event__author-name">{{ eventStore.oneEvent.creator.profile?.name }}</p>
                 </a>
                 <span class="start__icon">
@@ -128,6 +128,7 @@
 
     import { useEvent } from '@/composables/useEvent';
     import { useSubscriptionCaptcha } from '@/composables/useSubscriptionCaptcha';
+    import getImageUrl from '@/utils/getImageUrl.js';
     import EventRejoinBlockedModal from '../shared/modals/EventRejoinBlockedModal.vue';
     import SubscriptionSuccessModal from '../shared/modals/SubscriptionSuccessModal.vue';
     import UnsubscribeModal from '../shared/modals/UnsubscribeModal.vue';

@@ -4,7 +4,7 @@ import convertKeysToCamelCase from "@/utils/convertKeysToCamelCase.js";
 import convertToSnakeCase  from '@/utils/convertToSnakeCase.js';
 
 const api = axios.create({
-    baseURL: 'https://api.чертоги-героев.рф/server-api/',
+    baseURL: 'https://test-api.чертоги-героев.рф/server-api/',
     timeout: 5000
 });
 
@@ -21,7 +21,7 @@ api.interceptors.request.use((request) => {
         request.data = convertToSnakeCase(request.data);
     }
 
-    if (localStorage.getItem('accessToken')) {
+    if (process.client && localStorage.getItem('accessToken')) {
         request.headers = {
             ...request.headers,
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`

@@ -19,7 +19,11 @@ const mapSubscribeError = (error) => {
 
 const getEvents = async (filter) => {
     try {
-        const response = await api.post('/events', filter);
+        const response = await api.post('/events', {
+            ...filter,
+            page: 1,
+            limit: 30
+        });
         return response.data;
     }
     catch (error) {

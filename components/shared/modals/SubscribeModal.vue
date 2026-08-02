@@ -42,7 +42,7 @@
                             class="modal__filter-label"
                         ></label>
                     </div>
-                    <img :src="`${IMG_PATH}/${user.profile.avatarPath}`" alt="avatar" class="modal__users-avatar">
+                    <img :src="getImageUrl(user?.profile?.avatarPath)" alt="avatar" class="modal__users-avatar">
                     <p class="modal__user-text text">{{ user.login }}</p>
                 </div>
             </div>
@@ -65,8 +65,7 @@
     import { ref, watch, reactive } from 'vue';
 
     import { useUserStore } from '~/store/useUsers';
-
-    const IMG_PATH = import.meta.env.VITE_APP_IMAGE_URL;
+    import getImageUrl from '@/utils/getImageUrl.js';
 
     const emit = defineEmits([
         'confirm',

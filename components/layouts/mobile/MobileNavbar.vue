@@ -31,7 +31,7 @@
                             <p class="navbar__buttons-text">Войти</p>
                         </a>
                         <a href="https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/panel/profile" class="navbar__button-link" v-if="profile">
-                            <img :src="`${imageUrl}/${profile.profile.avatarPath}`" alt="Аватарка" class="navbar__button-img">
+                            <img :src="getImageUrl(profile.profile.avatarPath)" alt="Аватарка" class="navbar__button-img">
                         </a>
                         <TransitionGroup name="nav-button">
                             <button class="navbar__button" v-show="!isActiveDropDown" @click="toggleActiveDropdown">
@@ -62,6 +62,7 @@
     import { useRouter } from 'vue-router';
     import { useUserStore } from '@/store/useUsers';
     import { useNotificationsStore } from '~/store/notification';
+    import getImageUrl from '@/utils/getImageUrl.js';
 
     import NavbarMobileDropDown from '@/components/shared/dropdowns/NavbarMobileDropdown.vue';
     //import NavbarMobileDropdownProfile from '@/widgets/dropdowns/NavbarMobileDropdownProfile.vue';
@@ -80,8 +81,6 @@
     await notificationsStore.fetchNotifications();
 
     const profile = computed(() => userStore.profile);
-
-    const imageUrl = import.meta.env.VITE_APP_IMAGE_URL;
 
     const isActiveDropDown = ref(false);
 

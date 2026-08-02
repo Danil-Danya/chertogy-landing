@@ -10,6 +10,12 @@
             <div class="alert__container">
                 <h1 class="title">Все игры и события клуба</h1>
             </div>
+            <Transition name="modal">
+                <SocialModal
+                    v-if="isSocialModalOpen"
+                    @close="closeSocialModal"
+                />
+            </Transition>
             <div class="alert__content" v-if="showHelpBlock">
                 <div class="alert__information">
                     <div class="alert__information-item" v-for="item in information" :key="item">
@@ -23,7 +29,7 @@
                     <img src="@/assets/images/events/bg.png" alt="bg" class="alert__help-bg">
                     <h2 class="alert__help-title">Теряетесь?</h2>
                     <p class="text alert__help-text">Жмите кнопку снизу, и мы поможем подобрать вам игру!</p>
-                    <a target="_blank" rel="noopener noreferrer" href="https://t.me/ChertogiGeroev" class="alert__help-button">Помогите, я новичок!</a>
+                    <button type="button" class="alert__help-button" @click="openSocialModal">Помогите, я новичок!</button>
                 </div>
                     <div class="alert__help" v-else>
                     <img src="@/assets/images/events/bg.png" alt="bg" class="alert__help-bg">
@@ -43,6 +49,7 @@
 
 <script setup>
 
+    import SocialModal from '~/components/shared/modals/SocialModal.vue';
     import Clock from '~/components/icons/events/alerts/Clock.vue';
     import Filter from '~/components/icons/events/alerts/Filter.vue';
     import Message from '~/components/icons/events/alerts/Message.vue';
@@ -54,7 +61,17 @@
     const PenIcon = defineAsyncComponent(() => import('@/components/icons/development/Pen.vue'));
     
     import { useUserStore } from '~/store/useUsers';
-    
+
+    const isSocialModalOpen = ref(false);
+
+    const openSocialModal = () => {
+        isSocialModalOpen.value = true;
+    };
+
+    const closeSocialModal = () => {
+        isSocialModalOpen.value = false;
+    };
+
     const userStore = useUserStore();
     await userStore.fetchProfile();
 

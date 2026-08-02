@@ -10,7 +10,7 @@
                     :title="truncateText(item.title, 50)"
                     :date="item.createdAt"
                     :text="truncateText(item.shortDescription, 130)"
-                    :image="`https://api.чертоги-героев.рф/images/${item.previewPath}`"
+                    :image="getImageUrl(item.previewPath)"
                     :slug="item.slug"
                     :key="item"
                 />
@@ -30,6 +30,7 @@
     import NewsCard from '@/components/shared/widgets/NewsCard.vue';
     import Pagination from '@/components/shared/instruments/Pagination.vue';
 
+    import getImageUrl from '@/utils/getImageUrl.js';
     import truncateText from '@/utils/truncateText.js';
 
     import { useRoute, useRouter } from 'vue-router';
