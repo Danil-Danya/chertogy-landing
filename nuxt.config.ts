@@ -4,11 +4,10 @@ import fs from 'fs';
 import path from 'path';
 import fse from 'fs-extra';
 
-const siteUrl = 'https://xn----dtbbbhdau6cfpgt1e.xn--p1ai';
+const siteUrl = String(process.env.SITE_BASE_URL || 'https://xn----dtbbbhdau6cfpgt1e.xn--p1ai').replace(/\/+$/, '');
 const siteTitle = 'Чертоги героев — аутентичный клуб для игр в D&D в Москве';
 const siteDescription = 'Чертоги героев — атмосферный клуб настольных ролевых игр D&D в Москве. Играйте в подземелья и драконов с опытными мастерами и уютной компанией.';
 const siteImage = `${siteUrl}/images/og/logo-og.jpg`;
-
 const yandexMetrikaId = 108677896;
 const yandexMetrikaInitScript = `
 (function(m,e,t,r,i,k,a){
@@ -74,61 +73,20 @@ export default defineNuxtConfig({
 
                 {
                     property: 'og:type',
-                    content: 'website'
-                },
-                {
-                    property: 'og:site_name',
-                    content: 'Чертоги героев'
-                },
-                {
-                    property: 'og:title',
-                    content: siteTitle
-                },
-                {
-                    property: 'og:description',
-                    content: siteDescription
+                    content: 'website',
                 },
                 {
                     property: 'og:url',
                     content: `${siteUrl}/`
                 },
                 {
-                    property: 'og:image',
-                    content: siteImage
-                },
-                {
-                    property: 'og:image:secure_url',
-                    content: siteImage
-                },
-                {
-                    property: 'og:image:type',
-                    content: 'image/png'
-                },
-                {
-                    property: 'og:image:width',
-                    content: '1200'
-                },
-                {
-                    property: 'og:image:height',
-                    content: '630'
-                },
-
-                {
-                    name: 'twitter:card',
-                    content: 'summary_large_image'
-                },
-                {
-                    name: 'twitter:title',
+                    property: 'og:title',
                     content: siteTitle
                 },
                 {
-                    name: 'twitter:description',
-                    content: siteDescription
-                },
-                {
-                    name: 'twitter:image',
+                    property: 'og:image',
                     content: siteImage
-                }
+                },
             ],
             link: [
                 {
@@ -154,13 +112,16 @@ export default defineNuxtConfig({
 
     runtimeConfig: {
         public: {
-            siteBaseURL: process.env.SITE_BASE_URL,
+            siteBaseURL: siteUrl,
             yandexMetrikaId
         }
     },
 
-
     devtools: { enabled: true },
+
+    experimental: {
+        headNext: false
+    },
     modules: ['@nuxt/image'],
     //plugins: ['~/plugins/animations/gsap.cleaner.js'],
 

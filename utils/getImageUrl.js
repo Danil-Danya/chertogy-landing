@@ -1,4 +1,4 @@
-const DEFAULT_IMAGE_BASE_URL = 'https://api.чертоги-героев.рф/images';
+const DEFAULT_IMAGE_BASE_URL = 'https://test-api.xn----dtbbbhdau6cfpgt1e.xn--p1ai/images';
 const ABSOLUTE_URL_RE = /^(?:[a-z]+:)?\/\//i;
 
 const normalizeBaseUrl = (baseUrl) => {

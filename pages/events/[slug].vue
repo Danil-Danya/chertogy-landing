@@ -9,72 +9,171 @@
 
     definePageMeta({ layout: "site-layout" });
 
+    const DEFAULT_TITLE = 'Чертоги Героев';
+    const DEFAULT_DESCRIPTION = 'Чертоги Героев — аутентичный клуб настольных ролевых игр.';
+    const SEO_IMAGE_BASE_URL = 'https://test-api.xn----dtbbbhdau6cfpgt1e.xn--p1ai/images';
+    const FILE_EXTENSION_RE = /\.[a-z0-9]+(?=($|[?#]))/i;
+
     const route = useRoute();
+    const requestUrl = useRequestURL();
+    const runtimeConfig = useRuntimeConfig();
 
-    // const slug = computed(() => {
-    //     return Array.isArray(route.params.slug)
-    //         ? route.params.slug[0]
-    //         : route.params.slug;
-    // });
+    const normalizePathSegment = (value) => {
+        if (typeof value !== 'string') {
+            return '';
+        }
 
-    // const { data } = await useFetch(
-    //     () => `https://api.xn----dtbbbhdau6cfpgt1e.xn--p1ai/server-api/events/${slug.value}`,
-    //     {
-    //         key: () => `event-seo-${slug.value}`,
-    //         server: true,
-    //         lazy: import.meta.client
-    //     }
-    // );
+        const normalizedValue = value.trim();
 
-    // const title = computed(() => {
-    //     return data.value?.title || "Чертоги Героев";
-    // });
+        if (!normalizedValue) {
+            return '';
+        }
 
-    // const description = computed(() => {
-    //     return data.value?.shortDescription || "Чертоги Героев — аутентичный клуб настольных ролевых игр.";
-    // });
+        try {
+            return decodeURIComponent(normalizedValue);
+        }
+        catch {
+            return normalizedValue;
+        }
+    };
 
-    // const previewPath = computed(() => {
-    //     return data.value?.previewPath || data.value?.preview_path || null;
-    // });
+    const slug = computed(() => {
+        const routeSlug = Array.isArray(route.params.slug)
+            ? route.params.slug[0]
+            : route.params.slug;
 
-    // const ogImage = computed(() => {
-    //     if (!previewPath.value) {
-    //         return "https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/images/logos/logo-nav.png";
-    //     }
+        const normalizedRouteSlug = normalizePathSegment(routeSlug);
 
-    //     if (previewPath.value.startsWith("http")) {
-    //         return previewPath.value;
-    //     }
+        if (normalizedRouteSlug) {
+            return normalizedRouteSlug;
+        }
 
-    //     return `https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/share-images/${previewPath.value}`;
-    // });
+        const pathParts = String(route.path || '')
+            .split('/')
+            .filter(Boolean);
 
-    // const url = computed(() => {
-    //     return `https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/events/${slug.value}`;
-    // });
+        return normalizePathSegment(pathParts[pathParts.length - 1]);
+    });
 
-    // useSeoMeta({
-    //     title,
-    //     description,
-    //     keywords: "Чертоги Героев, события, мероприятия, D&D Москва, настольные ролевые игры",
+    const siteUrl = computed(() => {
+        const configuredSiteUrl = typeof runtimeConfig.public.siteBaseURL === 'string'
+            ? runtimeConfig.public.siteBaseURL.trim()
+            : '';
+        const requestSiteUrl = requestUrl?.host
+            ? `${requestUrl.protocol}//${requestUrl.host}`
+            : '';
 
-    //     ogType: "website",
-    //     ogTitle: title,
-    //     ogDescription: description,
-    //     ogUrl: url,
-    //     ogImage,
+        return String(configuredSiteUrl || requestSiteUrl).replace(/\/+$/, '');
+    });
 
-    //     twitterCard: "summary_large_image",
-    //     twitterTitle: title,
-    //     twitterDescription: description,
-    //     twitterImage: ogImage
-    // });
+    const normalizeDescription = (value) => {
+        if (typeof value !== 'string') {
+            return '';
+        }
 
-    // useHead({
-    //     meta: [
-    //         { property: "og:image:width", content: "1200" },
-    //         { property: "og:image:height", content: "630" }
-    //     ]
-    // });
+        return value.replace(/\s+/g, ' ').trim();
+    };
+
+    const normalizePreviewPath = (value) => {
+        if (typeof value !== 'string') {
+            return '';
+        }
+
+        return value.trim().replace(FILE_EXTENSION_RE, '');
+    };
+
+    const { data: seoData } = await useFetch(
+        () => `/api/event-seo/${encodeURIComponent(slug.value)}`,
+        {
+            key: () => `event-seo-${slug.value}`,
+            server: true,
+            default: () => null
+        }
+    );
+
+    const title = computed(() => {
+        const seoTitle = typeof seoData.value?.title === 'string'
+            ? seoData.value.title.trim()
+            : '';
+
+        return seoTitle || DEFAULT_TITLE;
+    });
+
+    const description = computed(() => {
+        const seoDescription = normalizeDescription(seoData.value?.shortDescription);
+
+        return seoDescription || DEFAULT_DESCRIPTION;
+    });
+
+    const defaultImage = computed(() => {
+        return `${siteUrl.value}/images/og/logo-og.jpg`;
+    });
+
+    const canonicalUrl = computed(() => {
+        if (!slug.value) {
+            return `${siteUrl.value}/events`;
+        }
+
+        return `${siteUrl.value}/events/${encodeURIComponent(slug.value)}`;
+    });
+
+    const ogImage = computed(() => {
+        const previewPath = normalizePreviewPath(seoData.value?.previewPath);
+
+        if (!previewPath) {
+            return defaultImage.value;
+        }
+
+        return `${SEO_IMAGE_BASE_URL}/${encodeURIComponent(previewPath.replace(/^\/+/, ''))}.jpg`;
+    });
+
+    const ogImageType = computed(() => {
+        if (/\.png(?=($|[?#]))/i.test(ogImage.value)) {
+            return 'image/png';
+        }
+
+        return 'image/jpeg';
+    });
+
+    useHead(() => ({
+        title: title.value,
+        meta: [
+            {
+                name: 'description',
+                content: description.value
+            },
+            {
+                name: 'keywords',
+                content: 'Чертоги Героев, события, мероприятия, D&D Москва, настольные ролевые игры'
+            },
+            {
+                property: 'og:type',
+                content: 'website'
+            },
+            {
+                property: 'og:url',
+                content: canonicalUrl.value
+            },
+            {
+                property: 'og:title',
+                content: title.value
+            },
+            {
+                property: 'og:image',
+                content: ogImage.value
+            },
+            {
+                property: 'og:description',
+                content: description.value
+            },
+        ],
+        link: [
+            {
+                rel: 'canonical',
+                href: canonicalUrl.value,
+            }
+        ]
+    }), {
+        tagPriority: 'critical'
+    });
 </script>

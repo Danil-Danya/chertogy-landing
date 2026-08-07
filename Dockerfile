@@ -10,7 +10,7 @@ RUN npm run build
 ENV NITRO_PORT=7000
 ENV NITRO_HOST=0.0.0.0
 ENV API_BASE_URL=https://admin.pultra.com
-ENV SITE_BASE_URL=https://pultra.kls-digital.ru/
+ENV SITE_BASE_URL=https://xn----dtbbbhdau6cfpgt1e.xn--p1ai
 
 EXPOSE 7000
 

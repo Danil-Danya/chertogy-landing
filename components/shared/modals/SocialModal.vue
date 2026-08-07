@@ -79,6 +79,7 @@
         margin-top: 24px;
         text-align: center;
         color: #EEE0F1;
+        font-size: 12px !important;
     }
 
     .modal__consent-link {

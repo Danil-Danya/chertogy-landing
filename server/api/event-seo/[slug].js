@@ -1,10 +1,13 @@
 import convertKeysToCamelCase from '~/utils/convertKeysToCamelCase.js';
 
-const API_BASE_URL = 'https://api.xn----dtbbbhdau6cfpgt1e.xn--p1ai/server-api';
+const API_BASE_URL = String(
+    process.env.VITE_APP_BASE_URL || 'https://test-api.xn----dtbbbhdau6cfpgt1e.xn--p1ai/server-api'
+).replace(/\/+$/, '');
 const PUBLIC_EVENTS_LIMIT = 100;
 const PUBLIC_EVENTS_MAX_PAGES = 10;
 const LIST_REQUEST_TIMEOUT_MS = 4000;
 const EVENT_REQUEST_TIMEOUT_MS = 2500;
+const WEBP_EXTENSION_RE = /\.webp(?=($|[?#]))/i;
 
 const getCacheKey = (slug) => `public-event:${slug}`;
 
@@ -69,11 +72,14 @@ const fetchEventBySlug = async (slug) => {
 
 const normalizeSeoEvent = (event) => {
     const normalized = convertKeysToCamelCase(event);
+    const previewPath = typeof normalized?.previewPath === 'string'
+        ? normalized.previewPath.trim().replace(WEBP_EXTENSION_RE, '.jpg')
+        : null;
 
     return {
         title: normalized?.title ?? null,
         shortDescription: normalized?.shortDescription ?? null,
-        previewPath: normalized?.previewPath ?? null
+        previewPath
     };
 };
 
