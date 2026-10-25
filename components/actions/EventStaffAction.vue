@@ -109,13 +109,13 @@
                 <span>Добавить игрока</span>
             </button>
             <div class="event__action" v-if="canManageSubscription">
-                <button class="event__button-action" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && !isWaiting && !isFinished && !isCanceled">
+                <button class="event__button-action action-button-attention" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && !isWaiting && !isFinished && !isCanceled">
                     <span class="event__button-icon">
                         <EditIcon />
                     </span>
                     <span>Записаться</span>
                 </button>
-                <button class="event__button-action waiting" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && isWaiting && !isCanceled">
+                <button class="event__button-action waiting action-button-attention" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && isWaiting && !isCanceled">
                     <span class="event__button-icon">
                         <ClockWaitIcon />
                     </span>

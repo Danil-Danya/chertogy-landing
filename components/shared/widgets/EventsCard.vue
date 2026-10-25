@@ -66,20 +66,30 @@
                             - {{ Math.round(discount) }} %
                         </span>
                     </div>
+                    <div class="events__card-marks-top">
+                        <span
+                            v-if="normalizedAgeRestriction !== null"
+                            class="events__card-age-restriction"
+                            :aria-label="`Возрастное ограничение ${normalizedAgeRestriction} плюс`"
+                            :title="`Возрастное ограничение ${normalizedAgeRestriction}+`"
+                        >
+                            {{ normalizedAgeRestriction }}+
+                        </span>
+                    </div>
                     <span class="events__card-locked" v-if="isStaff">
                         <LockIcon v-if="registrationType === 'OPEN' && !isFinished" />
                         <UnlockIcon v-else />
                     </span>
                 </div>
                 <div class="events__card-left">
-                    <div class="events__card-tags-container">
+                    <div class="events__card-tags-container" v-if="tagsList.length">
                         <ul class="events__card-list">
-                            <li class="event__card-li" v-for="tag in tagsList" :key="tag">
-                                <button class="events__card-tag"
-                                    :class="`events__card-${categoryClassMap[tag.category]}`"
-                                >
-                                    {{ tag.short_name }}
-                                </button>
+                            <li class="event__card-li" v-for="tag in tagsList" :key="`${tag.category}-${tag.short_name}`">
+                                <SystemInfoTag
+                                    :tag="tag"
+                                    base-class="events__card-tag"
+                                    :modifier-class="`events__card-${categoryClassMap[tag.category]}`"
+                                />
                             </li>
                         </ul>
                     </div>
@@ -104,13 +114,25 @@
                 <div class="events__card-bottom-block">
                     <div class="events__card-buttons">
                         <NuxtLink :to="`/events/${slug}`" class="events__card-link" v-if="!isFinished">Подробнее</NuxtLink>
-                        <button class="events__card-button" @click="openCaptchaModal" v-if="!isCreator && !isSubscribed && !isWaiting && !isInProgress && !isFinished && registrationType === 'OPEN'">
+                        <button
+                            class="events__card-button"
+                            :class="{ 'action-button-attention': attentionActive }"
+                            :data-event-attention-id="id"
+                            @click="openCaptchaModal"
+                            v-if="!isCreator && !isSubscribed && !isWaiting && !isInProgress && !isFinished && registrationType === 'OPEN'"
+                        >
                             <span class="events__card-icon">
                                 <EditIcon />
                             </span>
                             <span>Записаться</span>
                         </button>
-                        <button class="events__card-button waiting" @click="openCaptchaModal" v-if="!isCreator && !isSubscribed && isWaiting && !isInProgress && !isFinished && registrationType === 'OPEN'">
+                        <button
+                            class="events__card-button waiting"
+                            :class="{ 'action-button-attention': attentionActive }"
+                            :data-event-attention-id="id"
+                            @click="openCaptchaModal"
+                            v-if="!isCreator && !isSubscribed && isWaiting && !isInProgress && !isFinished && registrationType === 'OPEN'"
+                        >
                             <span class="events__card-icon">
                                 <ClockWaitIcon />
                             </span>
@@ -222,6 +244,7 @@
     import CaptchaModal from '../modals/CaptchaModal.vue';
     import EventRejoinBlockedModal from '../modals/EventRejoinBlockedModal.vue';
     import SubscriptionSuccessModal from '../modals/SubscriptionSuccessModal.vue';
+    import SystemInfoTag from './SystemInfoTag.vue';
     
     const SubscribeIcon = defineAsyncComponent(() => import('~/components/icons/events/cards/Subscribes.vue'));
     const PriceIcon = defineAsyncComponent(() => import('~/components/icons/events/cards/Price.vue'));
@@ -548,6 +571,18 @@
             type: Boolean,
             required: false
         },
+
+        ageRestriction: {
+            type: [Number, String],
+            required: false,
+            default: null
+        },
+
+        attentionActive: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
     })
 
     const isWaiting = computed(() => {
@@ -582,6 +617,16 @@
 
     const isClosed = computed(() => {
         return props.registrationType === 'CLOSED';
+    });
+
+    const normalizedAgeRestriction = computed(() => {
+        if (props.ageRestriction === null || props.ageRestriction === '') {
+            return null;
+        }
+
+        const value = Number(props.ageRestriction);
+
+        return Number.isInteger(value) && value >= 0 && value <= 99 ? value : null;
     });
 
 

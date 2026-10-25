@@ -11,8 +11,7 @@
 
     const DEFAULT_TITLE = 'Чертоги Героев';
     const DEFAULT_DESCRIPTION = 'Чертоги Героев — аутентичный клуб настольных ролевых игр.';
-    const SEO_IMAGE_BASE_URL = 'https://test-api.xn----dtbbbhdau6cfpgt1e.xn--p1ai/images';
-    const FILE_EXTENSION_RE = /\.[a-z0-9]+(?=($|[?#]))/i;
+    const IMAGE_EXTENSION_RE = /\.(png|webp|gif|jpe?g)(?=($|[?#]))/i;
 
     const route = useRoute();
     const requestUrl = useRequestURL();
@@ -79,101 +78,102 @@
             return '';
         }
 
-        return value.trim().replace(FILE_EXTENSION_RE, '');
+        return value.trim();
     };
 
-    const { data: seoData } = await useFetch(
-        () => `/api/event-seo/${encodeURIComponent(slug.value)}`,
-        {
-            key: () => `event-seo-${slug.value}`,
-            server: true,
-            default: () => null
-        }
-    );
+    const encodePathPreservingSlashes = (value) => {
+        return String(value)
+            .split('/')
+            .filter(Boolean)
+            .map((segment) => encodeURIComponent(segment))
+            .join('/');
+    };
 
-    const title = computed(() => {
-        const seoTitle = typeof seoData.value?.title === 'string'
-            ? seoData.value.title.trim()
-            : '';
+    const seoRequest = process.server
+        ? await useFetch(
+            () => `/api/event-seo/${encodeURIComponent(slug.value)}`,
+            {
+                key: () => `event-seo-${slug.value}`,
+                server: true,
+                default: () => null
+            }
+        )
+        : useFetch(
+            () => `/api/event-seo/${encodeURIComponent(slug.value)}`,
+            {
+                key: () => `event-seo-${slug.value}`,
+                server: true,
+                default: () => null
+            }
+        );
 
-        return seoTitle || DEFAULT_TITLE;
-    });
+    const { data: seoData } = seoRequest;
 
-    const description = computed(() => {
-        const seoDescription = normalizeDescription(seoData.value?.shortDescription);
+    const hasResolvedSeoTitle = typeof seoData.value?.title === 'string'
+        && seoData.value.title.trim().length > 0;
 
-        return seoDescription || DEFAULT_DESCRIPTION;
-    });
+    const resolvedTitle = typeof seoData.value?.title === 'string'
+        ? seoData.value.title.trim() || DEFAULT_TITLE
+        : DEFAULT_TITLE;
+    const resolvedDescription = normalizeDescription(seoData.value?.shortDescription) || DEFAULT_DESCRIPTION;
+    const resolvedSiteUrl = siteUrl.value;
+    const resolvedDefaultImage = `${resolvedSiteUrl}/images/og/logo-og.jpg`;
+    const resolvedCanonicalUrl = slug.value
+        ? `${resolvedSiteUrl}/events/${encodeURIComponent(slug.value)}`
+        : `${resolvedSiteUrl}/events`;
 
-    const defaultImage = computed(() => {
-        return `${siteUrl.value}/images/og/logo-og.jpg`;
-    });
+    const resolvedPreviewPath = normalizePreviewPath(seoData.value?.previewPath);
+    const resolvedOgImage = resolvedPreviewPath
+        ? `${resolvedSiteUrl}/share-images/${encodePathPreservingSlashes(resolvedPreviewPath.replace(/^\/+/, ''))}`
+        : resolvedDefaultImage;
 
-    const canonicalUrl = computed(() => {
-        if (!slug.value) {
-            return `${siteUrl.value}/events`;
-        }
+    const resolvedOgImageType = (() => {
+        const imageExtension = resolvedOgImage.match(IMAGE_EXTENSION_RE)?.[1]?.toLowerCase();
 
-        return `${siteUrl.value}/events/${encodeURIComponent(slug.value)}`;
-    });
-
-    const ogImage = computed(() => {
-        const previewPath = normalizePreviewPath(seoData.value?.previewPath);
-
-        if (!previewPath) {
-            return defaultImage.value;
-        }
-
-        return `${SEO_IMAGE_BASE_URL}/${encodeURIComponent(previewPath.replace(/^\/+/, ''))}.jpg`;
-    });
-
-    const ogImageType = computed(() => {
-        if (/\.png(?=($|[?#]))/i.test(ogImage.value)) {
+        if (imageExtension === 'png') {
             return 'image/png';
         }
 
+        if (imageExtension === 'gif') {
+            return 'image/gif';
+        }
+
+        if (imageExtension === 'webp') {
+            return 'image/webp';
+        }
+
         return 'image/jpeg';
+    })();
+
+    useServerSeoMeta({
+        title: resolvedTitle,
+        description: resolvedDescription,
+        keywords: 'Чертоги Героев, события, мероприятия, D&D Москва, настольные ролевые игры',
+        ogLocale: 'ru_RU',
+        ogSiteName: 'Чертоги Героев',
+        ogType: 'website',
+        ogUrl: resolvedCanonicalUrl,
+        ogTitle: resolvedTitle,
+        ogDescription: resolvedDescription,
+        ogImage: resolvedOgImage,
+        ogImageSecureUrl: resolvedOgImage,
+        ogImageType: resolvedOgImageType,
+        ogImageAlt: resolvedTitle,
+        twitterCard: 'summary_large_image',
+        twitterTitle: resolvedTitle,
+        twitterDescription: resolvedDescription,
+        twitterImage: resolvedOgImage
     });
 
-    useHead(() => ({
-        title: title.value,
-        meta: [
-            {
-                name: 'description',
-                content: description.value
-            },
-            {
-                name: 'keywords',
-                content: 'Чертоги Героев, события, мероприятия, D&D Москва, настольные ролевые игры'
-            },
-            {
-                property: 'og:type',
-                content: 'website'
-            },
-            {
-                property: 'og:url',
-                content: canonicalUrl.value
-            },
-            {
-                property: 'og:title',
-                content: title.value
-            },
-            {
-                property: 'og:image',
-                content: ogImage.value
-            },
-            {
-                property: 'og:description',
-                content: description.value
-            },
-        ],
+    useHead({
         link: [
             {
+                key: 'canonical',
                 rel: 'canonical',
-                href: canonicalUrl.value,
+                href: resolvedCanonicalUrl,
             }
         ]
-    }), {
+    }, {
         tagPriority: 'critical'
     });
 </script>

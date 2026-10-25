@@ -3,7 +3,7 @@ import axios from 'axios';
 import convertKeysToCamelCase from "@/utils/convertKeysToCamelCase.js";
 import convertToSnakeCase  from '@/utils/convertToSnakeCase.js';
 
-const DEFAULT_API_BASE_URL = 'https://test-api.xn----dtbbbhdau6cfpgt1e.xn--p1ai/server-api';
+const DEFAULT_API_BASE_URL = 'https://api.xn----dtbbbhdau6cfpgt1e.xn--p1ai/server-api';
 const normalizeBaseUrl = (baseUrl) => String(baseUrl || '').replace(/\/+$/, '');
 
 const api = axios.create({

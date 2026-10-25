@@ -538,6 +538,14 @@ input[type="number"] {
     background: url('/images/general/bg.png') no-repeat center /cover;
 }
 
+.bg-masters  {
+    background: url('/images/masters/bg.png') no-repeat center /cover;
+}
+
+.bg-master  {
+    background: url('/images/masters/bg.png') no-repeat center /cover;
+}
+
 .bg-events  {
     background: url('/images/general/bg.png') no-repeat center /cover;
 }
@@ -568,4 +576,70 @@ input[type="number"] {
 .modal-leave-to .modal__content {
     transform: translateY(10px) scale(0.98);
     opacity: 0;
+}
+
+.action-button-attention {
+    position: relative;
+    overflow: hidden;
+    animation: action-button-attention-glow 5s ease-in-out infinite;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -70%;
+        width: 35%;
+        height: 200%;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.25),
+            rgba(225, 235, 241, 0.85),
+            transparent
+        );
+        transform: skewX(-20deg);
+        pointer-events: none;
+        animation: action-button-attention-shine 5s ease-in-out infinite;
+    }
+}
+
+@keyframes action-button-attention-glow {
+    0%, 22%, 100% {
+        box-shadow: 0 4px 20.6px 0 rgba(110, 50, 132, 0.38);
+    }
+
+    8% {
+        box-shadow:
+            0 0 8px rgba(255, 255, 255, 0.8),
+            0 0 24px rgba(201, 218, 228, 0.55),
+            inset 0 0 10px rgba(255, 255, 255, 0.25);
+    }
+}
+
+@keyframes action-button-attention-shine {
+    0% {
+        left: -70%;
+        opacity: 0;
+    }
+
+    4% {
+        opacity: 1;
+    }
+
+    18% {
+        left: 135%;
+        opacity: 0.8;
+    }
+
+    22%, 100% {
+        left: 135%;
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .action-button-attention,
+    .action-button-attention::before {
+        animation: none;
+    }
 }

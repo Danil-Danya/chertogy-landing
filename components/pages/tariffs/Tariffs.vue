@@ -52,7 +52,7 @@
                             <span class="tariffs__item-icon">
                                 <Component :is="item.action.icon" />
                             </span>
-                            <span>{{ item.action.text }}</span>
+                            <span class="tariffs__item-link-text">{{ item.action.text }}</span>
                         </a>
                         <a
                             v-else-if="item.action.external"
@@ -64,7 +64,7 @@
                             <span class="tariffs__item-icon">
                                 <Component :is="item.action.icon" />
                             </span>
-                            <span>{{ item.action.text }}</span>
+                            <span class="tariffs__item-link-text">{{ item.action.text }}</span>
                         </a>
                         <NuxtLink
                             v-else
@@ -74,7 +74,7 @@
                             <span class="tariffs__item-icon">
                                 <Component :is="item.action.icon" />
                             </span>
-                            <span>{{ item.action.text }}</span>
+                            <span class="tariffs__item-link-text">{{ item.action.text }}</span>
                         </NuxtLink>
                     </article>
                 </SwiperSlide>
@@ -123,7 +123,7 @@
         {
             title: 'Игра с Мастером',
             description: 'Участие в игре под руководством нашего Мастера, куда может прийти любой желающий.',
-            price: 'от 2200₽',
+            price: 'от 2300₽',
             rate: 'за сессию с игрока',
             notes: [
                 'финальная стоимость всегда указана в анонсе События',

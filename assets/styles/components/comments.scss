@@ -1,0 +1,271 @@
+.comments {
+    padding-bottom: 50px;
+
+    &__filter {
+        display: flex;
+        padding: 20px;
+        background: linear-gradient(257.41deg, rgba(90, 51, 98, 0.2) -4.79%, rgba(31, 24, 33, 0.2) 86.4%);
+        border-radius: 10px;
+        justify-content: space-between;
+
+        @include media ($md) {
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        @include media($sm) {
+            padding: 15px;
+            gap: 15px;
+        }
+
+        &-title {
+            font-family: Alegreya SC;
+            font-weight: 500;
+            font-style: Medium;
+            font-size: 32px;
+            leading-trim: NONE;
+            line-height: 114.99999999999999%;
+            letter-spacing: 0%;
+            font-variant-numeric-figure: lining-nums;
+            font-variant-numeric-spacing: proportional-nums;
+            color: #EEE0F1;
+        }
+
+        &-left {
+            display: flex;
+            gap: 35px;
+            align-items: center;
+
+            @include media ($md) {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            @include media($sm) {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+        }
+
+        &-right {
+            @include media($md) {
+                width: 100%;
+            }
+        }
+
+        &-switch {
+            color: #805592;
+            cursor: pointer;
+            transition: 300ms;
+            font-family: Alegreya SC;
+            font-weight: 500;
+            font-style: Medium;
+            font-size: 20px;
+            leading-trim: NONE;
+            line-height: 120%;
+            letter-spacing: 0%;
+            text-align: center;
+            font-variant-numeric-figure: lining-nums;
+            font-variant-numeric-spacing: proportional-nums;
+
+            &-option {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+
+                @include media($md) {
+                    flex-direction: row-reverse;
+                }
+
+                @include media($sm) {
+                    justify-content: space-between;
+                }
+            }
+
+            &:hover {
+                color: #FFFFFF;
+            }
+        }
+
+        &-button {
+            font-family: Alegreya SC;
+            font-weight: 500;
+            font-style: Medium;
+            font-size: 20px;
+            leading-trim: NONE;
+            line-height: 120%;
+            letter-spacing: 0%;
+            text-align: center;
+            font-variant-numeric-figure: lining-nums;
+            font-variant-numeric-spacing: proportional-nums;
+            color: #ffffff;
+            background: #805592;
+            padding: 15px 22px;
+            border: 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 300ms;
+
+            @include media($md) {
+                width: 100%;
+            }
+
+            &:hover {
+                background: #653775;
+            }
+        }
+    }
+
+    &__card {
+        margin: 30px 0;
+        background: #110E1299;
+        padding: 20px;
+        overflow: hidden;
+
+        @include media($sm) {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        &-content {
+            display: flex;
+            gap: 35px;
+
+            @include media($md) {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        &-player {
+            font-family: Alegreya SC;
+            font-weight: 500;
+            font-style: Medium;
+            font-size: 20px;
+            leading-trim: NONE;
+            line-height: 120%;
+            letter-spacing: 0%;
+            text-align: center;
+            font-variant-numeric-figure: lining-nums;
+            font-variant-numeric-spacing: proportional-nums;
+            color: #6A3B7B;
+            margin-bottom: 10px;
+
+            @include media($md) {
+                margin-bottom: 0;
+                text-align: left;
+            }
+        }
+
+        &-left {
+            width: 150px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            @include media($md) {
+                width: 100%;
+                flex-shrink: 1;
+                flex-direction: row;
+                gap: 15px;
+            }
+        }
+
+        &-right {
+            flex: 1;
+            min-width: 0;
+
+            @include media($md) {
+                width: 100%;
+            }
+        }
+
+        &-img {
+            display: block;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+
+            @include media($md) {
+                order: -1;
+                width: 90px;
+                height: 90px;
+            }
+
+            @include media($sm) {
+                width: 70px;
+                height: 70px;
+            }
+        }
+
+        &-text {
+            font-family: Alegreya;
+            font-weight: 400;
+            font-style: Regular;
+            font-size: 20px;
+            leading-trim: NONE;
+            line-height: 120%;
+            letter-spacing: 0%;
+            font-variant-numeric-figure: lining-nums;
+            font-variant-numeric-spacing: proportional-nums;
+            color: #ffffff;
+            margin-bottom: 20px;
+
+            @include media($sm) {
+                font-size: 18px;
+            }
+        }
+
+        &-info {
+            &-el {
+                border: 1px solid #81569221;
+                background: #221C29;
+                padding: 8px 16px;
+                border-radius: 30px;
+                font-family: Alegreya;
+                font-weight: 400;
+                font-style: Regular;
+                font-size: 16px;
+                leading-trim: NONE;
+                line-height: 120%;
+                letter-spacing: 0%;
+                font-variant-numeric-figure: lining-nums;
+                font-variant-numeric-spacing: proportional-nums;
+                color: #D5B0E4;
+
+                @include media($sm) {
+                    padding: 6px 10px;
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+
+    &__info {
+        &-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+
+            @include media($md) {
+                flex-wrap: wrap;
+            }
+
+            @include media($sm) {
+                gap: 8px;
+            }
+        }
+    }
+
+    &__empty {
+        padding: 40px 20px;
+        color: #D5B0E4;
+        font-family: Alegreya;
+        font-size: 20px;
+        line-height: 120%;
+        text-align: center;
+    }
+}

@@ -89,7 +89,10 @@
     }
 
     &__button {
+        position: relative;
+        overflow: hidden;
         border-radius: 10px;
+        border: 1px solid rgba(238, 224, 241, 0.25);
         background: linear-gradient(313deg, #aa70bf 17.58%, #6e3284 131.17%);
         box-shadow: 0 4px 20.6px 0 rgba(110, 50, 132, 0.38);
         color: var(--04-text-main, #EEE0F1);
@@ -106,6 +109,26 @@
         padding: 16px 40px;
         margin-top: 58px;
         transition: all 300ms;
+        animation: adventure-button-glow 5s ease-in-out infinite;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -70%;
+            width: 35%;
+            height: 200%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.25),
+                rgba(225, 235, 241, 0.85),
+                transparent
+            );
+            transform: skewX(-20deg);
+            pointer-events: none;
+            animation: adventure-button-shine 5s ease-in-out infinite;
+        }
 
         @include media ($lg) {
             font-size: 24px;
@@ -120,5 +143,46 @@
         &:hover {
             background: linear-gradient(313deg, #aa70bf 17.58%, #ad68c6 131.17%);
         }
+    }
+}
+
+@keyframes adventure-button-glow {
+    0%, 22%, 100% {
+        box-shadow: 0 4px 20.6px 0 rgba(110, 50, 132, 0.38);
+    }
+
+    8% {
+        box-shadow:
+            0 0 8px rgba(255, 255, 255, 0.8),
+            0 0 24px rgba(201, 218, 228, 0.55),
+            inset 0 0 10px rgba(255, 255, 255, 0.25);
+    }
+}
+
+@keyframes adventure-button-shine {
+    0% {
+        left: -70%;
+        opacity: 0;
+    }
+
+    4% {
+        opacity: 1;
+    }
+
+    18% {
+        left: 135%;
+        opacity: 0.8;
+    }
+
+    22%, 100% {
+        left: 135%;
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .head__button,
+    .head__button::before {
+        animation: none;
     }
 }

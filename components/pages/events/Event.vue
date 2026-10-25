@@ -31,6 +31,14 @@
                             <div class="event__container-img">
                                 <img :src="getImageUrl(eventStore.oneEvent.previewPath)" alt="Картинка" class="event__container-img" ref="img">
                                 <div class="event__container-glass" v-if="isFinished"></div>
+                                <span
+                                    v-if="normalizedAgeRestriction !== null"
+                                    class="event__age-restriction"
+                                    :aria-label="`Возрастное ограничение ${normalizedAgeRestriction} плюс`"
+                                    :title="`Возрастное ограничение ${normalizedAgeRestriction}+`"
+                                >
+                                    {{ normalizedAgeRestriction }}+
+                                </span>
                                 <div class="event__price-list">
                                     <template v-if="eventStore.oneEvent.discount && eventStore.oneEvent.discount > 0">
                                         <span 
@@ -72,12 +80,12 @@
                             <!-- <h2 class="title event__title-mini">{{ eventStore.oneEvent.game?.system }}</h2> -->
                             <div class="event__tag-container">
                                 <ul class="event__tag-list" v-if="eventTags.length" :class="isStaff ? 'creator' : null">
-                                    <li class="event-tag" v-for="tag in eventTags" :key="tag">
-                                        <button class="event__tag-button"
-                                            :class="`event__tag-button-${categoryClassMap[tag.category]}`"
-                                        >
-                                            {{ tag.short_name }}
-                                        </button>
+                                    <li class="event-tag" v-for="tag in eventTags" :key="`${tag.category}-${tag.short_name}`">
+                                        <SystemInfoTag
+                                            :tag="tag"
+                                            base-class="event__tag-button"
+                                            :modifier-class="`event__tag-button-${categoryClassMap[tag.category]}`"
+                                        />
                                     </li>
                                 </ul>
                             </div>
@@ -183,6 +191,7 @@
     import EventUserAction from '~/components/actions/EventUserAction.vue';
     import EditIcon from '~/components/icons/events/cards/Edit.vue';
     import CopyIcon from '~/components/icons/events/cards/Copy.vue';
+    import SystemInfoTag from '~/components/shared/widgets/SystemInfoTag.vue';
 
     const CalendarIcon = defineAsyncComponent(() => import('@/components/icons/events/info/Calendar.vue'));
     const ClockIcon = defineAsyncComponent(() => import('@/components/icons/events/info/Clock.vue'));
@@ -277,6 +286,18 @@
         }
 
         return Math.ceil( price - (price * discount) / 100);
+    });
+
+    const normalizedAgeRestriction = computed(() => {
+        const ageRestriction = eventStore.oneEvent?.ageRestriction;
+
+        if (ageRestriction === null || ageRestriction === undefined || ageRestriction === '') {
+            return null;
+        }
+
+        const value = Number(ageRestriction);
+
+        return Number.isInteger(value) && value >= 0 && value <= 99 ? value : null;
     });
 
     const editEventUrl = computed(() => `https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/panel/events/update/${eventStore.oneEvent.id}`);

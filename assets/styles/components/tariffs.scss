@@ -180,6 +180,24 @@
             @include media($sm) {
                 font-size: 21px;
             }
+
+            &-text {
+                color: transparent;
+                background: linear-gradient(
+                    90deg,
+                    #d23c48 0%,
+                    #d23c48 40%,
+                    #fff4f5 50%,
+                    #d23c48 60%,
+                    #d23c48 100%
+                );
+                background-size: 250% 100%;
+                background-position: 100% 0;
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                animation: tariffs-link-text-shine 5s ease-in-out infinite;
+            }
         }
 
         &-icon {
@@ -190,5 +208,21 @@
             height: 20px;
             flex-shrink: 0;
         }
+    }
+}
+
+@keyframes tariffs-link-text-shine {
+    0% {
+        background-position: 100% 0;
+    }
+
+    20%, 100% {
+        background-position: 0 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tariffs__item-link-text {
+        animation: none;
     }
 }

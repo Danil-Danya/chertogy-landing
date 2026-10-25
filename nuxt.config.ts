@@ -29,12 +29,31 @@ ym(${yandexMetrikaId}, "init", {
 });
 `.trim();
 
+const copyDirectory = async (from: string, to: string) => {
+    await fse.ensureDir(to);
+
+    const entries = await fs.promises.readdir(from, { withFileTypes: true });
+
+    await Promise.all(entries.map(async (entry) => {
+        const source = path.join(from, entry.name);
+        const destination = path.join(to, entry.name);
+
+        if (entry.isDirectory()) {
+            return copyDirectory(source, destination);
+        }
+
+        if (entry.isFile()) {
+            return fs.promises.copyFile(source, destination);
+        }
+    }));
+};
+
 export default defineNuxtConfig({
     compatibilityDate: '2025-05-15',
     ssr: true,
 
     server: {
-        port: process.env.NITRO_PORT || 9800,
+        port: process.env.NITRO_PORT || 3001,
         host: process.env.NITRO_HOST || '127.0.0.1'
     },
 
@@ -84,7 +103,35 @@ export default defineNuxtConfig({
                     content: siteTitle
                 },
                 {
+                    property: 'og:description',
+                    content: siteDescription
+                },
+                {
                     property: 'og:image',
+                    content: siteImage
+                },
+                {
+                    property: 'og:locale',
+                    content: 'ru_RU'
+                },
+                {
+                    property: 'og:site_name',
+                    content: 'Чертоги Героев'
+                },
+                {
+                    name: 'twitter:card',
+                    content: 'summary_large_image'
+                },
+                {
+                    name: 'twitter:title',
+                    content: siteTitle
+                },
+                {
+                    name: 'twitter:description',
+                    content: siteDescription
+                },
+                {
+                    name: 'twitter:image',
                     content: siteImage
                 },
             ],
@@ -105,6 +152,8 @@ export default defineNuxtConfig({
         pageTransition: { name: 'page', mode: 'out-in' },
         scrollBehavior(to, from, savedPosition) {
             if (savedPosition) return savedPosition
+
+            if (to.path === '/masters' && from.path === '/masters') return false
 
             return { top: 0, left: 0 }
         }
@@ -178,7 +227,7 @@ export default defineNuxtConfig({
             const imagesTo = path.resolve('public/images');
 
             if (await fse.pathExists(imagesFrom)) {
-                await fse.copy(imagesFrom, imagesTo);
+                await copyDirectory(imagesFrom, imagesTo);
                 console.log('Картинки скопированы: assets/images → public/images');
             } 
             else {
@@ -189,7 +238,7 @@ export default defineNuxtConfig({
             const modelsTo = path.resolve('public/models');
 
             if (await fse.pathExists(modelsFrom)) {
-                await fse.copy(modelsFrom, modelsTo);
+                await copyDirectory(modelsFrom, modelsTo);
                 console.log('Модели скопированы: assets/models → public/models');
             } 
             else {

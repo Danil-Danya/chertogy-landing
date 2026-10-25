@@ -8,7 +8,7 @@
                     </div>
                     <ul class="navbar__socials-list" v-for="link in navbarSocialLinks" :key="link" >
                         <li class="navbar__social-li">
-                            <a :href="link.path" class="navbar__social-link">
+                            <a :href="link.path" class="navbar__social-link" target="_blank" rel="noopener noreferrer">
                                 <span class="navbar__socials-icon">
                                     <Component :is="link.icon" />
                                 </span>
@@ -89,7 +89,9 @@
     const navLinks = ref([
         { text: 'О клубе', path: '/' },
         { text: 'Тарифы', path: '/tariffs' },
+        // { text: 'Мастера', path: '/masters' },
         { text: 'К приключениям', path: '/events', target: true },
+        // { text: 'Галерея', path: '/gallery' },
         { text: 'Новости', path: '/news' },
         { text: 'Контакты', path: '/contacts' },
     ])

@@ -38,13 +38,24 @@
         }, 500)
     }
 
+    const isMastersFilterNavigation = (to, from) => {
+        return to.path === '/masters'
+            && from.path === '/masters'
+            && to.hash === from.hash;
+    };
+
     router.beforeEach((to, from, next) => {
-        startLoading();
+        if (!isMastersFilterNavigation(to, from)) {
+            startLoading();
+        }
+
         next();
     })
 
-    router.afterEach(() => {
-        finishLoading();
+    router.afterEach((to, from) => {
+        if (!isMastersFilterNavigation(to, from)) {
+            finishLoading();
+        }
     })
 
 </script>

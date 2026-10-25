@@ -1,5 +1,5 @@
 export default defineEventHandler((event) => {
-    const imageBaseUrl = String(process.env.VITE_APP_IMAGE_URL || 'https://test-api.xn----dtbbbhdau6cfpgt1e.xn--p1ai/images').replace(/\/+$/, '');
+    const imageBaseUrl = String(process.env.VITE_APP_IMAGE_URL || 'https://api.xn----dtbbbhdau6cfpgt1e.xn--p1ai/images').replace(/\/+$/, '');
     const path = getRouterParam(event, 'path');
 
     if (!path) {

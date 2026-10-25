@@ -132,6 +132,7 @@
 
             @include media ($md) {
                 flex-wrap: wrap;
+                gap: 0px;
             }
         }
 
@@ -198,7 +199,7 @@
 
             @include media ($md) {
                 width: 100%;
-                max-height: auto;
+                max-height: none;
             }
         }
 
@@ -263,6 +264,31 @@
             top: 15px;
             display: flex;
             gap: 10px;
+        }
+
+        &-age-restriction {
+            width: 48px;
+            height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            color: #FFFFFF;
+            font-family: Alegreya;
+            font-size: 22px;
+            line-height: 1;
+            border: 0;
+            font-style: normal;
+            font-weight: 500;
+            font-variant-numeric: lining-nums proportional-nums;
+            background: #222222e0;
+            cursor: pointer;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55),
+                        0 1px 4px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
         }
 
         &-allowed {
@@ -479,6 +505,10 @@
             &-title {
                 font-weight: 500 !important;
                 font-size: 26px;
+
+                @include media ($sm) {
+                    font-size: 20px;
+                }
             }
 
             @include media ($sm) {

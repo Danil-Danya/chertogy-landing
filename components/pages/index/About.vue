@@ -11,7 +11,7 @@
                     </div>
                 </div>
                 <div class="about__content-right">
-                    <img loading="lazy" src="/images/about/about.png" alt="Картинка" class="about__content-img" format="webp" @click="toggleIsZoomed" />
+                    <img loading="lazy" src="/images/about/about.jpg" alt="Картинка" class="about__content-img" format="webp" @click="toggleIsZoomed" />
                 </div>
             </div>
             <div class="about__container">
@@ -27,7 +27,7 @@
     </section>
     <Transition name="zoom">
         <ZoomImage 
-            image="/images/about/about.png" 
+            image="/images/about/about.jpg" 
             v-if="isZoomed && !isMobile"
             @close="toggleIsZoomed" 
         />

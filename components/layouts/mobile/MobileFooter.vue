@@ -27,8 +27,15 @@
                     </div>
                 </div>
                 <div class="footer__bottom">
-                    <p class="footer__bottom-text">ИП АЛЕКСАНДРОВ НИКОЛАЙ АЛЕКСАНДРОВИЧ ОГРНИП 324774600682026</p>
-                    <p class="footer__bottom-text">Политика обработки персональных данных и конфиденциальности</p>
+                    <div class="footer__container">
+                <p class="footer__bottom-text">ИП АЛЕКСАНДРОВ НИКОЛАЙ АЛЕКСАНДРОВИЧ ОГРНИП 324774600682026</p>
+                <p class="footer__bottom-text">
+                    <a class="footer__bottom-text" target="_blank" rel="noopener noreferrer" href="https://xn----dtbbbhdau6cfpgt1e.xn--p1ai/panel/privacy-policy">Политика обработки персональных данных и конфиденциальности</a>
+                </p>
+                <p class="footer__bottom-text">
+                    <a class="footer__bottom-text" target="_blank" rel="noopener noreferrer" href="https://m.vk.ru/@chertogi.club-oferta">Публичная оферта</a>
+                </p>
+            </div>
                 </div>
             </div>
         </div>

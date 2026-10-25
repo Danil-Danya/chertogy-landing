@@ -23,6 +23,7 @@
     const loading = ref(true);
     const router = useRouter();
     const { public: { yandexMetrikaId } } = useRuntimeConfig();
+    
     let removeAfterEachHook = null;
     let animationRestartTimeout = null;
 
@@ -103,6 +104,12 @@
         window.ym(yandexMetrikaId, 'hit', path);
     };
 
+    const isMastersFilterNavigation = (to, from) => {
+        return to.path === '/masters'
+            && from.path === '/masters'
+            && to.hash === from.hash;
+    };
+
     onMounted(() => {
         window.addEventListener('popstate', handlePopState);
 
@@ -111,6 +118,10 @@
         removeAfterEachHook = router.afterEach((to, from) => {
             if (to.fullPath !== from.fullPath) {
                 trackMetrikaPage(to.fullPath, from.fullPath);
+            }
+
+            if (isMastersFilterNavigation(to, from)) {
+                return;
             }
 
             const preservedScroll = consumeEventsWeekScrollState(to, from);

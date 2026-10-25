@@ -27,14 +27,14 @@
                 </span>
             </div>
         </div>
-        <div class="event__action" v-if="canManageSubscription">
-            <button class="event__button-action" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && !isWaiting && !isCanceled">
+        <div class="event__action" v-if="canManageSubscription || canGuestSubscribe">
+            <button class="event__button-action action-button-attention" @click="openCaptchaModal" v-if="(canSubscribe || canGuestSubscribe) && !isSubscribed && !isWaiting && !isCanceled">
                 <span class="event__button-icon">
                     <EditIcon />
                 </span>
                 <span>Записаться</span>
             </button>
-            <button class="event__button-action waiting" @click="openCaptchaModal" v-if="canSubscribe && !isSubscribed && isWaiting && !isCanceled">
+            <button class="event__button-action waiting action-button-attention" @click="openCaptchaModal" v-if="(canSubscribe || canGuestSubscribe) && !isSubscribed && isWaiting && !isCanceled">
                 <span class="event__button-icon">
                     <ClockWaitIcon />
                 </span>
@@ -96,6 +96,12 @@
         </div>
     </div>
     <Transition name="modal">
+        <LoginAlertModal
+            v-if="isShowLoginModal"
+            @close="isShowLoginModal = false"
+        />
+    </Transition>
+    <Transition name="modal">
         <UnsubscribeModal
             v-if="isUnSubscribe"
             :status="myStatus"
@@ -131,6 +137,7 @@
     import getImageUrl from '@/utils/getImageUrl.js';
     import EventRejoinBlockedModal from '../shared/modals/EventRejoinBlockedModal.vue';
     import SubscriptionSuccessModal from '../shared/modals/SubscriptionSuccessModal.vue';
+    import LoginAlertModal from '../shared/modals/LoginAlertModal.vue';
     import UnsubscribeModal from '../shared/modals/UnsubscribeModal.vue';
     import CaptchaModal from '../shared/modals/CaptchaModal.vue';
 import { is } from 'date-fns/locale';
@@ -168,6 +175,24 @@ import { is } from 'date-fns/locale';
     
     const isUnSubscribe = ref(false);
     const isCaptchaOpen = ref(false);
+    const isShowLoginModal = ref(false);
+
+    const canGuestSubscribe = computed(() => {
+        const event = eventStore.oneEvent;
+
+        if (userStore.profile || !event) {
+            return false;
+        }
+
+        return (
+            event.isAllowed &&
+            !event.isDraft &&
+            event.registrationType !== 'CLOSED' &&
+            !isInProgress.value &&
+            !isFinished.value &&
+            !event.isCanceled
+        );
+    });
 
     const openUnsubscribeModal = () => {
         isUnSubscribe.value = true;
@@ -188,6 +213,11 @@ import { is } from 'date-fns/locale';
         const eventId = eventStore.oneEvent?.id;
 
         if (isInProgress.value || isFinished.value) {
+            return;
+        }
+
+        if (!userId) {
+            isShowLoginModal.value = true;
             return;
         }
 

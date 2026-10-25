@@ -4,6 +4,10 @@ export const routerOptions = {
         return savedPosition;
     }
 
+    if (to.path === '/masters' && from.path === '/masters') {
+        return false;
+    }
+
     if (to.hash) {
       const el = document.querySelector(to.hash);
 

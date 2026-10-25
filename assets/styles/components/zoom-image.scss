@@ -1,23 +1,51 @@
 .zoom {
     width: 100%;
-    height: 100vh;
+    min-height: 100dvh;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 999999999;
     background: #000000af;
     backdrop-filter: blur(3px);
+    padding: 24px 0;
+    overflow-y: auto;
+
+    &__layout {
+        min-height: calc(100dvh - 48px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
     &__container {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        width: 100%;
+        max-width: 1400px;
+        min-height: calc(100dvh - 48px);
     }
 
     &__img {
-        width: 100%;
-        height: 80%;
+        display: block;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: calc(100dvh - 48px);
         border-radius: 15px;
+        object-fit: contain;
+    }
+
+    @include media ($sm) {
+        padding: 15px 0;
+
+        &__layout,
+        &__container {
+            min-height: calc(100dvh - 30px);
+        }
+
+        &__img {
+            max-height: calc(100dvh - 30px);
+        }
     }
 }

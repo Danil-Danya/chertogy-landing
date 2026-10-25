@@ -254,21 +254,20 @@ export const useEvent = () => {
         const event = eventStore.oneEvent;
 
         const changedEvent = { ...event, isCanceled: true }; 
+        let updatedEvent = false;
 
         if (event.type === 'GAME') {
-            const updatedEvent = await updateGame(event.id, event.game.id, changedEvent);
-
-            // if (updatedEvent) {
-            //     router.replace('/events')
-            // }
+            updatedEvent = await updateGame(event.id, event.game.id, changedEvent);
         }
         else {
-            const updatedEvent = await updateMeeting(event.id, changedEvent);
-            
-            // if (updatedEvent) {
-            //     router.replace('/events')
-            // }
+            updatedEvent = await updateMeeting(event.id, changedEvent);
         }
+
+        if (updatedEvent) {
+            await router.replace('/events');
+        }
+
+        return Boolean(updatedEvent);
     }
 
     const myGlow = computed(() => {

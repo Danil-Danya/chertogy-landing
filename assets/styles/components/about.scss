@@ -41,6 +41,7 @@
             max-width: 520px !important;
             width: 100% !important;
             height: 338px;
+            border-radius: 10px;
 
             @include media ($lg) {
                 border-radius: 4px;

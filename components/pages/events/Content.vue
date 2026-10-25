@@ -25,6 +25,7 @@
                                         v-for="event in mappedEvents"
                                         :key="event.id"
                                         v-bind="event"
+                                        :attention-active="String(event.id) === activeAttentionEventId"
                                     />
                                 </template>
                                 <h2 v-else class="content__event-title title">События не были найдены</h2>
@@ -86,6 +87,51 @@
 
     const filter = ref(null);
     const content = ref(null);
+    const activeAttentionEventId = ref(null);
+
+    let attentionAnimationFrame = null;
+    let attentionMutationObserver = null;
+    let attentionResizeObserver = null;
+
+    const updateActiveAttentionCard = () => {
+        attentionAnimationFrame = null;
+
+        if (!content.value) {
+            activeAttentionEventId.value = null;
+            return;
+        }
+
+        const targets = content.value.querySelectorAll('[data-event-attention-id]');
+        const viewportCenter = window.innerHeight / 2;
+        let closestEventId = null;
+        let closestDistance = Number.POSITIVE_INFINITY;
+
+        for (const target of targets) {
+            const rect = target.getBoundingClientRect();
+
+            if (rect.width === 0 || rect.height === 0) {
+                continue;
+            }
+
+            const targetCenter = rect.top + rect.height / 2;
+            const distance = Math.abs(targetCenter - viewportCenter);
+
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestEventId = target.dataset.eventAttentionId ?? null;
+            }
+        }
+
+        activeAttentionEventId.value = closestEventId;
+    };
+
+    const scheduleAttentionUpdate = () => {
+        if (!process.client || attentionAnimationFrame !== null) {
+            return;
+        }
+
+        attentionAnimationFrame = window.requestAnimationFrame(updateActiveAttentionCard);
+    };
 
     const { events } = defineProps({
         events: {
@@ -179,7 +225,33 @@
 
         await nextTick();
         calculateEventContentSections();
+
+        window.addEventListener('scroll', scheduleAttentionUpdate, { passive: true });
+        window.addEventListener('resize', scheduleAttentionUpdate, { passive: true });
+
+        attentionMutationObserver = new MutationObserver(scheduleAttentionUpdate);
+        attentionMutationObserver.observe(content.value, {
+            childList: true,
+            subtree: true
+        });
+
+        attentionResizeObserver = new ResizeObserver(scheduleAttentionUpdate);
+        attentionResizeObserver.observe(content.value);
+
+        scheduleAttentionUpdate();
     })
+
+    onBeforeUnmount(() => {
+        window.removeEventListener('scroll', scheduleAttentionUpdate);
+        window.removeEventListener('resize', scheduleAttentionUpdate);
+
+        attentionMutationObserver?.disconnect();
+        attentionResizeObserver?.disconnect();
+
+        if (attentionAnimationFrame !== null) {
+            window.cancelAnimationFrame(attentionAnimationFrame);
+        }
+    });
 
 </script>
 

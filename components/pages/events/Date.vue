@@ -26,7 +26,7 @@
                         >
                             <RouterLink :to="`/events/${event.slug}`" v-if="event">
                                 <p class="text">{{ formatTime(event.startTime) }} - {{ formatTime(event.endTime) }}</p>
-                                <h3 class="date__item-title">{{ truncateText(event.title, 20) }}</h3>
+                                <h3 class="date__item-title">{{ truncateText(event.title, 15) }}</h3>
                                 <div class="date__item-marks">
                                     <span class="date__item-setting date__item-mark" v-if="event?.game?.system">
                                         {{ event.game.system.split(' ')[0] }}

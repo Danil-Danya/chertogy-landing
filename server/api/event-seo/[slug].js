@@ -1,12 +1,12 @@
 import convertKeysToCamelCase from '~/utils/convertKeysToCamelCase.js';
 
 const API_BASE_URL = String(
-    process.env.VITE_APP_BASE_URL || 'https://test-api.xn----dtbbbhdau6cfpgt1e.xn--p1ai/server-api'
+    process.env.VITE_APP_BASE_URL || 'https://api.xn----dtbbbhdau6cfpgt1e.xn--p1ai/server-api'
 ).replace(/\/+$/, '');
 const PUBLIC_EVENTS_LIMIT = 100;
 const PUBLIC_EVENTS_MAX_PAGES = 10;
 const LIST_REQUEST_TIMEOUT_MS = 4000;
-const EVENT_REQUEST_TIMEOUT_MS = 2500;
+const EVENT_REQUEST_TIMEOUT_MS = 8000;
 const WEBP_EXTENSION_RE = /\.webp(?=($|[?#]))/i;
 
 const getCacheKey = (slug) => `public-event:${slug}`;
@@ -25,7 +25,7 @@ const fetchEventListPage = async (page) => {
             ordering: 'start_time',
             page,
             limit: PUBLIC_EVENTS_LIMIT,
-            lasted: false,
+            lasted: true,
             show_meetings: true
         },
         timeout: LIST_REQUEST_TIMEOUT_MS
@@ -104,21 +104,10 @@ export default defineEventHandler(async (event) => {
 
     const storage = useStorage('cache');
     const cached = await storage.getItem(getCacheKey(slug));
+    let seoDataTemporarilyUnavailable = false;
 
     if (cached?.event) {
         return normalizeSeoEvent(cached.event);
-    }
-
-    try {
-        const listEvent = await fetchEventFromList(slug);
-
-        if (listEvent) {
-            await writeCachedEvent(slug, listEvent);
-            return normalizeSeoEvent(listEvent);
-        }
-    }
-    catch (error) {
-        console.error(`Failed to fetch SEO list data for slug "${slug}"`, error);
     }
 
     try {
@@ -130,6 +119,28 @@ export default defineEventHandler(async (event) => {
         }
     }
     catch (error) {
+        const statusCode = Number(error?.statusCode ?? error?.status ?? 0);
+
+        if (statusCode && statusCode !== 404) {
+            seoDataTemporarilyUnavailable = true;
+            console.error(`Failed to fetch SEO direct data for slug "${slug}"`, error);
+        }
+    }
+
+    try {
+        const listEvent = await fetchEventFromList(slug);
+
+        if (listEvent) {
+            await writeCachedEvent(slug, listEvent);
+            return normalizeSeoEvent(listEvent);
+        }
+    }
+    catch (error) {
+        seoDataTemporarilyUnavailable = true;
+        console.error(`Failed to fetch SEO list data for slug "${slug}"`, error);
+    }
+
+    if (seoDataTemporarilyUnavailable) {
         throw createError({
             statusCode: 503,
             statusMessage: 'Event SEO data is temporarily unavailable'

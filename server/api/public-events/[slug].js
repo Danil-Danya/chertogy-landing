@@ -23,7 +23,7 @@ const fetchEventListPage = async (page) => {
             ordering: 'start_time',
             page,
             limit: PUBLIC_EVENTS_LIMIT,
-            lasted: false,
+            lasted: true,
             show_meetings: true
         },
         timeout: LIST_REQUEST_TIMEOUT_MS

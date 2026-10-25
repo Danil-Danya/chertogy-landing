@@ -1,7 +1,7 @@
 <template>
     <section class="zoom" @click="$emit('close')">
-        <div class="container">
-            <div class="zoom__container">
+        <div class="container zoom__layout">
+            <div class="zoom__container" @click.stop>
                 <img class="zoom__img" alt="Картинка увеличенная" :src="image" />
             </div>
         </div>

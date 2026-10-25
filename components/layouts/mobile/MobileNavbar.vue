@@ -9,7 +9,7 @@
                         </a>
                     </div>
                     <div class="navbar__socials">
-                        <a :href="link.path" class="navbar__socials-link" v-for="link in navbarSocialLinks" :key="link">
+                        <a :href="link.path" class="navbar__socials-link" v-for="link in navbarSocialLinks" :key="link" target="_blank" rel="noopener noreferrer">
                             <span class="navbar__socials-icon">
                                 <Component :is="link.icon" />
                             </span>

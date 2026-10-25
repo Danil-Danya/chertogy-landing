@@ -90,6 +90,7 @@ export const mapEventToCard = (event) => {
 
         isDraft: event.isDraft,
         isAllowed: event.isAllowed,
+        ageRestriction: event.ageRestriction ?? null,
 
         tagsList,
         isFinished,
