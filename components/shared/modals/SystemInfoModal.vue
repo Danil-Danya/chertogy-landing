@@ -3,9 +3,10 @@
         <div class="modal__content modal__content-system-info">
             <h2 class="modal__title title">{{ title }}</h2>
 
-            <p class="modal__text modal__text-system-info text">
-                {{ description }}
-            </p>
+            <div
+                class="modal__text modal__text-system-info text formatted-text"
+                v-html="description"
+            ></div>
 
             <div class="modal__actions">
                 <button type="button" class="btn btn-green" @click="onClose">

@@ -102,7 +102,7 @@
                                             </span>
                                         </h3>
 
-                                        <p class="text event__text">{{ info.text }}</p>
+                                        <div class="text event__text formatted-text" v-html="info.text"></div>
                                     </li>
                                 </ul>
                                 <ul class="event__info-list" v-if="eventStore.oneEvent.type === 'GAME'">
@@ -115,12 +115,15 @@
                                             <h3 class="event__data-title">{{ info.data.title }}</h3>
                                         </h3>
 
-                                        <p class="text event__text">{{ info.text }}</p>
+                                        <div class="text event__text formatted-text" v-html="info.text"></div>
                                     </li>
                                 </ul>
                             </div>
                             <div class="event__description">
-                                <p class="event__text event__text-preserve text">{{ eventStore.oneEvent.shortDescription }}</p>
+                                <div
+                                    class="event__text event__text-preserve text formatted-text"
+                                    v-html="eventStore.oneEvent.shortDescription"
+                                ></div>
                             </div>
                         </div>
                     </div>
@@ -155,17 +158,17 @@
                         </div>
                         <div class="events__bottom-content">
                             <template v-if="activeTab === 'description'">
-                                <p class="text event__text event__text-preserve">{{ eventDescription }}</p>
+                                <div
+                                    class="text event__text event__text-preserve formatted-text"
+                                    v-html="eventDescription"
+                                ></div>
                             </template>
 
                             <template v-else>
-                                <p
-                                    class="text event__text"
-                                    v-for="text in masterDescription"
-                                    :key="text"
-                                >
-                                    {{ text }}
-                                </p>
+                                <div
+                                    class="text event__text event__text-preserve formatted-text"
+                                    v-html="masterDescription"
+                                ></div>
                             </template>
                         </div>
                     </div>
@@ -219,7 +222,7 @@
     const eventInfoIcons = ref([]);
     const eventInfoTitles = ref([]);
     const eventDescription = ref('');
-    const masterDescription = ref([]);
+    const masterDescription = ref('');
 
     const img = ref('img');
 
@@ -250,17 +253,6 @@
         }
 
         return [];
-    };
-
-    const splitDescription = (value) => {
-        if (typeof value !== 'string') {
-            return [];
-        }
-
-        return value
-            .split('\n')
-            .map((item) => item.replace('\r', '').trim())
-            .filter((item) => item.length > 0);
     };
 
     const normalizeMultilineText = (value) => {
@@ -398,12 +390,12 @@
 
             eventTags.value = tags.filter((tag) => tag.short_name);
 
-            const fullDescription = event.fullDescription ?? event.fullDescription ?? '';
+            const fullDescription = event.fullDescription ?? '';
             eventDescription.value = normalizeMultilineText(fullDescription);
 
             const rawMasterDescription = event?.aboutCreator ?? '';
         
-            masterDescription.value = splitDescription(rawMasterDescription);
+            masterDescription.value = normalizeMultilineText(rawMasterDescription);
         },
         { immediate: true }
     );

@@ -207,6 +207,35 @@
         "Опыт игрока": "skill"
     };
 
+    const sortTagsByWeight = (categoryTags) => {
+        if (!Array.isArray(categoryTags)) {
+            return [];
+        }
+
+        const getWeight = (tag) => {
+            if (tag?.weight === null || tag?.weight === undefined || tag?.weight === '') {
+                return null;
+            }
+
+            const weight = Number(tag.weight);
+
+            return Number.isFinite(weight) ? weight : null;
+        };
+
+        return [...categoryTags].sort((firstTag, secondTag) => {
+            const firstWeight = getWeight(firstTag);
+            const secondWeight = getWeight(secondTag);
+            const hasFirstWeight = firstWeight !== null;
+            const hasSecondWeight = secondWeight !== null;
+
+            if (!hasFirstWeight && !hasSecondWeight) return 0;
+            if (!hasFirstWeight) return 1;
+            if (!hasSecondWeight) return -1;
+
+            return firstWeight - secondWeight;
+        });
+    };
+
     allTags.value = tags.tagsWithCategories.rows
         .map((item, index) => {
             const apiKey = CATEGORY_TO_API_KEY[item.name];
@@ -219,6 +248,9 @@
             return {
                 ...item,
                 apiKey,
+                tags: item.name === 'Опыт игрока'
+                    ? sortTagsByWeight(item.tags)
+                    : item.tags,
             };
         })
         .filter((item) => item && item.apiKey !== 'necessary_player_preparation');

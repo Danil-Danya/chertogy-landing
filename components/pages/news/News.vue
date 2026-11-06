@@ -9,7 +9,7 @@
                     v-for="item in newsStore.allNews.rows"
                     :title="truncateText(item.title, 50)"
                     :date="item.createdAt"
-                    :text="truncateText(item.shortDescription, 130)"
+                    :text="truncateHtml(item.shortDescription, 130)"
                     :image="getImageUrl(item.previewPath)"
                     :slug="item.slug"
                     :key="item"
@@ -31,6 +31,7 @@
     import Pagination from '@/components/shared/instruments/Pagination.vue';
 
     import getImageUrl from '@/utils/getImageUrl.js';
+    import truncateHtml from '@/utils/truncateHtml.js';
     import truncateText from '@/utils/truncateText.js';
 
     import { useRoute, useRouter } from 'vue-router';

@@ -63,16 +63,7 @@
     const description = computed(() => {
         const text = newsStore.oneNews?.description;
 
-        if (!text) {
-            return [];
-        }
-
-        return text
-            .replace(/\r\n/g, '\n')
-            .replace(/\r/g, '\n')
-            .split('\n')
-            .map(line => line.trim())
-            .filter(Boolean);
+        return typeof text === 'string' ? text.replace(/\r/g, '') : '';
     });
 
     watch(slug, async (newSlug) => {

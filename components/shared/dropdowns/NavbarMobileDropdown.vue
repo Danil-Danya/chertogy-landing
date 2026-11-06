@@ -106,6 +106,7 @@
     import TravelIcon from '~/components/icons/navbar/login/Travel.vue';
     import NewsIcon from '~/components/icons/navbar/login/News.vue';
     import ContactsIcon from '~/components/icons/navbar/login/Contacts.vue';
+    import GalleryIcon from '~/components/icons/navbar/login/Gallery.vue';
 
     import { useUserStore } from '~/store/useUsers';
 
@@ -121,7 +122,9 @@
     const navLinks = ref([
         { text: 'О клубе', path: '/', icon: AboutIcon },
         { text: 'Тарифы', path: '/tariffs', icon: TariffIcon },
+        // { text: 'Мастера', path: '/masters', icon: FollowingMastersIcon },
         { text: 'К приключениям', path: '/events', icon: TravelIcon, featured: true },
+        // { text: 'Галерея', path: '/gallery', icon: GalleryIcon },
         { text: 'Новости', path: '/news', icon: NewsIcon },
         { text: 'Контакты', path: '/contacts', icon: ContactsIcon },
     ])

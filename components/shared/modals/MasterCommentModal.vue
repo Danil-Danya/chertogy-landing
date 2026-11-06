@@ -29,6 +29,7 @@
                         label="Указать игру (не обязательно)"
                         placeholder="Выбрать сыгранную игру у мастера"
                         :options="eventOptions"
+                        v-if="eventOptions.length"
                     />
 
                     <p class="comment-modal__error" v-if="submitError">{{ submitError }}</p>
@@ -55,7 +56,6 @@
     import CommentTextarea from '@/components/shared/form/CommentTextarea.vue';
     import CommentSelect from '@/components/shared/form/CommentSelect.vue';
 
-    import { useUserStore } from '~/store/useUsers';
     import { useCommentsStore } from '~/store/useComments';
 
     const props = defineProps({
@@ -67,12 +67,16 @@
         masterId: {
             type: String,
             required: true
+        },
+
+        events: {
+            type: Array,
+            default: () => []
         }
     });
 
     const emit = defineEmits(['close', 'submit']);
 
-    const userStore = useUserStore();
     const commentsStore = useCommentsStore();
 
     const comment = ref('');
@@ -83,13 +87,7 @@
     const isSubmitted = ref(false);
 
     const eventOptions = computed(() => {
-        const events = userStore.profile?.subscribedEvents;
-
-        if (!Array.isArray(events)) {
-            return [];
-        }
-
-        return events
+        return props.events
             .filter((event) => event.id && event.title)
             .map((event) => ({
                 value: event.id,
@@ -120,8 +118,8 @@
 
         isSubmitting.value = false;
 
-        if (!result) {
-            submitError.value = 'Не удалось отправить отзыв. Попробуйте ещё раз.';
+        if (!result || result.error) {
+            submitError.value = result?.message || 'Не удалось отправить отзыв. Попробуйте ещё раз.';
             return;
         }
 
@@ -137,12 +135,6 @@
     watch(comment, () => {
         if (commentMessage.value) {
             validateComment();
-        }
-    });
-
-    onMounted(async () => {
-        if (!userStore.profile && localStorage.getItem('accessToken')) {
-            await userStore.fetchProfile();
         }
     });
 

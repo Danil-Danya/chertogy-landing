@@ -22,7 +22,7 @@
                         <span class="alert__icon">
                             <Component :is="item.icon" />
                         </span>
-                        <p class="alert__text text" v-html="item.text"></p>
+                        <p class="alert__text text formatted-text" v-html="item.text"></p>
                     </div>
                 </div>
                 <div class="alert__help" v-if="role === 'USER' || role === 'GUEST'">

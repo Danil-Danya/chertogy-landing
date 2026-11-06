@@ -1,4 +1,9 @@
 .masters {
+    &--empty {
+        min-height: 100vh;
+        min-height: 100dvh;
+    }
+
     &__title {
         margin-top: 144px;
 
@@ -51,6 +56,10 @@
     }
 
     &__button {
+        &-call, &-system {
+            min-height: 56px;
+        }
+
         &-icon {
             display: flex;
             transition: transform 200ms;
@@ -77,8 +86,8 @@
 
             font-family: 'Alegreya SC', serif;
             font-weight: 500;
-            font-size: 26px;
-            line-height: 115%;
+            font-size: 20px;
+            line-height: 120%;
             text-align: center;
 
             cursor: pointer;
@@ -154,9 +163,10 @@
             }
         }
 
-        &-create {
+        &-reorder, &-create {
             max-width: 355px;
             width: 100%;
+            height: 56px;
             padding: 12px;
             display: flex;
             justify-content: center;
@@ -164,14 +174,48 @@
             gap: 12px;
             border: 0;
             border-radius: 10px;
-            background: #528052;
             font-family: Alegreya SC;
             font-weight: 500;
             font-size: 20px;
             line-height: 120%;
             color: #FFFFFF;
             cursor: pointer;
-            transition: 200ms;
+            text-decoration: none;
+            transition: background 200ms, box-shadow 200ms, transform 200ms;
+
+            svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            &:focus-visible {
+                outline: 2px solid #D5B0E4;
+                outline-offset: 3px;
+            }
+
+            &:active {
+                transform: scale(0.94);
+            }
+        }
+
+        &-reorder {
+            background: #6E3284;
+
+            &:hover {
+                background: #86489C;
+                box-shadow: 0 0 24px rgba(134, 72, 156, 0.35);
+            }
+
+            &.active {
+                background: #422748;
+                box-shadow:
+                    inset 0 0 0 1px #D5B0E4,
+                    0 0 24px rgba(134, 72, 156, 0.45);
+            }
+        }
+
+        &-create {
+            background: #528052;
 
             &:hover {
                 background: #639563;
@@ -183,11 +227,24 @@
         }
     }
 
+    &__reorder-message {
+        margin-top: 14px;
+        color: #E25A68;
+        font-family: Alegreya;
+        font-size: 16px;
+        line-height: 120%;
+        text-align: center;
+    }
+
     &__dropdown {
         position: relative;
         max-width: 355px;
         width: 100%;
         z-index: 10;
+
+        &-control {
+            position: relative;
+        }
 
         .masters__button-system.active {
             border-color: #86489C;
@@ -207,6 +264,66 @@
             border-radius: 0 0 10px 10px;
             background: #0A060C;
             box-shadow: 0px 0px 24px 0px #81569226;
+        }
+
+        &-search {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            right: 52px;
+            left: 20px;
+            width: calc(100% - 72px);
+            height: 56px;
+            padding: 0 8px;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: #FFFFFF;
+            font-family: Alegreya SC;
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 120%;
+            text-align: center;
+
+            &::placeholder {
+                color: #EEE0F1;
+                opacity: 0.7;
+            }
+
+            &::-webkit-search-cancel-button {
+                display: none;
+            }
+        }
+
+        &-close {
+            position: absolute;
+            top: 50%;
+            right: 14px;
+            z-index: 2;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            transform: translateY(-50%);
+
+            svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            svg path {
+                fill: #86489C;
+                transition: fill 200ms;
+            }
+
+            &:hover svg path {
+                fill: #D5B0E4;
+            }
         }
 
         &-list {
@@ -289,6 +406,27 @@
         margin: 50px 0;
     }
 
+    &__empty {
+        min-height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 15px;
+
+        &-text {
+            color: #D5B0E4;
+            font-family: Alegreya SC;
+            font-size: 24px;
+            font-weight: 500;
+            line-height: 120%;
+            text-align: center;
+
+            @include media($sm) {
+                font-size: 20px;
+            }
+        }
+    }
+
     &__list {
         display: flex;
         flex-wrap: wrap;
@@ -328,7 +466,6 @@
         position: relative;
         padding: 20px;
         border: 1px solid #18171E;
-        backdrop-filter: blur(10px);
         box-shadow: 0px 0px 24px 0px #81569226;
         background: radial-gradient(
             52.2% 90.57% at 48.3% 9.43%, 
@@ -341,6 +478,44 @@
         border-radius: 15px;
         height: 550px;
         overflow: hidden;
+        transition: transform 300ms, box-shadow 300ms, opacity 200ms;
+
+        &--reorder {
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            transform: scale(0.97);
+            box-shadow:
+                0 14px 30px rgba(0, 0, 0, 0.42),
+                0 0 18px rgba(110, 50, 132, 0.12);
+
+            .masters__card-action,
+            .masters__card-link,
+            .system-info-tag {
+                pointer-events: none;
+            }
+
+            &:hover {
+                transform: translateY(-5px) scale(0.95);
+                box-shadow:
+                    0 34px 65px rgba(0, 0, 0, 0.72),
+                    0 15px 28px rgba(0, 0, 0, 0.5),
+                    0 0 32px rgba(134, 72, 156, 0.35);
+            }
+
+            &.masters__card--drag-over {
+                transform: translateY(-5px) scale(0.93);
+                box-shadow:
+                    0 38px 70px rgba(0, 0, 0, 0.75),
+                    0 16px 30px rgba(0, 0, 0, 0.52),
+                    0 0 40px rgba(213, 176, 228, 0.48);
+            }
+        }
+
+        &--dragging {
+            cursor: grabbing;
+            opacity: 0.35;
+        }
 
         @include media($md) {
             flex-wrap: wrap;
@@ -366,7 +541,7 @@
             }
 
             .masters__card-systems-tag {
-                background: #6F6C72;
+                background: #813333;
                 color: #E5E2E6;
             }
 
@@ -401,6 +576,13 @@
 
             &.admin {
                 padding: 0 65px;
+
+                @include media($sm) {
+                    .masters__card-history {
+                        width: calc(100% + 130px);
+                        margin-left: -65px;
+                    }
+                }
             }
         }
 
@@ -456,7 +638,7 @@
         &-name {
             font-family: Alegreya SC;
             font-weight: 500;
-            font-style: Medium;
+            font-style: normal;
             font-size: 32px;
             leading-trim: NONE;
             line-height: 114.99999999999999%;
@@ -465,6 +647,11 @@
             font-variant-numeric-spacing: proportional-nums;
             color: #ffffff;
             text-align: center;
+
+            @include media($sm) {
+                font-size: 26px;
+                line-height: 100%;
+            }
         }
 
         &-history {
@@ -483,29 +670,29 @@
         &-systems {
             display: flex;
             align-items: center;
-            gap: 15px;
+            justify-content: center;
+            gap: 12px;
             margin: 15px 0;
 
             @include media($md) {
-                flex-wrap: wrap;
-                justify-content: center;
+                flex-direction: column;
             }
 
-            &-designation {
-                font-family: Alegreya SC;
-                font-weight: 400;
-                font-style: Regular;
-                font-size: 20px;
-                leading-trim: NONE;
-                line-height: 114.99999999999999%;
-                letter-spacing: 0%;
-                text-align: center;
-                color: #D5B0E4;
+            .masters__card-decoration {
+                flex: 0 0 38px;
+                display: block;
+                width: 38px;
+                height: 38px;
+
+                @include media($md) {
+                    display: none;
+                }
             }
 
             &-tag {
                 padding: 8px 12px;
-                background: #86489C;
+                background: #813333;
+                border: 0;
                 font-family: Alegreya;
                 font-weight: 400;
                 font-style: Regular;
@@ -525,12 +712,24 @@
             }
 
             &-list {
+                flex: 0 1 auto;
+                min-width: 0;
                 display: flex;
-                gap: 15px;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+
+                > li {
+                    flex: 0 0 auto;
+                }
 
                 @include media($md) {
-                    width: 100%;
                     justify-content: center;
+
+                    > li:nth-child(n + 4) {
+                        display: none;
+                    }
                 }
             }
         }
@@ -587,15 +786,29 @@
                 height: auto;
                 aspect-ratio: 265 / 370;
             }
+
+            &-gradient {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                    180deg,
+                    rgba(0, 0, 0, 0) 0%,
+                    #18171E 100%
+                );
+                pointer-events: none;
+            }
         }
 
         &-left {
+            position: relative;
             flex: 0 0 265px;
             width: 265px;
+            overflow: hidden;
+            border-radius: 10px;
 
             @include media($md) {
                 flex: none;
-                width: min(265px, 100%);
+                width: 100%;
             }
         }
 

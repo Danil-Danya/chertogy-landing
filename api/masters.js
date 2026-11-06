@@ -6,9 +6,10 @@ const getAllMasters = async (page, limit, settings = [], includeHidden = false) 
             params: {
                 page: page || 1,
                 limit: limit || 10,
-                ordering: 'createdAt',
-                orderingType: 'DESC',
-                settings: settings.length ? settings : undefined
+                ordering: 'weight',
+                orderingType: 'ASC',
+                settings: settings.length ? settings : undefined,
+                isVisible: includeHidden ? undefined : true
             }
         })
 
@@ -40,8 +41,24 @@ const updateMaster = async (id, data) => {
     }
 }
 
+const swapMasterWeight = async (firstId, secondId) => {
+    try {
+        const response = await api.patch('/masters/swap-weight', {
+            firstId,
+            secondId
+        });
+
+        return response.data;
+    }
+    catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
 export {
     getAllMasters,
     getOneMasterBySlug,
-    updateMaster
+    updateMaster,
+    swapMasterWeight
 }

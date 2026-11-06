@@ -27,6 +27,7 @@
 <script setup>
 
     import { useTagsStore } from '~/store/useTags';
+    import getSystemDescription from '@/utils/systemDescriptions';
 
     const InfoIcon = defineAsyncComponent(() => import('@/components/icons/events/info/Info.vue'));
     import SystemInfoModal from '@/components/shared/modals/SystemInfoModal.vue';
@@ -71,7 +72,11 @@
 
         const shortNameLookupKey = `${normalizeLookupKey(category)}::${normalizeLookupKey(shortName)}`;
         const tagInfo = tagsStore.tagInfoLookup[shortNameLookupKey];
-        const description = typeof tagInfo?.description === 'string' ? tagInfo.description.trim() : '';
+        const apiDescription = typeof tagInfo?.description === 'string' ? tagInfo.description.trim() : '';
+        const fallbackDescription = normalizeLookupKey(category) === 'система'
+            ? getSystemDescription(shortName)
+            : '';
+        const description = apiDescription || fallbackDescription;
 
         if (!description) {
             return null;

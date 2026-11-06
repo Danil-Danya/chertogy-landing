@@ -36,6 +36,28 @@
         object-fit: contain;
     }
 
+    &--enlarged {
+        padding: 15px;
+
+        .zoom__layout {
+            max-width: none;
+            min-height: calc(100dvh - 30px);
+            padding: 0;
+        }
+
+        .zoom__container {
+            max-width: none;
+            min-height: calc(100dvh - 30px);
+        }
+
+        .zoom__img {
+            width: 85vw;
+            height: 85dvh;
+            max-width: 1400px;
+            max-height: 900px;
+        }
+    }
+
     @include media ($sm) {
         padding: 15px 0;
 

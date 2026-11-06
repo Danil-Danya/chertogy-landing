@@ -11,6 +11,15 @@ const api = axios.create({
     timeout: 5000
 });
 
+const isBinaryData = (data) => {
+    const isFormData = typeof FormData !== 'undefined' && data instanceof FormData;
+    const isBlob = typeof Blob !== 'undefined' && data instanceof Blob;
+    const isArrayBuffer = typeof ArrayBuffer !== 'undefined'
+        && (data instanceof ArrayBuffer || ArrayBuffer.isView(data));
+
+    return isFormData || isBlob || isArrayBuffer;
+};
+
 api.interceptors.response.use((response) => {
     if (response.data) {
         response.data = convertKeysToCamelCase(response.data);
@@ -20,7 +29,7 @@ api.interceptors.response.use((response) => {
 });
 
 api.interceptors.request.use((request) => {
-    if (request.data) {
+    if (request.data && !isBinaryData(request.data)) {
         request.data = convertToSnakeCase(request.data);
     }
 

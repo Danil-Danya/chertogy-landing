@@ -100,7 +100,7 @@
                         <h3 class="events__creator-name">{{ creator.profile.name }}</h3>
                     </div>
                     <div class="events__card-description">
-                        <p class="events__card-text text">{{ description }}</p>
+                        <div class="events__card-text text formatted-text" v-html="description"></div>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,91 @@
+.delete-confirmation {
+    position: fixed;
+    inset: 0;
+    z-index: 10000001;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(5, 8, 12, 0.84);
+    backdrop-filter: blur(8px);
+
+    &__content {
+        width: min(100%, 520px);
+        padding: 30px;
+        border: 1px solid rgba(213, 176, 228, 0.3);
+        border-radius: 15px;
+        background: #141218;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+
+        @include media ($sm) {
+            padding: 24px 18px;
+        }
+    }
+
+    &__title {
+        color: #EEE0F1;
+        font-family: "Alegreya SC";
+        font-size: 30px;
+        font-weight: 500;
+        line-height: 120%;
+        text-align: center;
+
+        @include media ($sm) {
+            font-size: 25px;
+        }
+    }
+
+    &__description {
+        margin-top: 15px;
+        color: #D5B0E4;
+        font-family: Alegreya;
+        font-size: 18px;
+        line-height: 130%;
+        text-align: center;
+    }
+
+    &__actions {
+        margin-top: 25px;
+        display: flex;
+        gap: 12px;
+
+        @include media ($sm) {
+            flex-direction: column-reverse;
+        }
+    }
+
+    &__button {
+        width: 100%;
+        padding: 13px 20px;
+        border: 0;
+        border-radius: 10px;
+        color: #EEE0F1;
+        font-family: "Alegreya SC";
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 120%;
+        cursor: pointer;
+        transition: background 300ms, opacity 300ms;
+
+        &--secondary {
+            background: #26262C;
+
+            &:hover:not(:disabled) {
+                background: #35353D;
+            }
+        }
+
+        &--delete {
+            background: #8E3038;
+
+            &:hover:not(:disabled) {
+                background: #B3434D;
+            }
+        }
+
+        &:disabled {
+            cursor: wait;
+            opacity: 0.55;
+        }
+    }
+}

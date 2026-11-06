@@ -10,55 +10,57 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 20px;
 
         &-name {
             display: flex;
             justify-content: start;
+        }
+
+        &-buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-shrink: 0;
         }
     }
 
     &__image {
         position: relative;
         max-width: 352px;
-        height: 422px;
+        height: 492px;
         width: 100%;
         cursor: zoom-in;
         overflow: hidden;
         border-radius: 15px;
 
-        &--with-sign::after {
-            content: '';
+        &-gradient {
             position: absolute;
-            right: 0;
-            bottom: 0;
-            left: 0;
+            inset: 0;
             z-index: 1;
-            height: 125px;
             background: linear-gradient(
                 180deg,
-                rgba(8, 6, 10, 0) 0%,
-                rgba(8, 6, 10, 0.72) 55%,
-                rgba(8, 6, 10, 0.94) 100%
+                rgba(0, 0, 0, 0) 0%,
+                #18171E 100%
             );
-            backdrop-filter: blur(2px);
             pointer-events: none;
         }
 
         @include media($lg) {
             max-width: 100%;
             height: auto;
-            aspect-ratio: 1 / 1;
+            aspect-ratio: 352 / 492;
         }
 
         &-img {
             width: 100%;
-            height: 422px;
+            height: 492px;
+            object-fit: cover;
+            object-position: center top;
             border-radius: 15px;
 
             @include media($lg) {
                 height: 100%;
-                object-fit: cover;
-                object-position: center top;
             }
         }
 
@@ -177,6 +179,7 @@
 
         &-dark {
             background: #221C29;
+            text-decoration: none;
 
             &:hover {
                 background: #32293b;
@@ -190,11 +193,31 @@
                 background: #653775;
             }
         }
+
+        &-edit {
+            width: 50px;
+            min-width: 50px;
+            height: 50px;
+            min-height: 50px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: #DF4055;
+            text-decoration: none;
+
+            &:hover {
+                background: #BB3043;
+            }
+
+        }
     }
 
     &__buttons {
         display: flex;
         gap: 15px;
+        margin-top: 20px;
 
         @include media ($md) {
             flex-wrap: wrap;
@@ -289,7 +312,8 @@
 
         &-tag {
             padding: 8px 12px;
-            background: #86489C;
+            background: #813333;
+            border: 0;
             font-family: Alegreya;
             font-weight: 400;
             font-style: Regular;
@@ -315,6 +339,11 @@
             gap: 12px;
             align-items: baseline;
             margin-bottom: 12px;
+
+            @include media($sm) {
+                flex-wrap: wrap;
+                gap: 4px 8px;
+            }
         }
 
         &-subtitle {
@@ -332,6 +361,7 @@
         }
 
         &-text {
+            min-width: 0;
             color: #D5B0E4;
             font-family: Alegreya;
             font-weight: 400;
@@ -344,7 +374,7 @@
             font-variant-numeric-spacing: proportional-nums;
 
             @include media($sm) {
-                white-space: nowrap;
+                white-space: normal;
             }
         }
     }
@@ -393,29 +423,43 @@
         }
 
         &-button {
-            background: #18171E;
-            cursor: pointer;
             border: 0;
+            background: #000000a7;
+            cursor: pointer;
             border-radius: 10px;
-            width: 40px;
-            height: 40px;
+            padding: 10px;
+            height: 75px;
             position: absolute;
-            top: 130px;
+            top: calc(50% - 38px);
             z-index: 99;
-            
+
+            &-icon {
+                display: flex;
+
+                svg {
+                    width: 28px;
+                    height: 28px;
+                }
+            }
+
+            @include media($sm) {
+                padding: 5px;
+                top: calc(50% - 28px);
+            }
+
             &-prev {
-                left: -20px;
+                left: 25px;
 
                 @include media($sm) {
-                    left: 10px;
+                    left: 15px;
                 }
             }
 
             &-next {
-                right: -20px !important;
+                right: 25px;
 
                 @include media($sm) {
-                    right: 10px !important;
+                    right: 15px;
                 }
             }
         }
@@ -427,6 +471,7 @@
             object-position: center;
             display: block;
             cursor: zoom-in;
+            border-radius: 15px;
 
             @include media($sm) {
                 height: 65vw;

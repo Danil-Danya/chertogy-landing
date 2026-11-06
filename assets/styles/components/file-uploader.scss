@@ -1,0 +1,98 @@
+.file-uploader {
+    position: relative;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+
+    &__area {
+        position: relative;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 0;
+        border-radius: 12px;
+        background: #528052;
+        color: #FFFFFF;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        cursor: pointer;
+        transition: background 200ms, transform 200ms;
+
+        &--dragging {
+            background: #639563;
+            transform: scale(1.05);
+        }
+
+        &--loading {
+            cursor: wait;
+        }
+
+        &:hover {
+            background: #639563;
+        }
+    }
+
+    &__input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
+
+    &__icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    &__description {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
+
+    &__loading {
+        position: absolute;
+        top: calc(100% + 8px);
+        color: #D5B0E4;
+        font-family: Alegreya;
+        font-size: 15px;
+        white-space: nowrap;
+    }
+
+    &__message {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        z-index: 2;
+        width: 320px;
+        padding: 8px 10px;
+        border-radius: 8px;
+        background: rgba(10, 6, 12, 0.9);
+        text-align: right;
+        font-family: Alegreya;
+        font-size: 17px;
+        line-height: 120%;
+
+        @include media ($sm) {
+            right: auto;
+            left: 50%;
+            width: min(320px, calc(100vw - 30px));
+            text-align: center;
+            transform: translateX(-50%);
+        }
+
+        &--error {
+            color: #C95959;
+        }
+
+        &--success {
+            color: #8FCB81;
+        }
+    }
+}

@@ -37,7 +37,7 @@
                             <NewsCard 
                                 :title="truncateText(item.title, 36)"
                                 :date="item.createdAt"
-                                :text="truncateText(item.shortDescription, 100)"
+                                :text="truncateHtml(item.shortDescription, 100)"
                                 :image="getImageUrl(item.previewPath)"
                                 :slug="item.slug"
                                 class="news__card-slider"
@@ -63,6 +63,7 @@
     import NewsCard from '@/components/shared/widgets/NewsCard.vue';
 
     import getImageUrl from '@/utils/getImageUrl.js';
+    import truncateHtml from '@/utils/truncateHtml.js';
     import truncateText from '@/utils/truncateText.js';
 
     import 'swiper/css';

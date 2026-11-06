@@ -14,31 +14,35 @@
             </button>
             <div class="masters__card-heading">
                 <h2 class="masters__card-name">{{ name }}</h2>
-                <p class="masters__card-history">{{ history }}</p>
+                <div class="masters__card-history formatted-text" v-html="history"></div>
             </div>
-            <button
-                type="button"
+            <a
+                :href="`${panelBaseUrl}/masters/update/${id}`"
                 class="masters__card-action masters__card-action-edit"
                 aria-label="Редактировать мастера"
-                @click="toUpdate"
                 v-if="isAdmin"
             >
                 <EditIcon />
-            </button>
+            </a>
         </div>
         <div class="masters__card-systems">
-            <img src="@/assets/images/masters/d20.svg" alt="" class="masters__card-decoration">
-            <p class="masters__card-systems-designation">Топ 3 системы:</p>
+            <img src="@/assets/images/masters/d20.svg" alt="" class="masters__card-decoration" draggable="false">
             <ul class="masters__card-systems-list">
-                <li class="masters__card-systems-tag" v-for="system in systems" :key="system">{{ system }}</li>
+                <li v-for="system in systems" :key="system">
+                    <SystemInfoTag
+                        :tag="{ category: 'Система', short_name: system }"
+                        base-class="masters__card-systems-tag"
+                    />
+                </li>
             </ul>
         </div>
         <div class="masters__card-content">
             <div class="masters__card-left">
-                <img :src="image" alt="Фото мастера" class="masters__card-img">
+                <img :src="image" alt="Фото мастера" class="masters__card-img" draggable="false">
+                <div class="masters__card-img-gradient" aria-hidden="true"></div>
             </div>
             <div class="masters__card-right">
-                <p class="masters__card-text">"{{ description }}"</p>
+                <div class="masters__card-text formatted-text" v-html="description"></div>
                 <div class="masters__card-button-container">
                     <a
                         :href="`/masters/${link}`"
@@ -63,8 +67,9 @@
     import EyeOpenIcon from '@/components/icons/masters/EyeOpen.vue';
     import EyeClosedIcon from '@/components/icons/masters/EyeClosed.vue';
     import EditIcon from '@/components/icons/events/cards/Edit.vue';
+    import SystemInfoTag from '@/components/shared/widgets/SystemInfoTag.vue';
 
-    const router = useRouter();
+    import panelBaseUrl from '@/utils/panelUrl';
 
     const emit = defineEmits(['toggleVisibility']);
 
@@ -122,10 +127,6 @@
 
     const toggleVisibility = () => {
         emit('toggleVisibility');
-    };
-
-    const toUpdate = () => {
-        router.replace(`/panel/masters/update/${props.id}`);
     };
 
     const preventHiddenLink = (event) => {

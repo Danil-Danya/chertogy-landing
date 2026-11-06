@@ -21,7 +21,7 @@
                         <p class="post__container-date">{{ formattedDate }}</p>
                     </div>
                     <div class="post__block">
-                        <p class="post__container-text text" v-for="item in text" :key="item" v-html="item" />
+                        <div class="post__container-text text formatted-text" v-html="text"></div>
                     </div>
                 </div>
             </div>
@@ -69,7 +69,7 @@
         },
 
         text: {
-            type: Array,
+            type: String,
             required: true,
         },  
     });

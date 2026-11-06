@@ -5,8 +5,22 @@ const normalizeBaseUrl = (baseUrl) => {
     return String(baseUrl || '').replace(/\/+$/, '');
 };
 
-const getImageUrl = (path) => {
-    if (typeof path !== 'string') {
+const getImagePath = (image) => {
+    if (typeof image === 'string') {
+        return image;
+    }
+
+    if (!image || typeof image !== 'object') {
+        return '';
+    }
+
+    return image.cropPath || image.path || '';
+};
+
+const getImageUrl = (image) => {
+    const path = getImagePath(image);
+
+    if (!path) {
         return null;
     }
 

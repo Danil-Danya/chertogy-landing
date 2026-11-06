@@ -25,14 +25,14 @@
                             class="navigator__slider-img"
                         />
                         <div class="navigator__slider-top">
-                            <h3 class="navigator__slider-title" v-html="slide.title"></h3>
+                            <h3 class="navigator__slider-title formatted-text" v-html="slide.title"></h3>
                         </div>
                         <div class="navigator__slider-bottom">
                             <div class="navigator__slider-item" v-for="item in slide.text" :key="item">
                                 <span class="navigator__slider-icon">
                                     <ArrowIcon />
                                 </span>
-                                <p class="navigator__slider-text" v-html="item"></p>
+                                <p class="navigator__slider-text formatted-text" v-html="item"></p>
                             </div>
                         </div>
                     </SwiperSlide>

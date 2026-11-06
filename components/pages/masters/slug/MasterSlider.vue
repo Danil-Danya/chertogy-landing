@@ -16,29 +16,37 @@
                         @slideChange="onSlideChange"
                         class="master__slider-swiper"
                     >
-                        <SwiperSlide 
-                            v-for="image in images"
-                            :key="image"
+                        <SwiperSlide
+                            v-for="(image, index) in images"
+                            :key="image.id"
                         >
-                            <img :src="image" alt="Картинка" class="master__slider-img" @click="openZoom(image)">
+                            <img
+                                :src="image.preview"
+                                alt="Картинка"
+                                class="master__slider-img"
+                                @click="openZoom(index)"
+                            >
                         </SwiperSlide>
+                        <button type="button" class="master__slider-button master__slider-button-prev">
+                            <span class="master__slider-button-icon">
+                                <PrevIcon />
+                            </span>
+                        </button>
+                        <button type="button" class="master__slider-button master__slider-button-next">
+                            <span class="master__slider-button-icon">
+                                <NextIcon />
+                            </span>
+                        </button>
                     </Swiper>
                 </ClientOnly>
-                <div class="master__slider-buttons">
-                    <button class="master__slider-button master__slider-button-prev">
-                        <ArrowPrevIcon />
-                    </button>
-                    <button class="master__slider-button master__slider-button-next">
-                        <ArrowNextIcon />
-                    </button>
-                </div>
             </div>
         </div>
         <Transition name="zoom">
-            <ZoomImage
-                :image="zoomedImage"
+            <ZoomSlider
+                :images="zoomImages"
+                :initial-index="zoomedImageIndex"
                 v-if="isZoomed"
-                @close="toggleIsZoomed"
+                @close="closeZoom"
             />
         </Transition>
     </section>
@@ -48,7 +56,7 @@
 
     import { Swiper, SwiperSlide } from 'swiper/vue';
     import { Navigation, Autoplay } from 'swiper/modules';
-    import ZoomImage from '@/components/shared/instruments/ZoomImage.vue';
+    import ZoomSlider from '@/components/shared/instruments/ZoomSlider.vue';
 
     import { useMastersStore } from '~/store/useMasters';
     import getImageUrl from '@/utils/getImageUrl';
@@ -56,8 +64,8 @@
     import 'swiper/css';
     import 'swiper/css/navigation';
 
-    const ArrowPrevIcon = defineAsyncComponent(() => import('@/components/icons/news/PrevArrow.vue'));
-    const ArrowNextIcon = defineAsyncComponent(() => import('@/components/icons/news/NextArrow.vue'));
+    const PrevIcon = defineAsyncComponent(() => import('@/components/icons/slider/Prev.vue'));
+    const NextIcon = defineAsyncComponent(() => import('@/components/icons/slider/Next.vue'));
 
     const masterStore = useMastersStore();
 
@@ -70,19 +78,30 @@
             return [];
         }
 
-        return gallery.map((image) => getImageUrl(image.path)).filter(Boolean);
+        return gallery.map((image) => {
+            const preview = getImageUrl(image);
+            const original = getImageUrl(image?.path || image);
+
+            return {
+                id: image?.id || original,
+                preview,
+                original
+            };
+        }).filter((image) => image.preview && image.original);
     });
 
-    const isZoomed = ref(false);
-    const zoomedImage = ref('');
+    const zoomImages = computed(() => images.value.map((image) => image.original));
 
-    const openZoom = (image) => {
-        zoomedImage.value = image;
+    const isZoomed = ref(false);
+    const zoomedImageIndex = ref(0);
+
+    const openZoom = (index) => {
+        zoomedImageIndex.value = index;
         isZoomed.value = true;
     }
 
-    const toggleIsZoomed = () => {
-        isZoomed.value = !isZoomed.value;
+    const closeZoom = () => {
+        isZoomed.value = false;
     }
 
     const slidesCount = ref(3);

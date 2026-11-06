@@ -461,6 +461,15 @@ input[type="number"] {
     line-height: 120%; /* 24px */
 }
 
+.formatted-text {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+
+    p:empty::before {
+        content: '\00a0';
+    }
+}
+
 .tags-enter-active,
 .tags-leave-active {
     transition: all 0.25s ease;
@@ -562,18 +571,22 @@ input[type="number"] {
 }
 
 .modal-enter-active .modal__content,
-.modal-leave-active .modal__content {
+.modal-leave-active .modal__content,
+.modal-enter-active .modal-transition__content,
+.modal-leave-active .modal-transition__content {
     transition:
         transform 0.25s ease,
         opacity 0.25s ease;
 }
 
-.modal-enter-from .modal__content {
+.modal-enter-from .modal__content,
+.modal-enter-from .modal-transition__content {
     transform: translateY(20px) scale(0.96);
     opacity: 0;
 }
 
-.modal-leave-to .modal__content {
+.modal-leave-to .modal__content,
+.modal-leave-to .modal-transition__content {
     transform: translateY(10px) scale(0.98);
     opacity: 0;
 }

@@ -20,7 +20,7 @@
                 <p class="news__card-date">{{ formattedDate }}</p>
             </div>
             <div class="news__card-content">
-                <p class="news__card-text text">{{ text }}</p>
+                <div class="news__card-text text formatted-text" v-html="text"></div>
             </div>
         </div>
         <div class="news__card-bottom" v-if="!isSlider">

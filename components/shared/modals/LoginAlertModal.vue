@@ -2,11 +2,11 @@
     <div class="modal">
         <div class="modal__content">
             <h2 class="modal__title title">
-                Ой! Нужно сначала войти в систему.
+                {{ title }}
             </h2>
 
             <p class="modal__text text">
-                Вы не можете записываться на события пока не авторизуетесь.
+                {{ description }}
             </p>
 
             <div class="modal__actions">
@@ -22,6 +22,18 @@
 </template>
 
 <script setup>
+
+    defineProps({
+        title: {
+            type: String,
+            default: 'Ой! Нужно сначала войти в систему.'
+        },
+
+        description: {
+            type: String,
+            default: 'Вы не можете записываться на события пока не авторизуетесь.'
+        }
+    });
 
     const emit = defineEmits([
         'close',

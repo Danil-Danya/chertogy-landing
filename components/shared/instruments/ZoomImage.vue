@@ -1,8 +1,17 @@
 <template>
-    <section class="zoom" @click="$emit('close')">
+    <section
+        class="zoom"
+        :class="{ 'zoom--enlarged': enlarged }"
+        @click="$emit('close')"
+    >
         <div class="container zoom__layout">
-            <div class="zoom__container" @click.stop>
-                <img class="zoom__img" alt="Картинка увеличенная" :src="image" />
+            <div class="zoom__container">
+                <img
+                    class="zoom__img"
+                    alt="Картинка увеличенная"
+                    :src="image"
+                    @click.stop
+                />
             </div>
         </div>
     </section>
@@ -14,6 +23,11 @@
         image: {
             type: String,
             required: true
+        },
+
+        enlarged: {
+            type: Boolean,
+            default: false
         }
     })
 
